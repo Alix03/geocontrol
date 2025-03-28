@@ -39,6 +39,7 @@ Version: V1 - description of Geocontrol as described in the swagger
 GeoControl is a software system designed for monitoring physical and environmental variables in various contexts: from hydrogeological analyses of mountain areas to the surveillance of historical buildings, and even the control of internal parameters (such as temperature or lighting) in residential or working environments.
 
 # Business Model
+ciao
 
 # Stakeholders
 
