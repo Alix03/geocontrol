@@ -63,7 +63,13 @@ ciao
 
 |   Actor   | Logical Interface | Physical Interface |
 | :-------: | :---------------: | :----------------: |
-| Actor x.. |                   |                    |
+| Actor Admin |  Graphical User Interface
++ command line interface   |  Screen, Keyboard   |
+| Actor Operator |  Graphical User Interface
++ command line interface  |  Screen, Keyboard  |
+| Actor Viewer |  GUI  | Screen, Keyboard   |
+| Actor Gateway/sensor | API per l'invio dati |  Internet Connection (via APIs) |
+| Servizio di pagamento| API | Connessione internet|
 
 # Stories and personas
 
