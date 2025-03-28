@@ -84,35 +84,38 @@ I viewer rappresentano i clienti che usufruiscono del servizio(UNCEM Piemonte, e
 
 |   Actor   | Logical Interface | Physical Interface |
 | :-------: | :---------------: | :----------------: |
-| Actor Admin |  Graphical User Interface
-+ command line interface   |  Screen, Keyboard   |
-| Actor Operator |  Graphical User Interface
-+ command line interface  |  Screen, Keyboard  |
-| Actor Viewer |  GUI  | Screen, Keyboard   |
+| Actor Admin |  Graphical User Interface command line interface   |  Screen, Keyboard   |
+| Actor Operator |  Graphical User Interface command line interface  |  Screen, Keyboard  |
+| Actor Viewer |  GUI, API  | Screen, Keyboard , Internet Connection (via APIs) |
 | Actor Gateway/sensor | API per l'invio dati |  Internet Connection (via APIs) |
 | Servizio di pagamento| API | Connessione internet|
 
 # Stories and personas
 
-\<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
+Persona1: lavoratore presso UNCEM, laureato in geologia, 35.
+Storia: Lavora presso UNCEM e utilizza GeoControl per monitorare il rischio idrogeologico nelle valli alpine. Necessita dati costantemente aggiornati per il monitoraggio dei corsi d'acqua.
 
-\<Persona is-an-instance-of actor>
+Persona2: storica d'arte, lavora presso una fondazione privata che si occupa della conservazione di edifici storici.
+Storia: Necessita di segnalazioni occasionali ma tempestive in caso di anomalie strutturali che superino dei valori di soglia.
 
-\<stories will be formalized later as scenarios in use cases>
+Persona3: tecnico del Comune.
+Storia: Usufruisce dei servizi per monitorare il funzionamento dell'illuminazione pubblica. Non ha esperienze pregresse riguardo l'utilizzo di apparati informatici; ha bisogno di un'interfaccia intuitiva e semplice da utilizzare.
+
+Persona4: lavoratore presso un'azienda agricola.
+Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, umidità e illuminazione per le serre. Uitlizza un server, che riceve i dati da GeoControl via API
 
 # Functional and non functional requirements
 
 ## Functional Requirements
 
-\<In the form DO SOMETHING, or VERB NOUN, describe high level capabilities of the system>
-
-\<they match to high level use cases>
 
 |  ID   | Description |
 | :---: | :---------: |
-|  FR1  |             |
-|  FR2  |             |
-| FRx.. |             |
+|  FR1 Autenticazione e gestione utenti  |  Login con credenziali (username e password). Generazione e gestione di token per l’autenticazione. Tre ruoli utente con permessi distinti: Admin, Operator, Viewer.|
+|  FR2 Gestione della topologia | Creazione, aggiornamento, eliminazione di reti, gateway e sensori. |
+| FR3 Raccolta e archiviazione delle misurazioni | Acquisizione dei dati dai sensori. Archiviazione dati |
+| FR4 Analisi dei dati e rilevamento anomalie| Calcolo della media (μ) e varianza (σ²) delle misurazioni. Identificazione di outlier con soglie.|
+| F5 Accesso ai dati | Consultazione delle misure da parte degli utenti autorizzati.|
 
 ## Non Functional Requirements
 
@@ -120,10 +123,11 @@ I viewer rappresentano i clienti che usufruiscono del servizio(UNCEM Piemonte, e
 
 |   ID    | Type (efficiency, reliability, ..) | Description | Refers to |
 | :-----: | :--------------------------------: | :---------: | :-------: |
-|  NFR1   |                                    |             |           |
-|  NFR2   |                                    |             |           |
-|  NFR3   |                                    |             |           |
-| NFRx .. |                                    |             |           |
+|  NFR1   |      Affidabilità   | Non più di 6 misurazioni perse per sensore all’anno. Meccanismi di ritrasmissione in caso di errore nella ricezione dati. Il sistema deve supportare più reti e numerosi dispositivi senza degradare le prestazioni.     |           |
+|  NFR2   |        Sicurezza       |    Accesso regolato tramite autenticazione e autorizzazione. Comunicazione sicura tra gateway e server. |           |
+|  NFR3   |     Portability      |  Compatibilità con diversi tipi di sensori e protocolli di comunicazione. |           |
+| NF4  |   Efficiency          | Acquisizione dei dati dai sensori ogni 10 minuti. |           |
+|NF5 | Manutenzione |Minimizzazione dello sforzo nella modifica del software e nella correzione di anomalie di sistema||
 
 # Use case diagram and use cases
 
