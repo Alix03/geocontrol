@@ -39,21 +39,42 @@ Version: V1 - description of Geocontrol as described in the swagger
 GeoControl is a software system designed for monitoring physical and environmental variables in various contexts: from hydrogeological analyses of mountain areas to the surveillance of historical buildings, and even the control of internal parameters (such as temperature or lighting) in residential or working environments.
 
 # Business Model
-ciao
+
+Per rendere il sistema sostenibile e scalabile, la soluzione scelta  è stata quella di combinare Public-Private Partnership (PPP), SaaS e Vendita Diretta.
+In questo modo, si copre il finanziamento iniziale con fondi pubblici e si garantiscono entrate continue con il SaaS, lasciando ai clienti la scelta tra acquistare o noleggiare i sensori.
+
+1 Fase Iniziale: Finanziamento Pubblico (PPP)
+
+L’Unione delle Comunità Montane del Piemonte finanzia lo sviluppo iniziale.
+In cambio, l’ente pubblico riceve una licenza perpetua per l’uso del software.
+Il progetto nasce senza rischio finanziario per GeoControl.
+
+2 Fase di Espansione: SaaS + Vendita Diretta 
+
+I clienti pagano un abbonamento che include l’acquisizione dei sensori e gateway direttamente.
 
 # Stakeholders
 
 | Stakeholder name | Description |
 | :--------------: | :---------: |
-| Stakeholder x..  |             |
+| UNCEM Piemonte | Committente, in quanto interessata alla gestione dello stato idrogeologico dei suoi territori  |
+| Entità pubbliche che richiedono monitoraggio continuo dei parametri fisici | Gestione delle analisi idrogeologiche delle aree o sorveglianza  degli edifici storici |
+| Entità private che richiedono monitoraggio continuo dei parametri fisici | Controllo dei parametri interni (come temperatura o luminosità) in ambienti residenziali o industriali |
+| Fornitori di gateway e sensori | Forniscono i dispositivi fisici che geocontrol utilizza |
+| Competitors | Implicato nel fornire soluzioni nella stessa nicchia di mercato |
+| Geocontrol office | Responsabili per il design, la gestione e lo sviluppo del sistema | 
+| Residenti nelle aree monitorate | Beneficiano indirettamente del monitoraggio del territorio di cui risiedono | 
+| Servizio di pagamento | Offre il servizio per gestire le transazioni per l'acquisto delle license e del servizio | 
+
 
 # Context Diagram and interfaces
 
 ## Context Diagram
 
-\<Define here Context diagram using UML use case diagram>
+![Context diagram](./images/Context.png)
 
-\<actors are a subset of stakeholders>
+Admin e operator appartengono al Geocontrol Office.
+I viewer rappresentano i clienti che usufruiscono del servizio(UNCEM Piemonte, entità pubbliche e private)
 
 ## Interfaces
 
