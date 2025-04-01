@@ -132,9 +132,27 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |          FR2.4.2 Eliminazione sensore          |                                                                     Eliminazione di un sensore                                                                      |
 |      FR2.4.3 Aggiunta sensore al Gateway       |                                                              Associazione di un sensore al suo gateway                                                              |
 |      FR2.4.4 Rimozione Sensor dal Gateway      |                                                                Rimozione di un sensore da un gateway                                                                |
-| FR3 Raccolta e archiviazione delle misurazioni |                                                        Acquisizione dei dati dai sensori. Archiviazione dati                                                        |
-|  FR4 Analisi dei dati e rilevamento anomalie   |                                  Calcolo della media (μ) e varianza (σ²) delle misurazioni. Identificazione di outlier con soglie.                                  |
-|               F5 Accesso ai dati               |                                                    Consultazione delle misure da parte degli utenti autorizzati.                                                    |
+| FR3 Raccolta e archiviazione delle misurazioni |                                                        Acquisizione dei dati dai sensori. Archiviazione dati                                                        |                                  |
+|FR3.1 Acquisizione dati | Acquisizione dei dati trasmessi dai gateway |
+|FR3.1.1 Associazione misurazione sensore| Associazione della misurazione al corrispondente sensore|
+|FR3.1.2 Conversione timestamp| Conversione dal timestap locale del sensore a UTC+0 |
+|FR3.3 Archiviazione dati | Memorizzazione dei dati convertiti nel sistema(?) |
+|  FR4 Analisi dei dati e rilevamento anomalie   |                                  Calcolo della media (μ) e varianza (σ²) delle misurazioni. Identificazione di outlier con soglie.|
+|FR4.1 Calcolo media (μ)| Calcolo della media delle misurazioni in un dato arco di tempo|
+|FR4.2 Calcolo varianza (σ²)| Calcolo della varianza delle misurazioni in un dato arco di tempo|
+|FR4.3 Calcolo soglie | Calcolo delle soglie (superiore e inferiore) per identificare potenziali valori anomali|
+|FR4.3.1 Soglia superiore |sogliaSuperiore = μ + 2σ
+|FR4.3.2 Soglia inferiore | sogliaInferiore = μ - 2σ|
+|FR4.4 Identificazione outlier| Un valore viene contrassegnato come anomalo se è maggiore della soglia superiore o minore della soglia inferiore|
+|   F5 Accesso ai dati (Tabellina come progetto vecchio?)             |    L'utente può svolgere operazioni differenti sui dati a seconda del suo ruolo (Operator, Viewer,Admin)|
+|FR5.1 Visualizzazione topologia| Admin,Operator, Viewer |
+|FR5.2 Visualizzazione dati utente| Admin,Operator |
+|FR5.3 Modifica topologia| Admin,Operator |
+|FR5.4 Operazione sugli utenti| Admin|
+|FR5.5 Visualizzazione dati sensori| Admin,Operator,Viewer|
+|FR5.5.1 Conversione timestamp|Conversione da UTC+0 a timestamp locale prima della visualizzazione|
+
+
 
 ## Non Functional Requirements
 
