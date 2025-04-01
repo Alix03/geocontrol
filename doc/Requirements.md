@@ -80,7 +80,6 @@ I viewer rappresentano i clienti che usufruiscono del servizio(UNCEM Piemonte, e
 
 \<describe here each interface in the context diagram>
 
-\<GUIs will be described graphically in a separate document>
 
 |   Actor   | Logical Interface | Physical Interface |
 | :-------: | :---------------: | :----------------: |

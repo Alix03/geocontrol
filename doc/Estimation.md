@@ -28,7 +28,6 @@ Consider the GeoControl project as described in the swagger, assume that you are
 | component name       | Estimated effort (person hours) |
 | -------------------- | ------------------------------- |
 | requirement document |                                 |
-| GUI prototype        |                                 |
 | design document      |                                 |
 | code                 |                                 |
 | unit tests           |                                 |
