@@ -107,7 +107,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |                       ID                       |                                                                             Description                                                                             |
 | :--------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|      FR1       | Autenticazione e gestione utenti.|
+|      FR1      | Autenticazione e gestione utenti.|
 |                  FR1.1                   |                                                          Login.|
 |                  FR1.2                   |      Logout.                                                                                                                             |
 |            FR 1.3              |    Gestione Account                                                                                                                 |
@@ -140,14 +140,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |FR4.3.1 Soglia superiore |sogliaSuperiore = μ + 2σ
 |FR4.3.2 Soglia inferiore | sogliaInferiore = μ - 2σ|
 |FR4.4 Identificazione outlier| Un valore viene contrassegnato come anomalo se è maggiore della soglia superiore o minore della soglia inferiore|
-|   F5 Accesso ai dati (Tabellina come progetto vecchio?)             |    L'utente può svolgere operazioni differenti sui dati a seconda del suo ruolo (Operator, Viewer,Admin)|
-|FR5.1 Visualizzazione topologia| Admin,Operator, Viewer |
-|FR5.2 Visualizzazione dati utente| Admin,Operator |
-|FR5.3 Modifica topologia| Admin,Operator |
-|FR5.4 Operazione sugli utenti| Admin|
-|FR5.5 Visualizzazione dati sensori| Admin,Operator,Viewer|
-|FR5.5.1 Conversione timestamp|Conversione da UTC+0 a timestamp locale prima della visualizzazione|
-
 
 
 ## Non Functional Requirements
