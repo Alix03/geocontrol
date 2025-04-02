@@ -107,7 +107,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |                       ID                       |                                                                             Description                                                                             |
 | :--------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|      FR1      | Autenticazione e gestione utenti.|
+|      **FR1**      | ** Autenticazione e gestione utenti.** |
 |                  FR1.1                   |                                                          Login.|
 |                  FR1.2                   |      Logout.                                                                                                                             |
 |            FR 1.3              |    Gestione Account                                                                                                                 |
@@ -115,7 +115,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |           FR1.3.2            |          Rimozione Account.                                                                     |
 |           FR1.3.3            |       Modifica Account.                                                                                    |
 |          FR1.3.4        |     Visualizzazione Account.                                   |
-|          FR2          |     Gestione Topologia                                                   |
+|          **FR2**          |     **Gestione** Topologia                                                   |
 |            FR2.1          |      Gestione Gateway                                                                 |
 |FR2.1.1| Creazione Gateway|
 |FR2.1.2| Modifica Gateway|
@@ -138,7 +138,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |FR2.3.5.4|Rimozione sensore al Gateway|
 |FR2.3.5.5|Aggiunta associazione tra Gateway|
 |FR2.3.5.6|Rimozione associazione tra Gateway||
-| FR3  |         Gestione dati         (?)                          |
+| **FR3**  |         **Gestione dati         (?)**                          |
 |FR3.1  | Raccolta dei dati trasmessi dai gateway |
 |FR3.1.1 | Associazione della misurazione al corrispondente sensore|
 |FR3.1.2 | Conversione dal timestap locale del sensore a UTC+0 |
@@ -146,7 +146,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |FR3.3| Visualizzazione dati|
 |FR3.4|Inserimento dati|
 |FR3.5| Conversione timestamp da UTC a orario locale del viewer|
-|  FR4   |                        Analisi dei dati e rilevamento anomalie. Calcolo della media (μ) e varianza (σ²) delle misurazioni. Identificazione di outlier con soglie.|
+|  **FR4**   |                        **Analisi dei dati e rilevamento anomalie.** |
 |FR4.1 | Calcolo della media delle misurazioni in un dato arco di tempo|
 |FR4.2 | Calcolo della varianza delle misurazioni in un dato arco di tempo|
 |FR4.3  | Calcolo delle soglie (superiore e inferiore) per identificare potenziali valori anomali|
