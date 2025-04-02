@@ -107,32 +107,28 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |                       ID                       |                                                                             Description                                                                             |
 | :--------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|      FR1 Autenticazione e gestione utenti      | Login con credenziali (username e password). Generazione e gestione di token per l’autenticazione. Tre ruoli utente con permessi distinti: Admin, Operator, Viewer. |
-|                  FR1.1 Login                   |                                                          Sistema richiede credenziali di accesso (user/pw)                                                          |
-|           FR1.1.1 Generazione Token            |                                             Generazione del token da includere nell'header per le richieste successive                                              |
-|                  FR1.2 Logout                  |                                                                     L'account viene scollegato                                                                      |
-|            FR 1.3 Gestione Account             |                                                           Account viene creato, monitorato e/o eliminato                                                            |
-|           FR1.3.1 Creazione Account            |                                                                  Account dell'utente viene creato                                                                   |
-|           FR 1.3.2 Rimozione Account           |                                                                        Account viene rimosso                                                                        |
-|           FR 1.3.3 Modifica Account            |                                                                      Account viene modificato                                                                       |
-|          FR 1.3.4 Assegnazione Ruolo           |                                     Assegnazione dell'account ad un ruolo tra Admin, Operator e Viewer (definizione permessi?)                                      |
-|          FR2 Gestione della topologia          |                                                 Creazione, aggiornamento, eliminazione di reti, gateway e sensori.                                                  |
-|            FR2.1 Creazione Network             |                                                                    Creazione di un nuovo network                                                                    |
-|            FR2.1.1 Assegnazione ID             |                                                             Associazione del network al suo ID univoco                                                              |
-|           FR2.2 Eliminazione Network           |                                                                       Rimozione di un network                                                                       |
-|             FR2.3 Modifica Network             |                                                                 Aggiunta e rimozione di un gateway                                                                  |
-|         FR2.3.1 Creazione del Gateway          |                                                                    Creazione di un nuovo Gateway                                                                    |
-|      FR2.3.2 Assegnazione MAC al Gateway       |                                                                 Assegnazione del Gateway al suo MAC                                                                 |
-|        FR2.3.3 Eliminazione del Gateway        |                                                                      Eliminazione del Gateway                                                                       |
-|     FR2.3.4 Aggiunta del Gateway a Network     |                                                               Associazione del gateway al suo network                                                               |
-|    FR2.3.5 Rimozione del Gateway a Network     |                                                                Rimozione di un gateway da un network                                                                |
-|             FR2.4 Modifica Gateway             |                                                      Creazione, rimozione e associazione di sensore al gateway                                                      |
-|           FR2.4.1 Creazione sensore            |                                                                    Creazione di un nuovo sensore                                                                    |
-|     FR2.4.1.1 Assegnazione MAC al sensore      |                                                                 Assegnazione del sensore al suo MAC                                                                 |
-|          FR2.4.2 Eliminazione sensore          |                                                                     Eliminazione di un sensore                                                                      |
-|      FR2.4.3 Aggiunta sensore al Gateway       |                                                              Associazione di un sensore al suo gateway                                                              |
-|      FR2.4.4 Rimozione Sensor dal Gateway      |                                                                Rimozione di un sensore da un gateway                                                                |
-| FR3 Raccolta e archiviazione delle misurazioni |                                                        Acquisizione dei dati dai sensori. Archiviazione dati                                                        |                                  |
+|      FR1       | Autenticazione e gestione utenti.|
+|                  FR1.1                   |                                                          Login.|
+|                  FR1.2                   |      Logout.                                                                                                                             |
+|            FR 1.3              |    Gestione Account                                                                                                                 |
+|           FR1.3.1             | Creazione Account.                                                      |
+|           FR 1.3.2            |          Rimozione Account.                                                                     |
+|           FR 1.3.3            |       Modifica Account.                                                                                    |
+|          FR 1.3.4        |     Assegnazione dell'account ad un ruolo tra Admin, Operator e Viewer (definizione permessi?)                                      |
+|          FR2          |     Gestione della topologia                                                     |
+|            FR2.1          |      Creazione Network.                                                                 |
+|           FR2.2            |         Eliminazione Network.                                                              |
+|             FR2.3              |    Modifica Network.                                                                                                                              |
+|         FR2.3.1           |                                                                    Creazione di Gateway.                                                                     |
+|        FR2.3.3         |   Eliminazione del Gateway                                            |
+|     FR2.3.4      |           Aggiunta del Gateway a Network                                                                                |
+|    FR2.3.5      |    Rimozione del Gateway a Network                                                              |
+|             FR2.4              |     Modifica Gateway                                                  |
+|           FR2.4.1             |           Creazione sensore                                                   |
+|          FR2.4.2          |           Eliminazione sensore                                                      |
+|      FR2.4.3 y       |            Aggiunta sensore al Gateway                                                     |
+|      FR2.4.4       |        Rimozione sensore dal Gateway                                      |
+| FR3  |         Raccolta e archiviazione delle misurazioni                                   |
 |FR3.1 Acquisizione dati | Acquisizione dei dati trasmessi dai gateway |
 |FR3.1.1 Associazione misurazione sensore| Associazione della misurazione al corrispondente sensore|
 |FR3.1.2 Conversione timestamp| Conversione dal timestap locale del sensore a UTC+0 |
