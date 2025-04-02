@@ -111,35 +111,48 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |                  FR1.1                   |                                                          Login.|
 |                  FR1.2                   |      Logout.                                                                                                                             |
 |            FR 1.3              |    Gestione Account                                                                                                                 |
-|           FR1.3.1             | Creazione Account.                                                      |
-|           FR 1.3.2            |          Rimozione Account.                                                                     |
-|           FR 1.3.3            |       Modifica Account.                                                                                    |
-|          FR 1.3.4        |     Assegnazione dell'account ad un ruolo tra Admin, Operator e Viewer (definizione permessi?)                                      |
-|          FR2          |     Gestione della topologia                                                     |
-|            FR2.1          |      Creazione Network.                                                                 |
-|           FR2.2            |         Eliminazione Network.                                                              |
-|             FR2.3              |    Modifica Network.                                                                                                                              |
-|         FR2.3.1           |                                                                    Creazione di Gateway.                                                                     |
-|        FR2.3.3         |   Eliminazione del Gateway                                            |
-|     FR2.3.4      |           Aggiunta del Gateway a Network                                                                                |
-|    FR2.3.5      |    Rimozione del Gateway a Network                                                              |
-|             FR2.4              |     Modifica Gateway                                                  |
-|           FR2.4.1             |           Creazione sensore                                                   |
-|          FR2.4.2          |           Eliminazione sensore                                                      |
-|      FR2.4.3 y       |            Aggiunta sensore al Gateway                                                     |
-|      FR2.4.4       |        Rimozione sensore dal Gateway                                      |
-| FR3  |         Raccolta e archiviazione delle misurazioni                                   |
-|FR3.1 Acquisizione dati | Acquisizione dei dati trasmessi dai gateway |
-|FR3.1.1 Associazione misurazione sensore| Associazione della misurazione al corrispondente sensore|
-|FR3.1.2 Conversione timestamp| Conversione dal timestap locale del sensore a UTC+0 |
-|FR3.3 Archiviazione dati | Memorizzazione dei dati convertiti nel sistema(?) |
-|  FR4 Analisi dei dati e rilevamento anomalie   |                                  Calcolo della media (μ) e varianza (σ²) delle misurazioni. Identificazione di outlier con soglie.|
-|FR4.1 Calcolo media (μ)| Calcolo della media delle misurazioni in un dato arco di tempo|
-|FR4.2 Calcolo varianza (σ²)| Calcolo della varianza delle misurazioni in un dato arco di tempo|
-|FR4.3 Calcolo soglie | Calcolo delle soglie (superiore e inferiore) per identificare potenziali valori anomali|
-|FR4.3.1 Soglia superiore |sogliaSuperiore = μ + 2σ
-|FR4.3.2 Soglia inferiore | sogliaInferiore = μ - 2σ|
-|FR4.4 Identificazione outlier| Un valore viene contrassegnato come anomalo se è maggiore della soglia superiore o minore della soglia inferiore|
+|           FR1.3.1             | Creazione Account e ssegnazione dell'account ad un ruolo tra Admin, Operator e Viewer                                                      |
+|           FR1.3.2            |          Rimozione Account.                                                                     |
+|           FR1.3.3            |       Modifica Account.                                                                                    |
+|          FR1.3.4        |     Visualizzazione Account.                                   |
+|          FR2          |     Gestione Topologia                                                   |
+|            FR2.1          |      Gestione Gateway                                                                 |
+|FR2.1.1| Creazione Gateway|
+|FR2.1.2| Modifica Gateway|
+|FR2.1.3| Eliminazione Gateway|
+|FR2.1.4| Visualizzazione Gateway|
+|FR2.2| Gestione Sensori|
+|FR2.2.1| Creazione Sensori|
+|FR2.2.2| Modifica Sensori|
+|FR2.2.3| Eliminazione Sensori|
+|FR2.2.4| Visualizzazione Sensori|
+|FR2.3| Gestione Topologia|
+|FR2.3.1| Creazione Network|
+|FR2.3.2| Modifica Network|
+|FR2.3.3| Eliminazione Network|
+|FR2.3.4| Visualizzazione Network|
+|FR2.3.5| Associazioni|
+|FR2.3.5.1|Aggiunta del Gateway a Network|
+|FR2.3.5.2|Rimozione del Gateway a Network|
+|FR2.3.5.3|Aggiunta sensore al Gateway|
+|FR2.3.5.4|Rimozione sensore al Gateway|
+|FR2.3.5.5|Aggiunta associazione tra Gateway|
+|FR2.3.5.6|Rimozione associazione tra Gateway||
+| FR3  |         Gestione dati         (?)                          |
+|FR3.1  | Raccolta dei dati trasmessi dai gateway |
+|FR3.1.1 | Associazione della misurazione al corrispondente sensore|
+|FR3.1.2 | Conversione dal timestap locale del sensore a UTC+0 |
+|FR3.2  | Archiviazione dei dati convertiti nel sistema |
+|FR3.3| Visualizzazione dati|
+|FR3.4|Inserimento dati|
+|FR3.5| Conversione timestamp da UTC a orario locale del viewer|
+|  FR4   |                        Analisi dei dati e rilevamento anomalie. Calcolo della media (μ) e varianza (σ²) delle misurazioni. Identificazione di outlier con soglie.|
+|FR4.1 | Calcolo della media delle misurazioni in un dato arco di tempo|
+|FR4.2 | Calcolo della varianza delle misurazioni in un dato arco di tempo|
+|FR4.3  | Calcolo delle soglie (superiore e inferiore) per identificare potenziali valori anomali|
+|FR4.3.1  |Calcolo sogliaSuperiore = μ + 2σ
+|FR4.3.2  | Calcolo sogliaInferiore = μ - 2σ|
+|FR4.4 | Identificazione outlier |
 
 
 ## Non Functional Requirements
