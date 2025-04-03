@@ -107,52 +107,64 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |                       ID                       |                                                                             Description                                                                             |
 | :--------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|      **FR1**      | ** Autenticazione e gestione utenti.** |
-|                  FR1.1                   |                                                          Login.|
-|                  FR1.2                   |      Logout.                                                                                                                             |
-|            FR 1.3              |    Gestione Account                                                                                                                 |
-|           FR1.3.1             | Creazione Account e ssegnazione dell'account ad un ruolo tra Admin, Operator e Viewer                                                      |
-|           FR1.3.2            |          Rimozione Account.                                                                     |
-|           FR1.3.3            |       Modifica Account.                                                                                    |
-|          FR1.3.4        |     Visualizzazione Account.                                   |
-|          **FR2**          |     **Gestione** Topologia                                                   |
-|            FR2.1          |      Gestione Gateway                                                                 |
-|FR2.1.1| Creazione Gateway|
-|FR2.1.2| Modifica Gateway|
-|FR2.1.3| Eliminazione Gateway|
-|FR2.1.4| Visualizzazione Gateway|
-|FR2.2| Gestione Sensori|
-|FR2.2.1| Creazione Sensori|
-|FR2.2.2| Modifica Sensori|
-|FR2.2.3| Eliminazione Sensori|
-|FR2.2.4| Visualizzazione Sensori|
-|FR2.3| Gestione Topologia|
-|FR2.3.1| Creazione Network|
-|FR2.3.2| Modifica Network|
-|FR2.3.3| Eliminazione Network|
-|FR2.3.4| Visualizzazione Network|
-|FR2.3.5| Associazioni|
-|FR2.3.5.1|Aggiunta del Gateway a Network|
-|FR2.3.5.2|Rimozione del Gateway a Network|
-|FR2.3.5.3|Aggiunta sensore al Gateway|
-|FR2.3.5.4|Rimozione sensore al Gateway|
-|FR2.3.5.5|Aggiunta associazione tra Gateway|
-|FR2.3.5.6|Rimozione associazione tra Gateway||
-| **FR3**  |         **Gestione dati         (?)**                          |
-|FR3.1  | Raccolta dei dati trasmessi dai gateway |
+|      **FR1**      | **Autenticazione e gestione utenti** |
+|                  FR1.1                   |                                                          Login|
+|FR1.1.1| Rilascio token di accesso|
+|                  FR1.2                   |      Logout                                                                                                                            |
+|            FR1.3              |    Gestione Account (Admin, Operator, Viewer)                                                                                                                 |
+|           FR1.3.1             | Creazione Account e assegnazione ruolo (Admin, Operator, Viewer)                                              |
+|           FR1.3.2            |          Rimozione Account                                                                     |
+|           FR1.3.3            |       Modifica Account                                                                                    |
+|          FR1.3.4        |     Visualizzazione Account         specifico
+|FR1.3.5| Visualizzazione elenco account|                         |
+|          **FR2**          |     **Gestione Topologia**                                                   |
+|            FR2.1          |      Gestione Network                                                                 |
+|FR2.1.1| Creazione Network|
+|FR2.1.2| Modifica Network|
+|FR2.1.3| Eliminazione Network|
+|FR2.1.4| Visualizzazione di tutti i Network|
+|FR2.1.5| Visualizzazione di un Network specifico|
+|FR2.2| Gestione Gateway|
+|FR2.2.1| Creazione Gateway|
+|FR2.2.2| Modifica Gateway|
+|FR2.2.3| Eliminazione Gateway|
+|FR2.2.4| Visualizzazione di un Gateway specifico|
+|FR2.2.5| Visualizzazione di tutti i Gateway associati a un  Network specifico|
+|FR2.3| Gestione Sensore|
+|FR2.3.1| Creazione Sensore|
+|FR2.3.2| Modifica Sensore|
+|FR2.3.3| Eliminazione Sensore|
+|FR2.3.4| Visualizzazione Sensore specifico|
+|FR2.3.5| Visualizzazione di tutti i Sensori associati a un Gateway specifico |
+|FR2.4| Associazioni|
+|FR2.4.1|Aggiunta del Gateway a Network|
+|FR2.4.2|Rimozione del Gateway da Network|
+|FR2.4.3|Aggiunta sensore al Gateway|
+|FR2.4.4|Rimozione sensore dal Gateway|
+|FR2.4.5|Aggiunta associazione tra Gateway|
+|FR2.4.6|Rimozione associazione tra Gateway||
+| **FR3**  |         **Gestione          Misurazioni**                          |
+|FR3.1  | Raccolta delle misurazioni trasmesse dai gateway |
 |FR3.1.1 | Associazione della misurazione al corrispondente sensore|
-|FR3.1.2 | Conversione dal timestap locale del sensore a UTC+0 |
+|FR3.1.2 | Conversione dal timestamp locale del sensore a UTC |
 |FR3.2  | Archiviazione dei dati convertiti nel sistema |
-|FR3.3| Visualizzazione dati|
-|FR3.4|Inserimento dati|
+|FR3.3| Visualizzazione misurazioni|
+|FR3.3.1| Visualizzazione misurazioni per un insieme di sensori di un Network specifico |
+|FR3.3.2|Visualizzazione misurazioni per un Sensore specifico|
+|FR3.4|Inserimento misurazioni|
 |FR3.5| Conversione timestamp da UTC a orario locale del viewer|
-|  **FR4**   |                        **Analisi dei dati e rilevamento anomalie.** |
-|FR4.1 | Calcolo della media delle misurazioni in un dato arco di tempo|
-|FR4.2 | Calcolo della varianza delle misurazioni in un dato arco di tempo|
+|  **FR4**   |                        **Analisi dei dati e rilevamento anomalie** |
+|FR4.1 | Calcolo della media delle misurazioni in un dato intervallo temporale|
+|FR4.2 | Calcolo della varianza delle misurazioni in un dato intervallo temporale|
 |FR4.3  | Calcolo delle soglie (superiore e inferiore) per identificare potenziali valori anomali|
 |FR4.3.1  |Calcolo sogliaSuperiore = μ + 2σ
 |FR4.3.2  | Calcolo sogliaInferiore = μ - 2σ|
 |FR4.4 | Identificazione outlier |
+|FR4.5|Visualizzazione statistiche|
+|FR4.5.1| Visualizzazione statistiche per un insieme di Sensori di un Network specifico|
+|FR4.5.2|Visualizzazione statistiche per uno specifico sensore|
+|FR4.5.3| Visualizzazione outliers per un insieme di Sensori di un Network specifico |
+|FR4.5.4|Visualizzazione outliers per uno specifico sensore |
 
 
 ## Non Functional Requirements
@@ -161,11 +173,14 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |  ID  | Type (efficiency, reliability, ..) |                                                                                                     Description                                                                                                      | Refers to |
 | :--: | :--------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------: |
-| NFR1 |            Affidabilità            | Non più di 6 misurazioni perse per sensore all’anno. Meccanismi di ritrasmissione in caso di errore nella ricezione dati. Il sistema deve supportare più reti e numerosi dispositivi senza degradare le prestazioni. |           |
-| NFR2 |             Sicurezza              |                                                         Accesso regolato tramite autenticazione e autorizzazione. Comunicazione sicura tra gateway e server.                                                         |           |
-| NFR3 |            Portability             |                                                                       Compatibilità con diversi tipi di sensori e protocolli di comunicazione.                                                                       |           |
-| NF4  |             Efficiency             |                                                                                  Acquisizione dei dati dai sensori ogni 10 minuti.                                                                                   |           |
-| NF5  |            Manutenzione            |                                                          Minimizzazione dello sforzo nella modifica del software e nella correzione di anomalie di sistema                                                           |           |
+| NFR1 | Affidabilità | Non più di 6 misurazioni perse per sensore all’anno | FR3 |
+| NFR2 | Affidabilità | Implementazione di meccanismi di ritrasmissione automatica in caso di errore nella ricezione dei dati | FR3 |
+| NFR3 | Prestazioni | Il sistema deve garantire prestazioni stabili anche in presenza di molteplici reti e dispositivi | FR3 |
+| NFR4 | Sicurezza | L’accesso al sistema deve essere regolato tramite autenticazione e autorizzazione basata su ruoli | FR1 |
+| NFR5 | Sicurezza | La comunicazione tra gateway e server deve avvenire su canali sicuri  | FR1 |
+| NFR6 | Portabilità | Compatibilità con diversi modelli di sensori e protocolli di comunicazione, senza necessità di modifiche sostanziali al software. | FR2, FR3 |
+| NFR7 | Efficienza | Acquisizione e registrazione dei dati dei sensori ogni 10 minuti. | FR3.1 |
+| NFR8 | Manutenibilità | Il sistema deve essere modulare e facilmente estendibile, consentendo interventi di aggiornamento o correzione senza compromettere il funzionamento globale. | Tutti |
 
 # Use case diagram and use cases
 
