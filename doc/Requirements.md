@@ -190,47 +190,87 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 \<next describe here each use case in the UCD>
 
-### Use case 1, UC1
+### Use Case 10, Creazione Network (UC10)
 
-| Actors Involved  |                                                                      |
-| :--------------: | :------------------------------------------------------------------: |
-|   Precondition   | \<Boolean expression, must evaluate to true before the UC can start> |
-|  Post condition  |  \<Boolean expression, must evaluate to true after UC is finished>   |
-| Nominal Scenario |         \<Textual description of actions executed by the UC>         |
-|     Variants     |                      \<other normal executions>                      |
-|    Exceptions    |                        \<exceptions, errors >                        |
+| Actors Involved  |           Admin, Operator            |
+| :--------------: | :----------------------------------: |
+|   Precondition   |       Utente autenticato con token      |
+|  Post condition  |     La rete è creata nel sistema     |
+| Nominal Scenario |            Scenario 10.1             |
+|     Variants     |                None                  |
+|    Exceptions    |     Scenario 10.2, Scenario 10.3, Scenario 10.4, Scenario 10.5, Scenario 10.6     |
 
-##### Scenario 1.1
+#### Scenario 10.1
 
-\<describe here scenarios instances of UC1>
+|  Scenario 10.1  |                               Creazione rete con successo `(Code 201)`                               |
+| :-------------: | :---------------------------------------------------------------------------------------: |
+|  Precondition   |                           Utente autenticato come Admin o Operator                           |
+| Post condition  |                      Rete registrata e visibile nel sistema                          |
+|     Step#       |                                    Description                                            |
+|        1        |                      Utente accede alla sezione "Gestione Reti" dell’interfaccia               |
+|        2        |                                Utente seleziona "Crea nuova rete"                              |
+|        3        |      Utente inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...)   |
+|        4        |                                Utente invia il modulo di creazione                             |
+|        5        |        Il sistema valida i dati, non restituisce nessun errore. Registra la rete e restituisce `201 Created`   |
+#### Scenario 10.2
 
-\<a scenario is a sequence of steps that corresponds to a particular execution of one use case>
+|  Scenario 10.2  |                            Dati mancanti o input non valido `(400 Invalid input data )`                          |
+| :-------------: | :----------------------------------------------------------------------------------------: |
+|  Precondition   |               Utente autenticato ma il modulo è incompleto o malformato                      |
+| Post condition  |                             Nessuna rete viene creata                                     |
+|     Step#       |                                    Description                                             |
+|        1        | Utente apre il modulo ma omette il campo obbligatorio `code`                                   |
+|        2        | Utente invia il modulo di creazione                                                      |
+|        3        | Il sistema valida i dati, rileva la mancanza del campo `code` e restituisce il codice di errore `400 Bad Request`|
 
-\<a scenario is a more formal description of a story>
 
-\<only relevant scenarios should be described>
+#### Scenario 10.3
 
-|  Scenario 1.1  |                                                                            |
-| :------------: | :------------------------------------------------------------------------: |
-|  Precondition  | \<Boolean expression, must evaluate to true before the scenario can start> |
-| Post condition |  \<Boolean expression, must evaluate to true after scenario is finished>   |
-|     Step#      |                                Description                                 |
-|       1        |                                                                            |
-|       2        |                                                                            |
-|      ...       |                                                                            |
+|  Scenario 10.3  |                       Token assente o non valido `401 Unauthorized`                     |
+| :-------------: | :----------------------------------------------------------------------------------------: |
+|  Precondition   | L'Utente non ha effettuato il login oppure il token è assente, scaduto o malformato          |
+| Post condition  | Nessuna rete viene creata                                                                 |
+|     Step#       | Description                                                                                |
+|        1        | L'utente tenta di inviare una richiesta  per creare una rete                                 |
+|        2        | La richiesta è priva di header `Authorization` oppure il token ha un formato non valido   |
+|        3        | Il sistema intercetta la richiesta, verifica il token e lo considera invalido                 |
+|        4        | Il sistema restituisce il codice di errore `401 Unauthorized`   |
 
-##### Scenario 1.2
 
-##### Scenario 1.x
+#### Scenario 10.4
 
-### Use case 2, UC2
+|  Scenario 10.4  |                        Ruolo non autorizzato `(403 Forbidden)`                                 |
+| :-------------: | :----------------------------------------------------------------------------------------: |
+|  Precondition   | L'utente è autenticato correttamente con un token valido, ma ha ruolo Viewer                     |
+| Post condition  | Nessuna rete viene creata                                                                 |
+|     Step#       | Description                                                                                |
+|        1        | L'utente  accede all’interfaccia come Viewer e apre il modulo “Crea nuova rete”                   |
+|        2        | L'utente compila i campi e invia la richiesta per la creazione di una nuova rete                                                |
+|        3        | Il sistema verifica che il token è valido                                                    |
+|        4        | Il sistema controlla il ruolo utente e rileva i permessi insufficienti                         |
+|        5        | Il sistama restituisce il codice di errore `(403 Forbidden)`              |
 
-..
+#### Scenario 10.5
 
-### Use case x, UCx
+|  Scenario 10.5 |                          Codice rete già esistente `(409 Confict)`                        |
+| :-------------: | :----------------------------------------------------------------------------------------: |
+|  Precondition   |                  Utente autenticato, ma il codice inserito è già registrato                  |
+| Post condition  |                             Nessuna rete viene creata                                     |
+|     Step#       |                                    Description                                             |
+|        1        | Utente compila il modulo con un codice già esistente                                  |
+|        2        | Utente  invia il modulo di creazione                                                    |
+|        3        | Il sistema valida i dati, rileva la duplicazione e restituisce il codice di errore `(409 Confict)`|
 
-..
+#### Scenario 10.5
 
+|  Scenario 10.6  |                                Errore interno del server `(500 Internal Server Error)`                             |
+| :-------------: | :----------------------------------------------------------------------------------------: |
+|  Precondition   | L’utente è autenticato, ma si verifica un errore inatteso lato server                     |
+| Post condition  | Nessuna rete viene creata                                                                 |
+|     Step#       | Description                                                                                |
+|        1        | L'utente compila il modulo correttamente e invia la richiesta                                    |
+|        2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server. |
+|        3        | Il sistema restituisce il codice di errore `(500 Internal Server Error)`     ||
 # Glossary
 
 \<use UML class diagram to define important terms, or concepts in the domain of the application, and their relationships>
