@@ -194,7 +194,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 | Actors Involved  |           Admin, Operator            |
 | :--------------: | :----------------------------------: |
-|   Precondition   |       Utente autenticato con token      |
+|   Precondition   |       L'utennte è autenticato con token      |
 |  Post condition  |     La rete è creata nel sistema     |
 | Nominal Scenario |            Scenario 10.1             |
 |     Variants     |                None                  |
@@ -204,23 +204,23 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |  Scenario 10.1  |                               Creazione rete con successo `(Code 201)`                               |
 | :-------------: | :---------------------------------------------------------------------------------------: |
-|  Precondition   |                           Utente autenticato come Admin o Operator                           |
-| Post condition  |                      Rete registrata e visibile nel sistema                          |
+|  Precondition   |                           L'utente è autenticato come Admin o Operator                           |
+| Post condition  |                      La rete viene creata ed è visibile nel sistema                          |
 |     Step#       |                                    Description                                            |
-|        1        |                      Utente accede alla sezione "Gestione Reti" dell’interfaccia               |
-|        2        |                                Utente seleziona "Crea nuova rete"                              |
-|        3        |      Utente inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...)   |
-|        4        |                                Utente invia il modulo di creazione                             |
-|        5        |        Il sistema valida i dati, non restituisce nessun errore. Registra la rete e restituisce `201 Created`   |
+|        1        |                      L'utenten accede alla sezione "Gestione Reti" dell’interfaccia               |
+|        2        |                                L'utente seleziona "Crea nuova rete"                              |
+|        3        |      L'utente inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...)   |
+|        4        |                                L'utente invia il modulo di creazione                             |
+|        5        |        Il sistema valida i dati, non restituisce nessun errore. Registra la rete e restituisce il codice `201 Created`   |
 #### Scenario 10.2
 
-|  Scenario 10.2  |                            Dati mancanti o input non valido `(400 Invalid input data )`                          |
+|  Scenario 10.2  |              Dati mancanti o input non valido `(400 Invalid input data )`                          |
 | :-------------: | :----------------------------------------------------------------------------------------: |
-|  Precondition   |               Utente autenticato ma il modulo è incompleto o malformato                      |
+|  Precondition   |               L'utente tente autenticato ma il modulo è incompleto o malformato                      |
 | Post condition  |                             Nessuna rete viene creata                                     |
 |     Step#       |                                    Description                                             |
-|        1        | Utente apre il modulo ma omette il campo obbligatorio `code`                                   |
-|        2        | Utente invia il modulo di creazione                                                      |
+|        1        | L'utente apre il modulo ma omette il campo obbligatorio `code`                                   |
+|        2        | L'utente invia il modulo di creazione                                                      |
 |        3        | Il sistema valida i dati, rileva la mancanza del campo `code` e restituisce il codice di errore `400 Bad Request`|
 
 
@@ -263,7 +263,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 10.5
 
-|  Scenario 10.6  |                                Errore interno del server `(500 Internal Server Error)`                             |
+|  Scenario 10.6  |           Errore interno del server `(500 Internal Server Error)`                             |
 | :-------------: | :----------------------------------------------------------------------------------------: |
 |  Precondition   | L’utente è autenticato, ma si verifica un errore inatteso lato server                     |
 | Post condition  | Nessuna rete viene creata                                                                 |
