@@ -203,74 +203,74 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 #### Scenario 10.1
 
 |  Scenario 10.1  |                               Creazione rete con successo `(Code 201)`                               |
-| :-------------: | :---------------------------------------------------------------------------------------: |
-|  Precondition   |                           L'utente è autenticato come Admin o Operator                           |
-| Post condition  |                      La rete viene creata ed è visibile nel sistema                          |
-|     Step#       |                                    Description                                            |
-|        1        |                      L'utenten accede alla sezione "Gestione Reti" dell’interfaccia               |
-|        2        |                                L'utente seleziona "Crea nuova rete"                              |
-|        3        |      L'utente inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...)   |
-|        4        |                                L'utente invia il modulo di creazione                             |
-|        5        |        Il sistema valida i dati, non restituisce nessun errore. Registra la rete e restituisce il codice `201 Created`   |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |                       L'utente è autenticato come Admin o Operator                                   |
+| Post condition  |                      La rete viene creata ed è visibile nel sistema                                 |
+|     Step#       |                                         Description                                                 |
+|       1         |             L'utenten accede alla sezione "Gestione Reti" dell’interfaccia                          |
+|       2         |                        L'utente seleziona "Crea nuova rete"                                          |
+|       3         |  L'utente inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...)          |
+|       4         |                        L'utente invia il modulo di creazione                                        |
+|       5         |     Il sistema valida i dati, non restituisce nessun errore. Registra la rete e restituisce il codice `201 Created` |
+
 #### Scenario 10.2
 
-|  Scenario 10.2  |              Dati mancanti o input non valido `(400 Invalid input data )`                          |
-| :-------------: | :----------------------------------------------------------------------------------------: |
-|  Precondition   |               L'utente tente autenticato ma il modulo è incompleto o malformato                      |
-| Post condition  |                             Nessuna rete viene creata                                     |
-|     Step#       |                                    Description                                             |
-|        1        | L'utente apre il modulo ma omette il campo obbligatorio `code`                                   |
-|        2        | L'utente invia il modulo di creazione                                                      |
-|        3        | Il sistema valida i dati, rileva la mancanza del campo `code` e restituisce il codice di errore `400 Bad Request`|
-
+|  Scenario 10.2  |                    Dati mancanti o input non valido `(400 Invalid input data )`                     |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |             L'utente tente autenticato ma il modulo è incompleto o malformato                       |
+| Post condition  |                             Nessuna rete viene creata                                               |
+|     Step#       |                                         Description                                                 |
+|       1         |             L'utente apre il modulo ma omette il campo obbligatorio `code`                          |
+|       2         |                           L'utente invia il modulo di creazione                                     |
+|       3         | Il sistema valida i dati, rileva la mancanza del campo `code` e restituisce il codice di errore `400 Bad Request` |
 
 #### Scenario 10.3
 
-|  Scenario 10.3  |                       Token assente o non valido `401 Unauthorized`                     |
-| :-------------: | :----------------------------------------------------------------------------------------: |
-|  Precondition   | L'Utente non ha effettuato il login oppure il token è assente, scaduto o malformato          |
-| Post condition  | Nessuna rete viene creata                                                                 |
-|     Step#       | Description                                                                                |
-|        1        | L'utente tenta di inviare una richiesta  per creare una rete                                 |
-|        2        | La richiesta è priva di header `Authorization` oppure il token ha un formato non valido   |
-|        3        | Il sistema intercetta la richiesta, verifica il token e lo considera invalido                 |
-|        4        | Il sistema restituisce il codice di errore `401 Unauthorized`   |
-
+|  Scenario 10.3  |                       Token assente o non valido `401 Unauthorized`                                 |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |   L'Utente non ha effettuato il login oppure il token è assente, scaduto o malformato              |
+| Post condition  |                             Nessuna rete viene creata                                               |
+|     Step#       |                                         Description                                                 |
+|       1         |                 L'utente tenta di inviare una richiesta  per creare una rete                        |
+|       2         | La richiesta è priva di header `Authorization` oppure il token ha un formato non valido            |
+|       3         |       Il sistema intercetta la richiesta, verifica il token e lo considera invalido                |
+|       4         |       Il sistema restituisce il codice di errore `401 Unauthorized`                                |
 
 #### Scenario 10.4
 
-|  Scenario 10.4  |                        Ruolo non autorizzato `(403 Forbidden)`                                 |
-| :-------------: | :----------------------------------------------------------------------------------------: |
-|  Precondition   | L'utente è autenticato correttamente con un token valido, ma ha ruolo Viewer                     |
-| Post condition  | Nessuna rete viene creata                                                                 |
-|     Step#       | Description                                                                                |
-|        1        | L'utente  accede all’interfaccia come Viewer e apre il modulo “Crea nuova rete”                   |
-|        2        | L'utente compila i campi e invia la richiesta per la creazione di una nuova rete                                                |
-|        3        | Il sistema verifica che il token è valido                                                    |
-|        4        | Il sistema controlla il ruolo utente e rileva i permessi insufficienti                         |
-|        5        | Il sistama restituisce il codice di errore `(403 Forbidden)`              |
+|  Scenario 10.4  |                        Ruolo non autorizzato `(403 Forbidden)`                                      |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |     L'utente è autenticato correttamente con un token valido, ma ha ruolo Viewer                   |
+| Post condition  |                             Nessuna rete viene creata                                               |
+|     Step#       |                                         Description                                                 |
+|       1         |     L'utente accede all’interfaccia come Viewer e apre il modulo “Crea nuova rete”                 |
+|       2         |        L'utente compila i campi e invia la richiesta per la creazione di una nuova rete            |
+|       3         |                    Il sistema verifica che il token è valido                                        |
+|       4         |       Il sistema controlla il ruolo utente e rileva i permessi insufficienti                       |
+|       5         |           Il sistema restituisce il codice di errore `(403 Forbidden)`                             |
 
 #### Scenario 10.5
 
-|  Scenario 10.5 |                          Codice rete già esistente `(409 Confict)`                        |
-| :-------------: | :----------------------------------------------------------------------------------------: |
-|  Precondition   |                  Utente autenticato, ma il codice inserito è già registrato                  |
-| Post condition  |                             Nessuna rete viene creata                                     |
-|     Step#       |                                    Description                                             |
-|        1        | Utente compila il modulo con un codice già esistente                                  |
-|        2        | Utente  invia il modulo di creazione                                                    |
-|        3        | Il sistema valida i dati, rileva la duplicazione e restituisce il codice di errore `(409 Confict)`|
+|  Scenario 10.5  |                          Codice rete già esistente `(409 Confict)`                                  |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |           Utente autenticato, ma il codice inserito è già registrato                                |
+| Post condition  |                             Nessuna rete viene creata                                               |
+|     Step#       |                                         Description                                                 |
+|       1         |             Utente compila il modulo con un codice già esistente                                    |
+|       2         |                      Utente invia il modulo di creazione                                            |
+|       3         | Il sistema valida i dati, rileva la duplicazione e restituisce il codice di errore `(409 Confict)` |
 
-#### Scenario 10.5
+#### Scenario 10.6
 
-|  Scenario 10.6  |           Errore interno del server `(500 Internal Server Error)`                             |
-| :-------------: | :----------------------------------------------------------------------------------------: |
-|  Precondition   | L’utente è autenticato, ma si verifica un errore inatteso lato server                     |
-| Post condition  | Nessuna rete viene creata                                                                 |
-|     Step#       | Description                                                                                |
-|        1        | L'utente compila il modulo correttamente e invia la richiesta                                    |
-|        2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server. |
-|        3        | Il sistema restituisce il codice di errore `(500 Internal Server Error)`     ||
+|  Scenario 10.6  |                    Errore interno del server `(500 Internal Server Error)`                          |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |              L’utente è autenticato, ma si verifica un errore inatteso lato server                  |
+| Post condition  |                             Nessuna rete viene creata                                               |
+|     Step#       |                                         Description                                                 |
+|       1         |          L'utente compila il modulo correttamente e invia la richiesta                              |
+|       2         |  Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server                |
+|       3         |       Il sistema restituisce il codice di errore `(500 Internal Server Error)`                      |
+
 # Glossary
 
 \<use UML class diagram to define important terms, or concepts in the domain of the application, and their relationships>
