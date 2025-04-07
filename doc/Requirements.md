@@ -194,7 +194,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 | Actors Involved  |           Admin, Operator            |
 | :--------------: | :----------------------------------: |
-|   Precondition   |       L'utennte è autenticato con token      |
+|   Precondition   |       L'utente è autenticato con token come Admin o Operator       |
 |  Post condition  |     La rete è creata nel sistema     |
 | Nominal Scenario |            Scenario 10.1             |
 |     Variants     |                None                  |
@@ -207,38 +207,38 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Precondition   |                       L'utente è autenticato come Admin o Operator                                   |
 | Post condition  |                      La rete viene creata ed è visibile nel sistema                                 |
 |     Step#       |                                         Description                                                 |
-|       1         |             L'utenten accede alla sezione "Gestione Reti" dell’interfaccia                          |
+|       1         |             L'utente accede alla sezione "Gestione Reti" dell’interfaccia                          |
 |       2         |                        L'utente seleziona "Crea nuova rete"                                          |
-|       3         |  L'utente inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...)          |
+|       3         |  L'utente inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...). Eventuali campi annidati Gateway o Sensor, se presenti, verranno ignorati.         |
 |       4         |                        L'utente invia il modulo di creazione                                        |
-|       5         |     Il sistema valida i dati, non restituisce nessun errore. Registra la rete e restituisce il codice `201 Created` |
+|       5         |    Il sistema valida i dati, registra la rete e restituisce il codice `201 Created` |
 
 #### Scenario 10.2
 
-|  Scenario 10.2  |                    Dati mancanti o input non valido `(400 Invalid input data )`                     |
+|  Scenario 10.2  |                    Dati mancanti o input non valido `(400 BadRequest)`                     |
 | :-------------: | :--------------------------------------------------------------------------------------------------: |
-|  Precondition   |             L'utente tente autenticato ma il modulo è incompleto o malformato                       |
+|  Precondition   |             L'utente è autenticato ma il modulo è incompleto o malformato                       |
 | Post condition  |                             Nessuna rete viene creata                                               |
 |     Step#       |                                         Description                                                 |
-|       1         |             L'utente apre il modulo ma omette il campo obbligatorio `code`                          |
+|       1         |             L’utente  omette uno o più campi obbligatori (ad esempio `code`) o inserisce valori non validi                          |
 |       2         |                           L'utente invia il modulo di creazione                                     |
-|       3         | Il sistema valida i dati, rileva la mancanza del campo `code` e restituisce il codice di errore `400 Bad Request` |
+|       3         | Il sistema valida i dati, rileva la mancanza del campo `code` e restituisce il codice di errore `400 BadRequest` |
 
 #### Scenario 10.3
 
-|  Scenario 10.3  |                       Token assente o non valido `401 Unauthorized`                                 |
+|  Scenario 10.3  |                       Token assente o non valido `(401 UnauthorizedError)`                                 |
 | :-------------: | :--------------------------------------------------------------------------------------------------: |
-|  Precondition   |   L'Utente non ha effettuato il login oppure il token è assente, scaduto o malformato              |
+|  Precondition   |   L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato              |
 | Post condition  |                             Nessuna rete viene creata                                               |
 |     Step#       |                                         Description                                                 |
 |       1         |                 L'utente tenta di inviare una richiesta  per creare una rete                        |
 |       2         | La richiesta è priva di header `Authorization` oppure il token ha un formato non valido            |
 |       3         |       Il sistema intercetta la richiesta, verifica il token e lo considera invalido                |
-|       4         |       Il sistema restituisce il codice di errore `401 Unauthorized`                                |
+|       4         |       Il sistema restituisce il codice di errore `401 UnauthorizedError`                                |
 
 #### Scenario 10.4
 
-|  Scenario 10.4  |                        Ruolo non autorizzato `(403 Forbidden)`                                      |
+|  Scenario 10.4  |                        Ruolo non autorizzato `(403 InsufficientRightsError)`                                      |
 | :-------------: | :--------------------------------------------------------------------------------------------------: |
 |  Precondition   |     L'utente è autenticato correttamente con un token valido, ma ha ruolo Viewer                   |
 | Post condition  |                             Nessuna rete viene creata                                               |
@@ -247,29 +247,281 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2         |        L'utente compila i campi e invia la richiesta per la creazione di una nuova rete            |
 |       3         |                    Il sistema verifica che il token è valido                                        |
 |       4         |       Il sistema controlla il ruolo utente e rileva i permessi insufficienti                       |
-|       5         |           Il sistema restituisce il codice di errore `(403 Forbidden)`                             |
+|       5         |           Il sistema restituisce il codice di errore `(403 InsufficientRightsError)`                             |
 
 #### Scenario 10.5
 
-|  Scenario 10.5  |                          Codice rete già esistente `(409 Confict)`                                  |
+|  Scenario 10.5  |                          Codice rete già esistente `(409 ConflictError)`                                  |
 | :-------------: | :--------------------------------------------------------------------------------------------------: |
-|  Precondition   |           Utente autenticato, ma il codice inserito è già registrato                                |
+|  Precondition   |           L'utente è autenticato, ma il codice inserito è già registrato                                |
 | Post condition  |                             Nessuna rete viene creata                                               |
 |     Step#       |                                         Description                                                 |
-|       1         |             Utente compila il modulo con un codice già esistente                                    |
-|       2         |                      Utente invia il modulo di creazione                                            |
-|       3         | Il sistema valida i dati, rileva la duplicazione e restituisce il codice di errore `(409 Confict)` |
+|       1         |             L'utente compila il modulo con un codice già esistente                                    |
+|       2         |                      L'utente invia il modulo di creazione                                            |
+|       3         | Il sistema valida i dati, rileva la duplicazione e restituisce il codice di errore `(409 ConflictError)` |
 
 #### Scenario 10.6
 
-|  Scenario 10.6  |                    Errore interno del server `(500 Internal Server Error)`                          |
+|  Scenario 10.6  |                    Errore interno del server `(500 InternalServerError)`                          |
 | :-------------: | :--------------------------------------------------------------------------------------------------: |
 |  Precondition   |              L’utente è autenticato, ma si verifica un errore inatteso lato server                  |
 | Post condition  |                             Nessuna rete viene creata                                               |
 |     Step#       |                                         Description                                                 |
 |       1         |          L'utente compila il modulo correttamente e invia la richiesta                              |
 |       2         |  Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server                |
-|       3         |       Il sistema restituisce il codice di errore `(500 Internal Server Error)`                      |
+|       3         |       Il sistema restituisce il codice di errore `(500 InternalServerError)`                      |
+
+### Use Case 11, Modifica Network (UC11)
+
+| Actors Involved  |           Admin, Operator            |
+| :--------------: | :----------------------------------: |
+|   Precondition   |       L'utente è autenticato con token come Admin o Operator       |
+|  Post condition  |     La rete viene aggiornata nel sistema     |
+| Nominal Scenario |            Scenario 11.1             |
+|     Variants     |                None                  |
+|    Exceptions    |     Scenario 11.2, Scenario 11.3, Scenario 11.4, Scenario 11.5, Scenario 11.6, Scenario 11.7 |
+
+#### Scenario 11.1
+
+|  Scenario 11.1  |                               Modifica rete con successo `(204 No Content)`                               |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |                       L'utente è autenticato come Admin o Operator                                   |
+| Post condition  |                      La rete viene aggiornata nel sistema                                            |
+|     Step#       |                                         Description                                                 |
+|       1         |             L'utente accede alla sezione "Gestione Reti" dell’interfaccia                           |
+|       2         |                        L'utente seleziona una rete da modificare                                     |
+|       3         |  L'utente modifica i campi `code`, `name`, `description` nel modulo.Eventuali campi annidati Gateway o Sensor vengono ignorati e non aggiornati                           |
+|       4         |                        L'utente invia il modulo di modifica della rete                                       |
+|       5         |     Il sistema valida i dati, aggiorna la rete e restituisce il codice `204 No Content`             |
+
+#### Scenario 11.2
+
+|  Scenario 11.2  |                    Dati mancanti o input non valido `(400 BadRequest)`                       |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |             L'utente è autenticato ma il modulo è incompleto o malformato                            |
+| Post condition  |                             Nessuna modifica viene applicata                                         |
+|     Step#       |                                         Description                                                 |
+|       1         |             L'utente omette uno o più campi obbligatori                       |
+|       2         |                           L'utente invia la richiesta di modifica della rete                                                 |
+|       3         | Il sistema valida i dati, rileva l’errore e restituisce `400 BadRequest`                            |
+
+#### Scenario 11.3
+
+|  Scenario 11.3  |                       Token assente o non valido `(401 UnauthorizedError)`                                |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |   L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato               |
+| Post condition  |                             Nessuna modifica viene applicata                                         |
+|     Step#       |                                         Description                                                 |
+|       1         |                 L'utente tenta di inviare una richiesta di modifica della rete senza un token valido                    |
+|       2         |       Il sistema intercetta la richiesta, verifica il token e lo considera invalido                |
+|       3         |       Il sistema restituisce il codice di errore `401 UnauthorizedError`                                |
+
+#### Scenario 11.4
+
+|  Scenario 11.4  |                        Ruolo non autorizzato `(403 InsufficientRightsError)`                                       |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |     L'utente è autenticato con token valido, ma ha ruolo Viewer                                     |
+| Post condition  |                             Nessuna modifica viene applicata                                         |
+|     Step#       |                                         Description                                                 |
+|       1         |     L'utente Viewer apre la sezione modifica rete                                                   |
+|       2         |     L'utente compila e invia la richiesta di modifica della rete                                                                 |
+|       3         |     Il sistema verifica il token e il ruolo, rileva i permessi insufficienti                          |
+|       4         |     Il sistema restituisce il codice di errore `403 InsufficientRightsError`                                      |
+
+#### Scenario 11.5
+
+|  Scenario 11.5  |                          Rete non trovata `(404 NotFoundError)`                                          |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |           L’utente inserisce un codice rete non esistente nel sistema                               |
+| Post condition  |                             Nessuna modifica viene applicata                                         |
+|     Step#       |                                         Description                                                 |
+|       1         |             L'utente seleziona o inserisce un codice rete errato                                     |
+|       2         |             Il sistema non trova la rete e restituisce errore `404 NotFoundError`                        |
+
+#### Scenario 11.6
+
+|  Scenario 11.6  |                          Codice rete già esistente `(409 ConflictError)`                                  |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |           L’utente modifica il codice della rete con uno già esistente                              |
+| Post condition  |                             Nessuna modifica viene applicata                                         |
+|     Step#       |                                         Description                                                 |
+|       1         |             L'utente inserisce un nuovo `code` che identifica una rete già esistente                    |
+|       2         |             Il sistema rileva il conflitto e restituisce errore `409 ConflictError`                      |
+
+#### Scenario 11.7
+
+|  Scenario 11.7  |                    Errore interno del server `(500 InternalServerError)`                           |
+| :-------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition   |              L’utente è autenticato, ma si verifica un errore inatteso lato server                  |
+| Post condition  |                             Nessuna modifica viene applicata                                         |
+|     Step#       |                                         Description                                                 |
+|       1         |          L'utente compila correttamente il modulo e invia la richiesta di modifica della rete                         |
+|       2         |  Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server                |
+|       3         |       Il sistema restituisce il codice di errore `(500 InternalServerError)`                      |
+
+### Use Case 12, Eliminazione Network (UC12)
+
+| Actors Involved  |           Admin, Operator            |
+| :--------------: | :----------------------------------: |
+|   Precondition   |       L'utente è autenticato con token come Admin o Operator       |
+|  Post condition  |     La rete viene eliminata dal sistema     |
+| Nominal Scenario |            Scenario 12.1             |
+|     Variants     |                None                  |
+|    Exceptions    |     Scenario 12.2, Scenario 12.3, Scenario 12.4, Scenario 12.5 |
+
+#### Scenario 12.1
+
+|  Scenario 12.1  |                               Eliminazione rete con successo `(204 No Content)`                               |
+| :-------------: | :-------------------------------------------------------------------------------------------------------------: |
+|  Precondition   |                       L'utente è autenticato come Admin o Operator                                               |
+| Post condition  |                      La rete viene eliminata dal sistema                                                         |
+|     Step#       |                                         Description                                                              |
+|       1         |             L'utente accede alla sezione "Gestione Reti" dell’interfaccia                                       |
+|       2         |             L'utente seleziona una rete esistente e preme "Elimina"                                              |
+|       3         |             Il sistema riceve la richiesta, verifica il parametro `networkCode` e procede all'eliminazione      |
+|       4         |             Il sistema restituisce il codice `204 No Content`                                                    |
+
+#### Scenario 12.2
+
+|  Scenario 12.2  |                       Token assente o non valido `(401 UnauthorizedError)`                                |
+| :-------------: | :---------------------------------------------------------------------------------------------------------: |
+|  Precondition   |   L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato                      |
+| Post condition  |                             Nessuna rete viene eliminata                                                    |
+|     Step#       |                                         Description                                                          |
+|       1         |         L'utente invia la richiesta di eliminazione senza un header `Authorization` valido                     |
+|       2         |         Il sistema verifica il token e lo considera invalido                                                 |
+|       3         |         Il sistema restituisce il codice `401 UnauthorizedError`                                             |
+
+#### Scenario 12.3
+
+|  Scenario 12.3  |                        Ruolo non autorizzato `(403 InsufficientRightsError)`                                |
+| :-------------: | :---------------------------------------------------------------------------------------------------------: |
+|  Precondition   |     L'utente è autenticato con token valido, ma ha ruolo Viewer                                            |
+| Post condition  |                             Nessuna rete viene eliminata                                                    |
+|     Step#       |                                         Description                                                          |
+|       1         |     L'utente Viewer tenta di eliminare una rete                                                             |
+|       2         |     Il sistema verifica il ruolo utente e rileva permessi insufficienti                                     |
+|       3         |     Il sistema restituisce il codice di errore `403 InsufficientRightsError`                                |
+
+#### Scenario 12.4
+
+|  Scenario 12.4  |                          Rete non trovata `(404 NotFoundError)`                                             |
+| :-------------: | :---------------------------------------------------------------------------------------------------------: |
+|  Precondition   |           L’utente specifica un `networkCode` non esistente                                                 |
+| Post condition  |                             Nessuna rete viene eliminata                                                    |
+|     Step#       |                                         Description                                                          |
+|       1         |             L'utente invia la richiesta DELETE con un codice rete non presente nel sistema                  |
+|       2         |             Il sistema non trova la rete e restituisce errore `404 NotFoundError`                           |
+
+#### Scenario 12.5
+
+|  Scenario 12.5  |                    Errore interno del server `(500 InternalServerError)`                                   |
+| :-------------: | :---------------------------------------------------------------------------------------------------------: |
+|  Precondition   |              L’utente è autenticato, ma si verifica un errore inatteso lato server                         |
+| Post condition  |                             Nessuna rete viene eliminata                                                    |
+|     Step#       |                                         Description                                                          |
+|       1         |          L'utente invia una richiesta valida di eliminazione                                                |
+|       2         |  Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server                        |
+|       3         |       Il sistema restituisce il codice di errore `500 InternalServerError`                                 |
+
+### Use Case 13, Recupero lista Network (UC13)
+
+| Actors Involved  |           Admin, Operator, Viewer            |
+| :--------------: | :------------------------------------------: |
+|   Precondition   |       L'utente è autenticato con token valido       |
+|  Post condition  |     L'elenco delle reti viene restituito all’utente     |
+| Nominal Scenario |            Scenario 13.1             |
+|     Variants     |                None                  |
+|    Exceptions    |     Scenario 13.2, Scenario 13.3     |
+
+#### Scenario 13.1
+
+|  Scenario 13.1  |                 Recupero lista reti con successo `(200 OK)`                  |
+| :-------------: | :--------------------------------------------------------------------------: |
+|  Precondition   |         L'utente è autenticato con token valido                              |
+| Post condition  |         Il sistema restituisce una lista (anche eventualmente vuota) di reti |
+|     Step#       |                                Description                                   |
+|       1         |   L'utente accede alla sezione "Reti" o invia una richiesta GET a `/networks`|
+|       2         |   Il sistema valida il token                                                  |
+|       3         |   Il sistema restituisce la lista delle reti con codice `200 OK`             |
+
+#### Scenario 13.2
+
+|  Scenario 13.2  |                 Token assente o non valido `(401 UnauthorizedError)`          |
+| :-------------: | :---------------------------------------------------------------------------: |
+|  Precondition   |        L'utente non ha effettuato il login o ha un token non valido           |
+| Post condition  |                     Nessuna lista viene restituita                           |
+|     Step#       |                                Description                                   |
+|       1         |   L'utente invia la richiesta senza header `Authorization` valido            |
+|       2         |   Il sistema rileva che il token è assente, scaduto o malformato             |
+|       3         |   Il sistema restituisce errore `401 UnauthorizedError`                      |
+
+#### Scenario 13.3
+
+|  Scenario 13.3  |                Errore interno del server `(500 InternalServerError)`         |
+| :-------------: | :--------------------------------------------------------------------------: |
+|  Precondition   |         L'utente è autenticato, ma si verifica un errore imprevisto          |
+| Post condition  |                     Nessuna lista viene restituita                           |
+|     Step#       |                                Description                                   |
+|       1         |   L'utente invia una richiesta valida per la lista delle reti                |
+|       2         |   Il sistema riscontra un errore interno durante l'elaborazione              |
+|       3         |   Il sistema restituisce il codice di errore `500 InternalServerError`       |
+
+### Use Case 14, Recupero singolo Network (UC14)
+
+| Actors Involved  |           Admin, Operator, Viewer            |
+| :--------------: | :------------------------------------------: |
+|   Precondition   |       L'utente è autenticato con token valido       |
+|  Post condition  |     I dettagli della rete vengono restituiti all’utente     |
+| Nominal Scenario |            Scenario 14.1             |
+|     Variants     |                None                  |
+|    Exceptions    |     Scenario 14.2, Scenario 14.3, Scenario 14.4     |
+
+#### Scenario 14.1
+
+|  Scenario 14.1  |                 Recupero rete con successo `(200 OK)`                  |
+| :-------------: | :--------------------------------------------------------------------: |
+|  Precondition   |       L'utente è autenticato con token valido                         |
+| Post condition  |       Il sistema restituisce i dettagli della rete                    |
+|     Step#       |                               Description                              |
+|       1         |   L'utente invia una richiesta GET a `/networks/{networkCode}`
+|       2         |   Il sistema riceve e interpreta la richiesta        |
+|       3         |   Il sistema valida il token                                           |
+|       4         |   Il sistema restituisce i dati della rete con codice `200 OK`        |
+
+#### Scenario 14.2
+
+|  Scenario 14.2  |         Token assente o non valido `(401 UnauthorizedError)`           |
+| :-------------: | :---------------------------------------------------------------------: |
+|  Precondition   |      L'utente non ha effettuato il login o ha un token non valido      |
+| Post condition  |                     Nessuna rete viene restituita                      |
+|     Step#       |                               Description                              |
+|       1         |   L'utente invia la richiesta senza header `Authorization` valido      |
+|       2         |   Il sistema rileva che il token è assente, scaduto o malformato       |
+|       3         |   Il sistema restituisce errore `401 UnauthorizedError`                |
+
+#### Scenario 14.3
+
+|  Scenario 14.3  |                 Rete non trovata `(404 NotFoundError)`                 |
+| :-------------: | :--------------------------------------------------------------------: |
+|  Precondition   |     Il `networkCode` specificato non corrisponde ad alcuna rete       |
+| Post condition  |                     Nessuna rete viene restituita                      |
+|     Step#       |                               Description                              |
+|       1         |   L'utente invia una richiesta GET con un `networkCode` non esistente  |
+|       2         |   Il sistema non trova alcuna rete con quel codice                    |
+|       3         |   Il sistema restituisce errore `404 NotFoundError`                   |
+
+#### Scenario 14.4
+
+|  Scenario 14.4  |           Errore interno del server `(500 InternalServerError)`         |
+| :-------------: | :---------------------------------------------------------------------: |
+|  Precondition   |          L’utente è autenticato, ma si verifica un errore lato server   |
+| Post condition  |                     Nessuna rete viene restituita                      |
+|     Step#       |                               Description                              |
+|       1         |   L'utente invia una richiesta valida per il recupero della rete       |
+|       2         |   Il sistema riscontra un errore interno inatteso                      |
+|       3         |   Il sistema restituisce errore `500 InternalServerError`              |
+
 
 # Glossary
 
