@@ -107,18 +107,16 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |                       ID                       |                                                                             Description                                                                             |
 | :--------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|      **FR1**      | **Autenticazione e gestione utenti** |
-|                  FR1.1                   |                                                          Login|
-|FR1.1.1| Rilascio token di accesso|
-|                  FR1.2                   |      Logout                                                                                                                            |
-|            FR1.3              |    Gestione Account (Admin, Operator, Viewer)                                                                                                                 |
-|           FR1.3.1             | Creazione Account e assegnazione ruolo (Admin, Operator, Viewer)                                              |
-|           FR1.3.2            |          Rimozione Account                                                                     |
-|           FR1.3.3            |       Modifica Account                                                                                    |
-|          FR1.3.4        |     Visualizzazione Account         specifico
-|FR1.3.5| Visualizzazione elenco account|                         |
-|          **FR2**          |     **Gestione Topologia**                                                   |
-|            FR2.1          |      Gestione Network                                                                 |
+|    **FR1**      | **Autenticazione e gestione utenti** |
+|FR1.1| Login|
+|FR1.2|Logout 
+|FR1.3|Creazione Account|
+|FR1.4|Rimozione Account|
+|FR1.5|Modifica Account|
+|FR1.6|Visualizzazione Account specifico
+|FR1.7| Visualizzazione elenco account|                         |
+|    **FR2**          |     **Gestione Topologia** |
+|FR2.1|Gestione Network |
 |FR2.1.1| Creazione Network|
 |FR2.1.2| Modifica Network|
 |FR2.1.3| Eliminazione Network|
@@ -190,7 +188,154 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 \<next describe here each use case in the UCD>
 
-### Use Case 10, Creazione Network (UC10)
+### Use Case 10, Creazione Network (Login (UC10))
+
+| Actors Involved  |          User           |
+| :--------------: | :---------------------: |
+|   Precondition   | L'utente U non è loggato |
+|  Post condition  |     L'utente U è loggato     |
+| Nominal Scenario |      Scenario 1.1       |
+|     Variants     |          Nessuna           |
+|    Exceptions    | Scenario 1.2, 1.3, 1.4  |
+
+#### Scenario 1.1
+
+|  Scenario 1.1  |                                       Login riuscito                                         |
+| :------------: | :------------------------------------------------------------------------------------------: |
+|  Precondition  |                                       U è registrato                                         |
+| Post condition |                                        U è loggato                                           |
+|     Step#      |                                        Descrizione                                           |
+|       1        |                              Sistema: Chiede username, password.                             |
+|       2        |                              User: Inserisce username, password.                             |
+|       3        |                               Sistema: Legge i dati inseriti.                                |
+|       4        |                            Sistema: Dato il nome utente, cerca l’utente.                     |
+|       5        | Sistema: Recupera la password, la confronta con quella fornita. I dati coincidono, l’utente è autorizzato |
+|       6        | Sistema: Associa allo user un token di accesso temporaneo |
+
+#### Scenario 1.2
+
+|  Scenario 1.2  |                                              Password errata                                             |
+| :------------: | :-----------------------------------------------------------------------------------------------------:  |
+|  Precondition  |                                        U è registrato                                                    |
+| Post condition |                                        U non è loggato                                                   |
+|     Step#      |                                        Descrizione                                                       |
+|       1        |                              Sistema: Chiede username, password.                                         |
+|       2        |                              User: Inserisce username, password.                                         |
+|       3        |                               Sistema: Legge i dati inseriti.                                            |
+|       4        |                            Sistema: Dato il nome utente, cerca l’utente.                                 |
+|       5        | Sistema:  Recupera la password, la confronta con quella fornita. I dati non coincidono, l’utente non è autorizzato |
+|       6        | Sistema: mostra a schermo un messaggio di errore |
+
+#### Scenario 1.3
+
+| Scenario 1.3   |                              L'utente non è registrato                             |
+| -------------- | :---------------------------------------------------------------------------:      |
+| Precondition   |                              U non è registrato                                    |
+| Post condition |                              U non è loggato                                       |
+| Step#          |                                  Descrizione                                       |
+|       1        |                              Sistema: Chiede username, password.                   |
+|       2        |                              User: Inserisce username, password.                   |
+|       3        |                               Sistema: Legge i dati inseriti.                      |
+|       4        | Sistema:  Cerca l’utente dato il nome utente. Utente non trovato. Utente non autorizzato |
+|       5        | Sistema: mostra a schermo un messaggio di errore |
+
+
+### Use case 2, Logout (UC2)
+
+| Actors Involved  |        User                  |
+| :--------------: | :----------------:           |
+|   Precondition   |   Utente U esiste            |
+|  Post condition  | U non è loggato nel sistema  |
+| Nominal Scenario |    Scenario 2.1              |
+|     Variants     |         Nessuna              |
+|    Exceptions    |    Scenario 2.2              |
+
+#### Scenario 2.1
+
+| Scenario 2.1   |                   Logout                               |
+| -------------- | :-----------------------------------------:            |
+| Precondition   |                U è loggato                             |
+| Post condition |               U non è loggato                          |
+| Step#          |                 Descrizione                            |
+| 1              |             User: Clicca pulsante di Logout            |
+| 2              |      Sistema: Controlla che U sia loggato nel sistema  |
+| 3              |   Sistema: rimuove l'autorizzazone-user per l'uente    |
+| 4              | Sistema: mostra un messaggio di conferma logout.       |
+
+#### Scenario 2.2
+
+| Scenario 2.2   |                   User non è loggato nel sistema                   |
+| -------------- | :----------------------------------------------------------:       |
+| Precondition   |                      U non è loggato                               |
+| Post condition |                     U non è loggato                                |
+| Step#          |                         Descrizione                                |
+| 1              |                     User: Clicca pulsante di Logout                |
+| 2              |              Sistema: Controlla che U sia loggato nel sistema      |
+| 3              | Sistema: U non risulta loggato nel sistema                         |
+| 4              |Sistema: mostra un messaggio di errore                              |
+
+### Use Case 3, Creazione Account (UC3)
+
+| Actors Involved  |               Admin              |
+| :--------------: | :------------------------------: |
+|   Precondition   | L'utente U non ha un account     |
+|  Post condition  |        User registrato           |
+| Nominal Scenario |           Scenario 3.1           |
+|     Variants     |               Nessuna            |
+|    Exceptions    |        Scenario 3.2, 3.3         |
+
+#### Scenario 3.1
+
+|  Scenario 3.1  |                                                    Registrazione                                                   |
+| :------------: | :----------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                          U non ha un account                                                       |
+| Post condition |                                                 U registrato                                                       |
+|     Step#      |                                                    Descrizione                                                     |
+|       1        |                                               Admin: Clicca il pulsante di registrazione                           |
+|       2        |                                Sistema: Chiede username, password, ruolo                                           |
+|       3        |                               Admin: Inserisce  username, password, ruolo                                          |
+|       4        |                                Sistema: Legge i dati immessi                                                       |
+|       5        | Sistema: Controlla che i dati immessi non siano associati a nessun account esistente. Non esiste già un account per i dati immessi |
+|       6        |                               Sistema: Crea un nuovo user e lo memorizza nel sistema                               |
+|       7        | Sistema: mostra a schermo un messaggio di successo                                                                 |
+
+#### Scenario 3.2
+
+|  Scenario 3.2  |                                                          Username già in uso                                                               |
+| :------------: | :---------------------------------------------------------------------------------------------------------------------------------------:  |
+|  Precondition  |                                                          U ha un account                                                                   |
+| Post condition |                                                            Registrazione fallita                                                           |
+|     Step#      |                                                               Descrizione                                                                  |
+|       1        |                                               Admin: Clicca il pulsante di registrazione                                                   |
+|       2        |                                Sistema: Chiede username, password, ruolo                                                                   |
+|       3        |                               Admin: Inserisce  username, password, ruolo                                                                  |
+|       4        |                                Sistema: Legge i dati immessi                                                                               |
+|       5        | Sistema: Controlla che i dati immessi non siano associati a nessun account esistente. Risulta già un account per i dati immessi            |
+|       6        | Sistema: mostra a schermo un messaggio di errore                                                                                           |
+
+#### Scenario 3.3
+
+|  Scenario 3.3  |                                    User inserisce parametri vuoti                                     |
+| :------------: | :---------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                 U non ha un account                                   |
+| Post condition |                                          Registrazione fallita                                        |
+|     Step#      |                                              Descrizione                                              |
+|       1        |                                               Admin: Clicca il pulsante di registrazione              |
+|       2        |                                Sistema: Chiede username, password, ruolo                              |
+|       3        |                               Admin: Inserisce  username, password, ruolo                             |
+|       4        |                                Sistema: Legge i dati immessi                                          |
+|       5        | Sistema: Controlla che tutti i parametri richiesti siano soddisfatti. Almeno un parametro risulta vuoto |
+|       6        | Sistema: mostra a schermo un messaggio di errore                                                      |
+
+### Use Case 4, View users (UC4)
+
+| Actors Involved  |                    User                     |
+| :--------------: | :-----------------------------------------: |
+|   Precondition   |                    None                     |
+|  Post condition  | Information about at least one user is seen |
+| Nominal Scenario |                Scenario 4.1                 |
+|     Variants     |         Scenario 4.3, Scenario 4.4          |
+|    Exceptions    |         Scenario 4.2, Scenario 4.5          |
 
 | Actors Involved  |           Admin, Operator            |
 | :--------------: | :----------------------------------: |
