@@ -163,6 +163,8 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |FR4.5.2|Visualizzazione statistiche per uno specifico sensore|
 |FR4.5.3| Visualizzazione outliers per un insieme di Sensori di un Network specifico |
 |FR4.5.4|Visualizzazione outliers per uno specifico sensore |
+|  **FR5**   |                        **Caduta Connessione** |
+
 
 
 ## Non Functional Requirements
@@ -348,7 +350,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 3.5
 
-|  Scenario 3.4  |                                   Diritti insufficienti  `(Code 403)`                           |
+|  Scenario 3.5  |                                   Diritti insufficienti  `(Code 403)`                           |
 | :------------: | :---------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                                 U non ha un account                                   |
 | Post condition |                                          Registrazione fallita                                        |
@@ -367,7 +369,66 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |     L'aacount dello user viene eliminato   |
 | Nominal Scenario |            Scenario 4.1                    |
 |     Variants     |                Nessuna                     |
-|    Exceptions    |                                            |
+|    Exceptions    |      4.1                                   |
+
+#### Scenario 4.1
+
+|  Scenario 4.1  |                                                    Eliminazione Utente  `(Code 204)`                               |
+| :------------: | :----------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                          Utente U ha un account                                                    |
+| Post condition |                                                 Account utente eliminato                                           |
+|     Step#      |                                                    Descrizione                                                     |
+|       1        |                                               Admin: Clicca il pulsante di eliminazione accuont                    |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta                    |
+|       3        |                              Sistema: Rileva che il token è valido                                                 |
+|       4        |                                Sistema: Chiede `username`                                                          |
+|       5        |                               Admin: Inserisce `username`                                                          |
+|       6        |                                Sistema: Legge i dati immessi                                                       |
+|       7        | Sistema: Controlla che i dati immessi siano associati a un account esistente.                                      |
+|       8        |                               Sistema: Elimina l'account                                                           |
+|       9        | Sistema: mostra a schermo un messaggio di successo 
+
+#### Scenario 4.2
+
+|  Scenario 4.2  |                                   Token mancante o malformato  `(Code 401)`                           |
+| :------------: | :---------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                 Utente U ha un account                                |
+| Post condition |                                          Eliminazione Account fallita                                 |
+|     Step#      |                                              Descrizione                                              |
+|       1        |                                               Admin: Clicca il pulsante di elimanzione              |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta       |
+|       3        |                              Sistema: Rileva che il token è assente o in un formato non valido        |
+|       4        |                               Sistema: Blocca il processo di elimanzione                            |
+|       5        |                                Sistema: Mostra un messaggio d'errore                                  |
+
+#### Scenario 4.3
+
+|  Scenario 4.3  |                                    Diritti insufficienti  `(Code 403)`                                 |
+| :------------: | :---------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                 Utente U ha un account                                |
+| Post condition |                                          Eliminazione Account fallita                                 |
+|     Step#      |                                              Descrizione                                              |
+|       1        |                                               Admin: Clicca il pulsante di elimanzione              |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta       |
+|       3        |                              Sistema: Sistema: Rileva che l'utente associato al token non ha i diritti di eliminazione        |
+|       4        |                               Sistema: Blocca il processo di elimanzione                            |
+|       5        |                                Sistema: Mostra un messaggio d'errore                                  |
+
+#### Scenario 4.4
+
+|  Scenario 4.4  |                                                   Account utente non trovato `(Code 404)`                               |
+| :------------: | :----------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                          Utente U ha un account                                                    |
+| Post condition |                                                 Account utente eliminato                                           |
+|     Step#      |                                                    Descrizione                                                     |
+|       1        |                                               Admin: Clicca il pulsante di eliminazione accuont                    |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta                    |
+|       3        |                              Sistema: Rileva che il token è valido                                                 |
+|       4        |                                Sistema: Chiede `username`                                                          |
+|       5        |                               Admin: Inserisce `username`                                                          |
+|       6        |                                Sistema: Legge i dati immessi                                                       |
+|       7        | Sistema: Controlla che i dati immessi siano associati a un account esistente. L'account non trovato                |
+|       8        |                               Sistema: Mostra un messaggio d'errore                                                         |
 
 ### Use Case 10, View users (UC10)
 
