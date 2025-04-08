@@ -161,7 +161,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |FR4.5.2|Visualizzazione statistiche per uno specifico sensore|
 |FR4.5.3| Visualizzazione outliers per un insieme di Sensori di un Network specifico |
 |FR4.5.4|Visualizzazione outliers per uno specifico sensore |
-|  **FR5**   |                        **Caduta Connessione** |
+|  **FR5**   |                        **Gestione caduta Connessione** |
 
 
 
@@ -838,6 +838,86 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2         |   Il sistema riscontra un errore interno inatteso                      |
 |       3         |   Il sistema restituisce errore `500 InternalServerError`              |
 
+
+### Use Case 25, Associazione della misurazione al corrispondente sensore (UC25)
+(da finire)
+| Actors Involved  |               Admin              |
+| :--------------: | :------------------------------: |
+|   Precondition   | Il sensore deve essere registrato    |
+|  Post condition  |        La misurazione viene salvata          |
+| Nominal Scenario |           Scenario 25.1           |
+|     Variants     |               Nessuna            |
+|    Exceptions    |      |
+
+#### Scenario 25.1
+
+|  Scenario 25.1  |                                                    Associazione della misurazione al sensore con successo                                  |
+| :------------: | :----------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                          Il sensore deve essere registrato                                                       |
+| Post condition |                                                La misurazione viene salvata                                                      |
+|     Step#      |                                                    Descrizione                                                     |
+|       1        |                                               Admin: Clicca il pulsante di registrazione                           |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta                    |
+|       3        |                              Sistema: Rileva che il token è valido                                                 |
+|       4        |                                Sistema: Chiede `username`, `password`, `ruolo`                                     |
+|       5        |                               Admin: Inserisce `username`, `password`, `ruolo`                                     |
+|       6        |                                Sistema: Legge i dati immessi                                                       |
+|       7        | Sistema: Controlla che i dati immessi non siano associati a nessun account esistente. Non esiste già un account per i dati immessi |
+|       8        |                               Sistema: Crea un nuovo user e lo memorizza nel sistema                               |
+|       9        | Sistema: mostra a schermo un messaggio di successo                                                                 |
+
+### Use Case 26, Inserimento misurazioni (UC26)
+
+| Actors Involved  |               Admin, Operator              |
+| :--------------: | :------------------------------: |
+|   Precondition   | Il sensore è registrato     |
+|  Post condition  |        Misurazione inserita          |
+| Nominal Scenario |           Scenario 26.1           |
+|     Variants     |               Nessuna            |
+|    Exceptions    |  Scenario 26.2, 26.3, 26.4, 26.5, 26.6     |
+(ci vuole il controllo sul timestamp?)
+#### Scenario 26.1
+
+|  Scenario 26.1  |                                                    Misurazione creata  `(Code 201)`                                    |
+| :------------: | :----------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                          Il sensore è registrato                                                      |
+| Post condition |                                                Misurazione inserita                                                      |
+|     Step#      |                                                    Descrizione                                                     |
+|       1        |                                               Utente: Clicca il pulsante di inserimento della misurazione                          |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta                    |
+|       3        |                              Sistema: Rileva che il token è valido                                                 |
+|       4        |                                Sistema: Chiede `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`                                     |
+|       5        |                               Utente: Inserisce `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`  (da tastiera o tramite menù a tendina)                                   |
+|       6        |                                Sistema: Legge i dati immessi                                                       |
+|       7        | Sistema:  Controlla che i dati immessi corrispondano a network, gateway e sensori esistenti e associati |
+|       8        | Sistema:  Controlla che il valore della misurazione rientri tra i valori del dominio
+|       9        |                               Sistema: Memorizza la misurazione nel sistema                              |
+|       10        | Sistema: mostra a schermo un messaggio di successo                                                                 |
+
+|  Scenario 26.2  |                                                    Dati di input invalidi  `(Code 400)`                                    |
+| :------------: | :----------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                          Il sensore è registrato                                                      |
+| Post condition |                                                Inserimento della misurazione fallita                                                      |
+|     Step#      |                                                    Descrizione                                                     |
+|       1        |                                               Utente: Clicca il pulsante di inserimento della misurazione                          |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta                    |
+|       3        |                              Sistema: Rileva che il token è valido                                                 |
+|       4        |                                Sistema: Chiede `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`                                     |
+|       5        |                               Utente: Inserisce `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`  (da tastiera o tramite menù a tendina)                                   |
+|       6        |                                Sistema: Legge i dati immessi                                                       |
+|       7        | Sistema:  Controlla che il valore della misurazione rientri tra i valori del dominio
+|       8        | Sistema: mostra a schermo un messaggio di errore                                                                 |
+
+
+|  Scenario 26.3  |                                                    Non autorizzato  `(Code 401)`                                    |
+| :------------: | :----------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                          Il sensore è registrato                                                      |
+| Post condition |                                               Inserimento della misurazione fallita                                                      |
+|     Step#      |                                                    Descrizione                                                     |
+|       1        |                                               Utente: Clicca il pulsante di inserimento della misurazione                          |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta                    |
+|       3        |                              Sistema: Rileva che il token non è valido                                                 |
+|       9        | Sistema: mostra a schermo un messaggio di errore                                                                 |
 
 # Glossary
 
