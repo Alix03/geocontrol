@@ -105,63 +105,63 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ## Functional Requirements
 
-|   ID    |                                       Description                                       |
-| :-----: | :-------------------------------------------------------------------------------------: | --- |
-| **FR1** |                          **Autenticazione e gestione utenti**                           |
-|  FR1.1  |                                          Login                                          |
-|  FR1.2  |                                         Logout                                          |
-|  FR1.3  |                                    Creazione Account                                    |
-|  FR1.4  |                                    Rimozione Account                                    |
-|  FR1.5  |                                 Visualizzazione Account                                 |
-| **FR2** |                                 **Gestione Topologia**                                  |
-|  FR2.1  |                                    Gestione Network                                     |
-| FR2.1.1 |                                    Creazione Network                                    |
-| FR2.1.2 |                                    Modifica Network                                     |
-| FR2.1.3 |                                  Eliminazione Network                                   |
-| FR2.1.4 |                           Visualizzazione di tutti i Network                            |
-| FR2.1.5 |                         Visualizzazione di un Network specifico                         |
-|  FR2.2  |                                    Gestione Gateway                                     |
-| FR2.2.1 |                                    Creazione Gateway                                    |
-| FR2.2.2 |                                    Modifica Gateway                                     |
-| FR2.2.3 |                                  Eliminazione Gateway                                   |
-| FR2.2.4 |                         Visualizzazione di un Gateway specifico                         |
-| FR2.2.5 |           Visualizzazione di tutti i Gateway associati a un Network specifico           |
-|  FR2.3  |                                    Gestione Sensore                                     |
-| FR2.3.1 |                                    Creazione Sensore                                    |
-| FR2.3.2 |                                    Modifica Sensore                                     |
-| FR2.3.3 |                                  Eliminazione Sensore                                   |
-| FR2.3.4 |                            Visualizzazione Sensore specifico                            |
-| FR2.3.5 |           Visualizzazione di tutti i Sensori associati a un Gateway specifico           |
-|  FR2.4  |                                      Associazioni                                       |
-| FR2.4.1 |                             Aggiunta del Gateway a Network                              |
-| FR2.4.2 |                            Rimozione del Gateway da Network                             |
-| FR2.4.3 |                               Aggiunta sensore al Gateway                               |
-| FR2.4.4 |                              Rimozione sensore dal Gateway                              |
-| FR2.4.5 |                            Aggiunta associazione tra Gateway                            |
-| FR2.4.6 |                           Rimozione associazione tra Gateway                            |     |
-| **FR3** |                                **Gestione Misurazioni**                                 |
-|  FR3.1  |                    Raccolta delle misurazioni trasmesse dai gateway                     |
-| FR3.1.1 |                Associazione della misurazione al corrispondente sensore                 |
-| FR3.1.2 |                   Conversione dal timestamp locale del sensore a UTC                    |
-|  FR3.2  |                      Archiviazione dei dati convertiti nel sistema                      |
-|  FR3.3  |                               Visualizzazione misurazioni                               |
-| FR3.3.1 |      Visualizzazione misurazioni per un insieme di sensori di un Network specifico      |
-| FR3.3.2 |                  Visualizzazione misurazioni per un Sensore specifico                   |
-|  FR3.4  |                                 Inserimento misurazioni                                 |
-|  FR3.5  |                 Conversione timestamp da UTC a orario locale del viewer                 |
-| **FR4** |                       **Analisi dei dati e rilevamento anomalie**                       |
-|  FR4.1  |          Calcolo della media delle misurazioni in un dato intervallo temporale          |
-|  FR4.2  |        Calcolo della varianza delle misurazioni in un dato intervallo temporale         |
+|   ID    | Description                                                                             |
+| :-----: | --------------------------------------------------------------------------------------- |
+| **FR1** | **Autenticazione e gestione utenti**                                                    |
+|  FR1.1  | Login                                                                                   |
+|  FR1.2  | Logout                                                                                  |
+|  FR1.3  | Creazione Account                                                                       |
+|  FR1.4  | Rimozione Account                                                                       |
+|  FR1.5  | Visualizzazione Account                                                                 |
+| **FR2** | **Gestione Topologia**                                                                  |
+|  FR2.1  | Gestione Network                                                                        |
+| FR2.1.1 | Creazione Network                                                                       |
+| FR2.1.2 | Modifica Network                                                                        |
+| FR2.1.3 | Eliminazione Network                                                                    |
+| FR2.1.4 | Visualizzazione di tutti i Network                                                      |
+| FR2.1.5 | Visualizzazione di un Network specifico                                                 |
+|  FR2.2  | Gestione Gateway                                                                        |
+| FR2.2.1 | Creazione Gateway                                                                       |
+| FR2.2.2 | Modifica Gateway                                                                        |
+| FR2.2.3 | Eliminazione Gateway                                                                    |
+| FR2.2.4 | Visualizzazione di un Gateway specifico                                                 |
+| FR2.2.5 | Visualizzazione di tutti i Gateway associati a un Network specifico                     |
+|  FR2.3  | Gestione Sensore                                                                        |
+| FR2.3.1 | Creazione Sensore                                                                       |
+| FR2.3.2 | Modifica Sensore                                                                        |
+| FR2.3.3 | Eliminazione Sensore                                                                    |
+| FR2.3.4 | Visualizzazione Sensore specifico                                                       |
+| FR2.3.5 | Visualizzazione di tutti i Sensori associati a un Gateway specifico                     |
+|  FR2.4  | Associazioni                                                                            |
+| FR2.4.1 | Aggiunta del Gateway a Network                                                          |
+| FR2.4.2 | Rimozione del Gateway da Network                                                        |
+| FR2.4.3 | Aggiunta sensore al Gateway                                                             |
+| FR2.4.4 | Rimozione sensore dal Gateway                                                           |
+| FR2.4.5 | Aggiunta associazione tra Gateway                                                       |
+| FR2.4.6 | Rimozione associazione tra Gateway                                                      |
+| **FR3** | **Gestione Misurazioni**                                                                |
+|  FR3.1  | Raccolta delle misurazioni trasmesse dai gateway                                        |
+| FR3.1.1 | Associazione della misurazione al corrispondente sensore                                |
+| FR3.1.2 | Conversione dal timestamp locale del sensore a UTC                                      |
+|  FR3.2  | Archiviazione dei dati convertiti nel sistema                                           |
+|  FR3.3  | Visualizzazione misurazioni                                                             |
+| FR3.3.1 | Visualizzazione misurazioni per un insieme di sensori di un Network specifico           |
+| FR3.3.2 | Visualizzazione misurazioni per un Sensore specifico                                    |
+|  FR3.4  | Inserimento misurazioni                                                                 |
+|  FR3.5  | Conversione timestamp da UTC a orario locale del viewer                                 |
+| **FR4** | **Analisi dei dati e rilevamento anomalie**                                             |
+|  FR4.1  | Calcolo della media delle misurazioni in un dato intervallo temporale                   |
+|  FR4.2  | Calcolo della varianza delle misurazioni in un dato intervallo temporale                |
 |  FR4.3  | Calcolo delle soglie (superiore e inferiore) per identificare potenziali valori anomali |
-| FR4.3.1 |                            Calcolo sogliaSuperiore = μ + 2σ                             |
-| FR4.3.2 |                            Calcolo sogliaInferiore = μ - 2σ                             |
-|  FR4.4  |                                 Identificazione outlier                                 |
-|  FR4.5  |                               Visualizzazione statistiche                               |
-| FR4.5.1 |      Visualizzazione statistiche per un insieme di Sensori di un Network specifico      |
-| FR4.5.2 |                  Visualizzazione statistiche per uno specifico sensore                  |
-| FR4.5.3 |       Visualizzazione outliers per un insieme di Sensori di un Network specifico        |
-| FR4.5.4 |                   Visualizzazione outliers per uno specifico sensore                    |
-| **FR5** |                             **Gestione caduta Connessione**                             |
+| FR4.3.1 | Calcolo sogliaSuperiore = μ + 2σ                                                        |
+| FR4.3.2 | Calcolo sogliaInferiore = μ - 2σ                                                        |
+|  FR4.4  | Identificazione outlier                                                                 |
+|  FR4.5  | Visualizzazione statistiche                                                             |
+| FR4.5.1 | Visualizzazione statistiche per un insieme di Sensori di un Network specifico           |
+| FR4.5.2 | Visualizzazione statistiche per uno specifico sensore                                   |
+| FR4.5.3 | Visualizzazione outliers per un insieme di Sensori di un Network specifico              |
+| FR4.5.4 | Visualizzazione outliers per uno specifico sensore                                      |
+| **FR5** | **Gestione caduta Connessione**                                                         |
 
 ## Non Functional Requirements
 
