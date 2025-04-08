@@ -112,9 +112,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |FR1.2|Logout 
 |FR1.3|Creazione Account|
 |FR1.4|Rimozione Account|
-|FR1.5|Modifica Account|
-|FR1.6|Visualizzazione Account specifico
-|FR1.7| Visualizzazione elenco account|                         |
+|FR1.5|Visualizzazione Account |
 |    **FR2**          |     **Gestione Topologia** |
 |FR2.1|Gestione Network |
 |FR2.1.1| Creazione Network|
@@ -369,7 +367,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |     L'aacount dello user viene eliminato   |
 | Nominal Scenario |            Scenario 4.1                    |
 |     Variants     |                Nessuna                     |
-|    Exceptions    |      4.1                                   |
+|    Exceptions    |      4.1, 4.2, 4.3, 4.4                     |
 
 #### Scenario 4.1
 
@@ -429,6 +427,84 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       6        |                                Sistema: Legge i dati immessi                                                       |
 |       7        | Sistema: Controlla che i dati immessi siano associati a un account esistente. L'account non trovato                |
 |       8        |                               Sistema: Mostra un messaggio d'errore                                                         |
+
+
+### Use Case 5, Visualizzazione Account (UC5)
+
+| Actors Involved  |           Admin                            |
+| :--------------: | :----------------------------------:       |
+|   Precondition   |      	L’admin è loggato e ha i permessi necessari       |
+|  Post condition  |     L’admin visualizza la lista completa degli account registrati nel sistema  |
+| Nominal Scenario |            Scenario 5.1                    |
+|     Variants     |               5.2                    |
+|    Exceptions    |       5.3, 5.4                                     |
+
+#### Scenario 5.1
+
+|  Scenario 5.1  |                                                   Visualizzazione elenco account `(Code 200)`                               |
+| :------------: | :----------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                          L’admin è loggato e ha i permessi necessari                               |
+| Post condition |                                       L’admin visualizza la lista completa degli account registrati nel sistema    |
+|     Step#      |                                                    Descrizione                                                     |
+|       1        |                                               Admin: Clicca il pulsante di Visualizza Account                      |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta                    |
+|       3        |                              Sistema: Rileva che il token è valido                                                 |
+|       4        |                                Sistema: recupera tutti gli account dal database                                    |
+|       6        |                                Sistema: mostra a schermo l'elenco degli utenti trovati                             |
+
+#### Scenario 5.2
+
+|  Scenario 5.2  |                                                   Visualizzazione account specifico `(Code 200)`                   |
+| :------------: | :----------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                          L’admin è loggato e ha i permessi necessari                               |
+| Post condition |                                       L’admin visualizza l'account specificato                                     |
+|     Step#      |                                                    Descrizione                                                     |
+|       1        |                                               Admin: Clicca il pulsante di Visualizza Account                      |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta                    |
+|       3        |                              Sistema: Rileva che il token è valido                                                 |
+|       4         |               Admin: seleziona o cerca l’account da visualizzare                                                  |
+|       4        |                                Sistema: recupera l'account dal database                                            |
+|       6        |                                Sistema: mostra a schermol'account specificato                                      |
+
+#### Scenario 5.3
+
+|  Scenario 5.3  |                                   Token mancante o malformato  `(Code 401)`                           |
+| :------------: | :---------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                 Admin clicca il pulsante di Visualizza Account                               |
+| Post condition |                                          Visualizzazione Account fallita                                |
+|     Step#      |                                              Descrizione                                              |
+|       1        |                                      Admin: Clicca il pulsante di visualizzazione account              |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta       |
+|       3        |                              Sistema: Rileva che il token è assente o in un formato non valido        |
+|       4        |                               Sistema: Blocca il processo di visualizzazione                            |
+|       5        |                                Sistema: Mostra un messaggio d'errore                                  |
+
+#### Scenario 5.4
+
+|  Scenario 5.4  |                                    Diritti insufficienti  `(Code 403)`                                 |
+| :------------: | :---------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                 Admin clicca il pulsante di Visualizza Account        |
+| Post condition |                                          Eliminazione Account fallita                                 |
+|     Step#      |                                              Descrizione                                              |
+|       1        |                                               Admin: Clicca il pulsante di visualizzazione account    |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta       |
+|       3        |                              Sistema: Sistema: Rileva che l'utente associato al token non ha i diritti di eliminazione  |
+|       4        |                               Sistema: Blocca il processo di visualizzazione                          |
+|       5        |                                Sistema: Mostra un messaggio d'errore                                  |
+
+#### Scenario 5.5
+#### DA FINIRE
+|  Scenario 5.5  |                                   Utente non trovato  `(Code 404)`                                 |
+| :------------: | :---------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                 Admin clicca il pulsante di Visualizza Account        |
+| Post condition |                                          Eliminazione Account fallita                                 |
+|     Step#      |                                              Descrizione                                              |
+|       1        |                                               Admin: Clicca il pulsante di visualizzazione account    |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta       |
+|       3        |                              Sistema: Sistema: Rileva che l'utente associato al token non ha i diritti di eliminazione  |
+|       4        |                               Sistema: Blocca il processo di visualizzazione                          |
+|       5        |                                Sistema: Mostra un messaggio d'errore                                  |
+
 
 ### Use Case 10, View users (UC10)
 
