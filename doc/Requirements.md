@@ -188,7 +188,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 \<next describe here each use case in the UCD>
 
-### Use Case 10, Creazione Network (Login (UC10))
+### Use Case 1, Login (UC10)
 
 | Actors Involved  |          User           |
 | :--------------: | :---------------------: |
@@ -200,13 +200,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 1.1
 
-|  Scenario 1.1  |                                       Login riuscito                                         |
+|  Scenario 1.1  |                                       Login riuscito  `(Code 200)`                                       |
 | :------------: | :------------------------------------------------------------------------------------------: |
 |  Precondition  |                                       U è registrato                                         |
 | Post condition |                                        U è loggato                                           |
 |     Step#      |                                        Descrizione                                           |
-|       1        |                              Sistema: Chiede username, password.                             |
-|       2        |                              User: Inserisce username, password.                             |
+|       1        |                              Sistema: Chiede `username`, `password`.                             |
+|       2        |                              User: Inserisce `username`, `password`.                             |
 |       3        |                               Sistema: Legge i dati inseriti.                                |
 |       4        |                            Sistema: Dato il nome utente, cerca l’utente.                     |
 |       5        | Sistema: Recupera la password, la confronta con quella fornita. I dati coincidono, l’utente è autorizzato |
@@ -214,13 +214,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 1.2
 
-|  Scenario 1.2  |                                              Password errata                                             |
+|  Scenario 1.2  |                                              Password/Username errati  `(Code 401)`                                           |
 | :------------: | :-----------------------------------------------------------------------------------------------------:  |
 |  Precondition  |                                        U è registrato                                                    |
 | Post condition |                                        U non è loggato                                                   |
 |     Step#      |                                        Descrizione                                                       |
-|       1        |                              Sistema: Chiede username, password.                                         |
-|       2        |                              User: Inserisce username, password.                                         |
+|       1        |                              Sistema: Chiede `username`, `password`.                                         |
+|       2        |                              User: Inserisce `username`, `password`.                                         |
 |       3        |                               Sistema: Legge i dati inseriti.                                            |
 |       4        |                            Sistema: Dato il nome utente, cerca l’utente.                                 |
 |       5        | Sistema:  Recupera la password, la confronta con quella fornita. I dati non coincidono, l’utente non è autorizzato |
@@ -228,13 +228,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 1.3
 
-| Scenario 1.3   |                              L'utente non è registrato                             |
+| Scenario 1.3   |                              L'utente non è registrato  `(Code 404)`                          |
 | -------------- | :---------------------------------------------------------------------------:      |
 | Precondition   |                              U non è registrato                                    |
 | Post condition |                              U non è loggato                                       |
 | Step#          |                                  Descrizione                                       |
-|       1        |                              Sistema: Chiede username, password.                   |
-|       2        |                              User: Inserisce username, password.                   |
+|       1        |                              Sistema: Chiede `username`, `password`.                   |
+|       2        |                              User: Inserisce `username`, `password`.                   |
 |       3        |                               Sistema: Legge i dati inseriti.                      |
 |       4        | Sistema:  Cerca l’utente dato il nome utente. Utente non trovato. Utente non autorizzato |
 |       5        | Sistema: mostra a schermo un messaggio di errore |
@@ -282,60 +282,94 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |        User registrato           |
 | Nominal Scenario |           Scenario 3.1           |
 |     Variants     |               Nessuna            |
-|    Exceptions    |        Scenario 3.2, 3.3         |
+|    Exceptions    |  Scenario 3.2, 3.3, 3.4, 3.5     |
 
 #### Scenario 3.1
 
-|  Scenario 3.1  |                                                    Registrazione                                                   |
+|  Scenario 3.1  |                                                    Registrazione  `(Code 201)`                                    |
 | :------------: | :----------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                          U non ha un account                                                       |
 | Post condition |                                                 U registrato                                                       |
 |     Step#      |                                                    Descrizione                                                     |
 |       1        |                                               Admin: Clicca il pulsante di registrazione                           |
-|       2        |                                Sistema: Chiede username, password, ruolo                                           |
-|       3        |                               Admin: Inserisce  username, password, ruolo                                          |
-|       4        |                                Sistema: Legge i dati immessi                                                       |
-|       5        | Sistema: Controlla che i dati immessi non siano associati a nessun account esistente. Non esiste già un account per i dati immessi |
-|       6        |                               Sistema: Crea un nuovo user e lo memorizza nel sistema                               |
-|       7        | Sistema: mostra a schermo un messaggio di successo                                                                 |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta                    |
+|       3        |                              Sistema: Rileva che il token è valido                                                 |
+|       4        |                                Sistema: Chiede `username`, `password`, `ruolo`                                     |
+|       5        |                               Admin: Inserisce `username`, `password`, `ruolo`                                     |
+|       6        |                                Sistema: Legge i dati immessi                                                       |
+|       7        | Sistema: Controlla che i dati immessi non siano associati a nessun account esistente. Non esiste già un account per i dati immessi |
+|       8        |                               Sistema: Crea un nuovo user e lo memorizza nel sistema                               |
+|       9        | Sistema: mostra a schermo un messaggio di successo                                                                 |
 
 #### Scenario 3.2
 
-|  Scenario 3.2  |                                                          Username già in uso                                                               |
-| :------------: | :---------------------------------------------------------------------------------------------------------------------------------------:  |
-|  Precondition  |                                                          U ha un account                                                                   |
-| Post condition |                                                            Registrazione fallita                                                           |
-|     Step#      |                                                               Descrizione                                                                  |
-|       1        |                                               Admin: Clicca il pulsante di registrazione                                                   |
-|       2        |                                Sistema: Chiede username, password, ruolo                                                                   |
-|       3        |                               Admin: Inserisce  username, password, ruolo                                                                  |
-|       4        |                                Sistema: Legge i dati immessi                                                                               |
-|       5        | Sistema: Controlla che i dati immessi non siano associati a nessun account esistente. Risulta già un account per i dati immessi            |
-|       6        | Sistema: mostra a schermo un messaggio di errore                                                                                           |
+|  Scenario 3.2  |                                                          Username già in uso   `(Code 409)`                     |
+| :------------: | :---------------------------------------------------------------------------------------------------------------------------------------:|
+|  Precondition  |                                                          U ha un account                                           |
+| Post condition |                                                            Registrazione fallita                                   |
+|     Step#      |                                                               Descrizione                                          |
+|       1        |                                               Admin: Clicca il pulsante di registrazione                           |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta                    |
+|       3        |                              Sistema: Rileva che il token è valido                                                 |
+|       4        |                                Sistema: Chiede `username`, `password`, `ruolo`                                     |
+|       5        |                               Admin: Inserisce  `username`, `password`, `ruolo`                                    |
+|       6        |                                Sistema: Legge i dati immessi                                                       |
+|       7        | Sistema: Controlla che i dati immessi non siano associati a nessun account esistente. Risulta già un account per i dati immessi|
+|       8        | Sistema: mostra a schermo un messaggio di errore                                                                   |
 
 #### Scenario 3.3
 
-|  Scenario 3.3  |                                    User inserisce parametri vuoti                                     |
+|  Scenario 3.3  |                                    User inserisce parametri vuoti  `(Code 400)`                                     |
 | :------------: | :---------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                                 U non ha un account                                   |
 | Post condition |                                          Registrazione fallita                                        |
 |     Step#      |                                              Descrizione                                              |
 |       1        |                                               Admin: Clicca il pulsante di registrazione              |
-|       2        |                                Sistema: Chiede username, password, ruolo                              |
-|       3        |                               Admin: Inserisce  username, password, ruolo                             |
-|       4        |                                Sistema: Legge i dati immessi                                          |
-|       5        | Sistema: Controlla che tutti i parametri richiesti siano soddisfatti. Almeno un parametro risulta vuoto |
-|       6        | Sistema: mostra a schermo un messaggio di errore                                                      |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta       |
+|       3        |                              Sistema: Rileva che il token è valido                                    |
+|       4        |                                Sistema: Chiede`username`, `password`, `ruolo`                         |
+|       5        |                               Admin: Inserisce  `username`, `password`, `ruolo`                       |
+|       6        |                                Sistema: Legge i dati immessi                                          |
+|       7        | Sistema: Controlla che tutti i parametri richiesti siano soddisfatti. Almeno un parametro risulta vuoto |
+|       8        | Sistema: mostra a schermo un messaggio di errore                                                      |
 
-### Use Case 4, View users (UC4)
+#### Scenario 3.4
 
-| Actors Involved  |                    User                     |
-| :--------------: | :-----------------------------------------: |
-|   Precondition   |                    None                     |
-|  Post condition  | Information about at least one user is seen |
-| Nominal Scenario |                Scenario 4.1                 |
-|     Variants     |         Scenario 4.3, Scenario 4.4          |
-|    Exceptions    |         Scenario 4.2, Scenario 4.5          |
+|  Scenario 3.4  |                                   Token mancante o malformato  `(Code 401)`                           |
+| :------------: | :---------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                 U non ha un account                                   |
+| Post condition |                                          Registrazione fallita                                        |
+|     Step#      |                                              Descrizione                                              |
+|       1        |                                               Admin: Clicca il pulsante di registrazione              |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta       |
+|       3        |                              Sistema: Rileva che il token è assente o in un formato non valido        |
+|       4        |                               Sistema: Blocca il processo di registrazione                            |
+|       5        |                                Sistema: Mostra un messaggio d'errore                                  |
+
+#### Scenario 3.5
+
+|  Scenario 3.4  |                                   Diritti insufficienti  `(Code 403)`                           |
+| :------------: | :---------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                 U non ha un account                                   |
+| Post condition |                                          Registrazione fallita                                        |
+|     Step#      |                                              Descrizione                                              |
+|       1        |                                               Admin: Clicca il pulsante di registrazione              |
+|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta       |
+|       3        |                              Sistema: Rileva che l'utente associato al token non ha i diritti di registrazionee |
+|       4        |                               Sistema: Blocca il processo di registrazione                            |
+|       5        |                                Sistema: Mostra un messaggio d'errore                                  |
+
+### Use Case 4, Rimozione Account (UC4)
+
+| Actors Involved  |           Admin                            |
+| :--------------: | :----------------------------------:       |
+|   Precondition   |       Almeno un utente è registrato        |
+|  Post condition  |     L'aacount dello user viene eliminato   |
+| Nominal Scenario |            Scenario 4.1                    |
+|     Variants     |                Nessuna                     |
+|    Exceptions    |                                            |
+
+### Use Case 10, View users (UC10)
 
 | Actors Involved  |           Admin, Operator            |
 | :--------------: | :----------------------------------: |
