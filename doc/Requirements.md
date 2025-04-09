@@ -492,11 +492,11 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Precondition  |                                                             L'utente è autenticato come Admin o Operator                                                              |
 | Post condition |                                                            La rete viene creata ed è visibile nel sistema                                                             |
 |     Step#      |                                                                              Description                                                                              |
-|       1        |                                                     L'utente accede alla sezione "Gestione Reti" dell’interfaccia                                                     |
-|       2        |                                                                 L'utente seleziona "Crea nuova rete"                                                                  |
-|       3        | L'utente inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...). Eventuali campi annidati Gateway o Sensor, se presenti, verranno ignorati. |
-|       4        |                                                                 L'utente invia il modulo di creazione                                                                 |
-|       5        |                                           Il sistema valida i dati, registra la rete e restituisce il codice `201 Created`                                            |
+|       1        |                                                     Utente: Accede alla sezione "Gestione Reti" dell’interfaccia                                                     |
+|       2        |                                                                 Utente: Seleziona "Crea nuova rete"                                                                  |
+|       3        | Utente: Inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...). Eventuali campi annidati Gateway o Sensor, se presenti, verranno ignorati. |
+|       4        |                                                                 Utente: invia il modulo di creazione                                                                 |
+|       5        |                                           Sistema: Valida i dati, registra la rete e restituisce il codice `201 Created`                                            |
 
 #### Scenario 10.2
 
