@@ -133,12 +133,10 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  FR2.3.4  | Visualizzazione Sensore specifico                                                       |
 | FR2.3.4.1 | Visualizzazione di tutti i Sensori associati a un Gateway specifico                     |
 |   FR2.4   | Associazioni                                                                            |
-|  FR2.4.1  | Aggiunta del Gateway a Network                                                          |
-|  FR2.4.2  | Rimozione del Gateway da Network                                                        |
-|  FR2.4.3  | Aggiunta sensore al Gateway                                                             |
-|  FR2.4.4  | Rimozione sensore dal Gateway                                                           |
-|  FR2.4.5  | Aggiunta associazione tra Gateway                                                       |
-|  FR2.4.6  | Rimozione associazione tra Gateway                                                      |
+|  FR2.4.1  | Aggiunta del Gateway a Network (contestuale alla creazione gateway)                     |
+|  FR2.4.2  | Rimozione del Gateway da Network (non c'è)                                              |
+|  FR2.4.3  | Aggiunta sensore al Gateway (contestuale alla creazione sensore)                        |
+|  FR2.4.4  | Rimozione sensore dal Gateway (non c'è)                                                 |
 |  **FR3**  | **Gestione Misurazioni**                                                                |
 |   FR3.1   | Conversione timestamp                                                                   |
 |  FR3.1.1  | Conversione timestamp da orario locale a UTC                                            |
