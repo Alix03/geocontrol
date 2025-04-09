@@ -838,7 +838,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 ### Use Case 25, Associazione della misurazione al corrispondente sensore (UC25)
 
 (da finire)
-| Actors Involved | Admin |
+| Actors Involved | Gateway |
 | :--------------: | :------------------------------: |
 | Precondition | Il sensore deve essere registrato |
 | Post condition | La misurazione viene salvata |
@@ -850,14 +850,12 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 | Scenario 25.1  |                                       Associazione della misurazione al sensore con successo                                       |
 | :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                 Il sensore deve essere registrato                                                  |
+|  Precondition  |                                                 I sensori devono essere registrati                                                  |
 | Post condition |                                                    La misurazione viene salvata                                                    |
 |     Step#      |                                                            Descrizione                                                             |
-|       1        |                                             Admin: Clicca il pulsante di registrazione                                             |
-|       2        |                                  Sistema: Verifica la presenza di un token valido nella richiesta                                  |
-|       3        |                                               Sistema: Rileva che il token è valido                                                |
-|       4        |                                          Sistema: Chiede `username`, `password`, `ruolo`                                           |
-|       5        |                                          Admin: Inserisce `username`, `password`, `ruolo`                                          |
+|       1        |                                             Gateway: Invia i dati al sistema                                         |
+|       4        |                                          Sistema: Verifica che il MAC del gateway è registrato                                          |
+|       5        |                                 Sistema: Verifica che il MAC del sensore                          |
 |       6        |                                                   Sistema: Legge i dati immessi                                                    |
 |       7        | Sistema: Controlla che i dati immessi non siano associati a nessun account esistente. Non esiste già un account per i dati immessi |
 |       8        |                                       Sistema: Crea un nuovo user e lo memorizza nel sistema                                       |
@@ -872,6 +870,8 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Nominal Scenario |             Scenario 26.1             |
 |     Variants     |                Nessuna                |
 |    Exceptions    | Scenario 26.2, 26.3, 26.4, 26.5, 26.6 |
+
+
 
 (ci vuole il controllo sul timestamp?)
 
