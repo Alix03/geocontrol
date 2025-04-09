@@ -105,69 +105,65 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ## Functional Requirements
 
-|   ID    | Description                                                                             |
-| :-----: | --------------------------------------------------------------------------------------- |
-| **FR1** | **Autenticazione e gestione utenti**                                                    |
-|  FR1.1  | Login                                                                                   |
-|  FR1.2  | Creazione Account                                                                       |
-|  FR1.3  | Rimozione Account                                                                       |
-|  FR1.4  | Visualizzazione Elenco Account                                                          |
-|  FR1.4.1| Visualizza Specifico Account                                                             | 
-| **FR2** | **Gestione Topologia**                                                                  |
-|  FR2.1  | Gestione Network                                                                        |
-| FR2.1.1 | Creazione Network                                                                       |
-| FR2.1.2 | Modifica Network                                                                        |
-| FR2.1.3 | Eliminazione Network                                                                    |
-| FR2.1.4 | Visualizzazione di tutti i Network                                                      |
-| FR2.1.4.1 | Visualizzazione di un Network specifico                                                 |
-|  FR2.2  | Gestione Gateway                                                                        |
-| FR2.2.1 | Creazione Gateway                                                                       |
-| FR2.2.2 | Modifica Gateway                                                                        |
-| FR2.2.3 | Eliminazione Gateway                                                                    |
-| FR2.2.4 | Visualizzazione di un Gateway specifico                                                 |
-| FR2.2.4.1 | Visualizzazione di tutti i Gateway associati a un Network specifico                     |
-|  FR2.3  | Gestione Sensore                                                                        |
-| FR2.3.1 | Creazione Sensore                                                                       |
-| FR2.3.2 | Modifica Sensore                                                                        |
-| FR2.3.3 | Eliminazione Sensore                                                                    |
-| FR2.3.4 | Visualizzazione Sensore specifico                                                       |
-| FR2.3.4.1 | Visualizzazione di tutti i Sensori associati a un Gateway specifico                     |
-|  FR2.4  | Associazioni                                                                            |
-| FR2.4.1 | Aggiunta del Gateway a Network                                                          |
-| FR2.4.2 | Rimozione del Gateway da Network                                                        |
-| FR2.4.3 | Aggiunta sensore al Gateway                                                             |
-| FR2.4.4 | Rimozione sensore dal Gateway                                                           |
-| FR2.4.5 | Aggiunta associazione tra Gateway                                                       |
-| FR2.4.6 | Rimozione associazione tra Gateway                                                      |
-| **FR3** | **Gestione Misurazioni**                                                                |
-|  FR3.1  | Raccolta delle misurazioni trasmesse dai gateway                                        |
-| FR3.1.1 | Associazione della misurazione al corrispondente sensore                                |
-| FR3.1.2 | Conversione dal timestamp locale del sensore a UTC                                      |
-|  FR3.2  | Archiviazione dei dati convertiti nel sistema                                           |
-|  FR3.3  | Visualizzazione misurazioni                                                             |
-| FR3.3.1 | Visualizzazione misurazioni per un insieme di sensori di un Network specifico           |
-| FR3.3.2 | Visualizzazione misurazioni per un Sensore specifico                                    |
-|  FR3.4  | Inserimento misurazioni                                                                 |
-|  FR3.5  | Conversione timestamp da UTC a orario locale del viewer                                 |
-| **FR4** | **Analisi dei dati e rilevamento anomalie**                                             |
-|  FR4.1  | Calcolo della media delle misurazioni in un dato intervallo temporale                   |
-|  FR4.2  | Calcolo della varianza delle misurazioni in un dato intervallo temporale                |
-|  FR4.3  | Calcolo delle soglie (superiore e inferiore) per identificare potenziali valori anomali |
-| FR4.3.1 | Calcolo sogliaSuperiore = μ + 2σ                                                        |
-| FR4.3.2 | Calcolo sogliaInferiore = μ - 2σ                                                        |
-|  FR4.4  | Identificazione outlier                                                                 |
-|  FR4.5  | Visualizzazione statistiche                                                             |
-| FR4.5.1 | Visualizzazione statistiche per un insieme di Sensori di un Network specifico           |
-| FR4.5.2 | Visualizzazione statistiche per uno specifico sensore                                   |
-| FR4.5.3 | Visualizzazione outliers per un insieme di Sensori di un Network specifico              |
-| FR4.5.4 | Visualizzazione outliers per uno specifico sensore                                      |
-| **FR5** | **Gestione Errori**                                                                     |
-| FR5.1   | E400-	Invalid input data                                                                |
-| FR5.2   | E401-	Unauthorized                                                                      |
-| FR5.3   | E403-	Insufficient rights                                                               |
-| FR5.4   | E409-	Network code already in use                                                       |
-| FR5.5   | E500- Internal server error                                                             |
-
+|    ID     | Description                                                                                                         |
+| :-------: | ------------------------------------------------------------------------------------------------------------------- |
+|  **FR1**  | **Autenticazione e gestione utenti**                                                                                |
+|   FR1.1   | Login                                                                                                               |
+|   FR1.2   | Creazione Account                                                                                                   |
+|   FR1.3   | Rimozione Account                                                                                                   |
+|   FR1.4   | Visualizzazione Elenco Account                                                                                      |
+|  FR1.4.1  | Visualizza Specifico Account                                                                                        |
+|  **FR2**  | **Gestione Topologia**                                                                                              |
+|   FR2.1   | Gestione Network                                                                                                    |
+|  FR2.1.1  | Creazione Network                                                                                                   |
+|  FR2.1.2  | Modifica Network                                                                                                    |
+|  FR2.1.3  | Eliminazione Network                                                                                                |
+|  FR2.1.4  | Visualizzazione di tutti i Network                                                                                  |
+| FR2.1.4.1 | Visualizzazione di un Network specifico                                                                             |
+|   FR2.2   | Gestione Gateway                                                                                                    |
+|  FR2.2.1  | Creazione Gateway                                                                                                   |
+|  FR2.2.2  | Modifica Gateway                                                                                                    |
+|  FR2.2.3  | Eliminazione Gateway                                                                                                |
+|  FR2.2.4  | Visualizzazione di un Gateway specifico                                                                             |
+| FR2.2.4.1 | Visualizzazione di tutti i Gateway associati a un Network specifico                                                 |
+|   FR2.3   | Gestione Sensore                                                                                                    |
+|  FR2.3.1  | Creazione Sensore                                                                                                   |
+|  FR2.3.2  | Modifica Sensore                                                                                                    |
+|  FR2.3.3  | Eliminazione Sensore                                                                                                |
+|  FR2.3.4  | Visualizzazione Sensore specifico                                                                                   |
+| FR2.3.4.1 | Visualizzazione di tutti i Sensori associati a un Gateway specifico                                                 |
+|   FR2.4   | Associazioni                                                                                                        |
+|  FR2.4.1  | Aggiunta del Gateway a Network                                                                                      |
+|  FR2.4.2  | Rimozione del Gateway da Network                                                                                    |
+|  FR2.4.3  | Aggiunta sensore al Gateway                                                                                         |
+|  FR2.4.4  | Rimozione sensore dal Gateway                                                                                       |
+|  FR2.4.5  | Aggiunta associazione tra Gateway                                                                                   |
+|  FR2.4.6  | Rimozione associazione tra Gateway                                                                                  |
+|  **FR3**  | **Gestione Misurazioni**                                                                                            |
+|   FR3.1   | Conversione dal timestamp locale del sensore a UTC ???????????????                                                  |
+|   FR3.2   | Visualizzazione misurazioni                                                                                         |
+|  FR3.2.1  | Visualizzazione misurazioni per un insieme di sensori di un Network specifico in un intervallo di tempo specificato |
+|  FR3.2.2  | Visualizzazione misurazioni per un Sensore specifico                                                                |
+|   FR3.3   | Inserimento misurazioni                                                                                             |
+|   FR3.4   | Conversione timestamp da UTC a orario locale del viewer                                                             |
+|  **FR4**  | **Analisi dei dati e rilevamento anomalie**                                                                         |
+|   FR4.1   | Calcolo della media delle misurazioni in un dato intervallo temporale                                               |
+|   FR4.2   | Calcolo della varianza delle misurazioni in un dato intervallo temporale                                            |
+|   FR4.3   | Calcolo delle soglie (superiore e inferiore) per identificare potenziali valori anomali                             |
+|  FR4.3.1  | Calcolo sogliaSuperiore = μ + 2σ                                                                                    |
+|  FR4.3.2  | Calcolo sogliaInferiore = μ - 2σ                                                                                    |
+|   FR4.4   | Identificazione outlier                                                                                             |
+|   FR4.5   | Visualizzazione statistiche                                                                                         |
+|  FR4.5.1  | Visualizzazione statistiche per un insieme di Sensori di un Network specifico                                       |
+|  FR4.5.2  | Visualizzazione statistiche per uno specifico sensore                                                               |
+|  FR4.5.3  | Visualizzazione outliers per un insieme di Sensori di un Network specifico                                          |
+|  FR4.5.4  | Visualizzazione outliers per uno specifico sensore                                                                  |
+|  **FR5**  | **Gestione Errori**                                                                                                 |
+|   FR5.1   | E400- Invalid input data                                                                                            |
+|   FR5.2   | E401- Unauthorized                                                                                                  |
+|   FR5.3   | E403- Insufficient rights                                                                                           |
+|   FR5.4   | E409- Network code already in use                                                                                   |
+|   FR5.5   | E500- Internal server error                                                                                         |
 
 ## Non Functional Requirements
 
@@ -807,6 +803,36 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |        Il sistema riscontra un errore interno inatteso         |
 |       3        |    Il sistema restituisce errore `500 InternalServerError`     |
 
+### Use Case 20, Aggiunta del Gateway a Network (FR2.4.1)
+
+| Actors Involved  |            Admin, Operator            |
+| :--------------: | :-----------------------------------: |
+|   Precondition   |   Il network deve essere registrato   |
+|  Post condition  |         Misurazione inserita          |
+| Nominal Scenario |             Scenario 26.1             |
+|     Variants     |                Nessuna                |
+|    Exceptions    | Scenario 26.2, 26.3, 26.4, 26.5, 26.6 |
+
+(ci vuole il controllo sul timestamp?)
+
+#### Scenario 26.1
+
+| Scenario 26.1  |                                                Misurazione creata `(Code 201)`                                                |
+| :------------: | :---------------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                    Il sensore è registrato                                                    |
+| Post condition |                                                     Misurazione inserita                                                      |
+|     Step#      |                                                          Descrizione                                                          |
+|       1        |                                  Utente: Clicca il pulsante di inserimento della misurazione                                  |
+|       2        |                               Sistema: Verifica la presenza di un token valido nella richiesta                                |
+|       3        |                                             Sistema: Rileva che il token è valido                                             |
+|       4        |                     Sistema: Chiede `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`                      |
+|       5        | Utente: Inserisce `codice network`, `mac gateway`, `mac sensore`, `valore misurazione` (da tastiera o tramite menù a tendina) |
+|       6        |                                                 Sistema: Legge i dati immessi                                                 |
+|       7        |            Sistema: Controlla che i dati immessi corrispondano a network, gateway e sensori esistenti e associati             |
+|       8        |                      Sistema: Controlla che il valore della misurazione rientri tra i valori del dominio                      |
+|       9        |                                         Sistema: Memorizza la misurazione nel sistema                                         |
+|       10       |                                      Sistema: mostra a schermo un messaggio di successo                                       |
+
 ### Use Case 25, Associazione della misurazione al corrispondente sensore (UC25)
 
 (da finire)
@@ -822,12 +848,12 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 | Scenario 25.1  |                                       Associazione della misurazione al sensore con successo                                       |
 | :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                 I sensori devono essere registrati                                                  |
+|  Precondition  |                                                 I sensori devono essere registrati                                                 |
 | Post condition |                                                    La misurazione viene salvata                                                    |
 |     Step#      |                                                            Descrizione                                                             |
-|       1        |                                             Gateway: Invia i dati al sistema                                         |
-|       4        |                                          Sistema: Verifica che il MAC del gateway è registrato                                          |
-|       5        |                                 Sistema: Verifica che il MAC del sensore                          |
+|       1        |                                                  Gateway: Invia i dati al sistema                                                  |
+|       4        |                                       Sistema: Verifica che il MAC del gateway è registrato                                        |
+|       5        |                                              Sistema: Verifica che il MAC del sensore                                              |
 |       6        |                                                   Sistema: Legge i dati immessi                                                    |
 |       7        | Sistema: Controlla che i dati immessi non siano associati a nessun account esistente. Non esiste già un account per i dati immessi |
 |       8        |                                       Sistema: Crea un nuovo user e lo memorizza nel sistema                                       |
@@ -842,8 +868,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Nominal Scenario |             Scenario 26.1             |
 |     Variants     |                Nessuna                |
 |    Exceptions    | Scenario 26.2, 26.3, 26.4, 26.5, 26.6 |
-
-
 
 (ci vuole il controllo sul timestamp?)
 
