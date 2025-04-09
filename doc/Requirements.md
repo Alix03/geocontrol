@@ -194,71 +194,44 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ### Use Case 1, Login (UC10)
 
-| Actors Involved  |           User           |
+| Actors Involved  |           utente           |
 | :--------------: | :----------------------: |
-|   Precondition   | L'utente U non è loggato |
-|  Post condition  |   L'utente U è loggato   |
+|   Precondition   | L'utente non è loggato |
+|  Post condition  |   L'utente è loggato   |
 | Nominal Scenario |       Scenario 1.1       |
 |     Variants     |         Nessuna          |
-|    Exceptions    |  Scenario 1.2, 1.3, 1.4  |
+|    Exceptions    |  ADD ECCEZIONI           |
 
 #### Scenario 1.1
 
 |  Scenario 1.1  |                                        Login riuscito `(Code 200)`                                        |
 | :------------: | :-------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                              U è registrato                                               |
-| Post condition |                                                U è loggato                                                |
+|  Precondition  |                                              L'utente è registrato                                               |
+| Post condition |                                                L'utente è loggato                                                |
 |     Step#      |                                                Descrizione                                                |
 |       1        |                                  Sistema: Chiede `username`, `password`.                                  |
-|       2        |                                  User: Inserisce `username`, `password`.                                  |
+|       2        |                                  utente: Inserisce `username`, `password`.                                  |
 |       3        |                                      Sistema: Legge i dati inseriti.                                      |
 |       4        |                               Sistema: Dato il nome utente, cerca l’utente.                               |
 |       5        | Sistema: Recupera la password, la confronta con quella fornita. I dati coincidono, l’utente è autorizzato |
 |       6        |                         Sistema: Associa allo user un token di accesso temporaneo                         |
 
-#### Scenario 1.2
-
-|  Scenario 1.2  |                                       Password/Username errati `(Code 401)`                                       |
-| :------------: | :---------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                  U è registrato                                                   |
-| Post condition |                                                  U non è loggato                                                  |
-|     Step#      |                                                    Descrizione                                                    |
-|       1        |                                      Sistema: Chiede `username`, `password`.                                      |
-|       2        |                                      User: Inserisce `username`, `password`.                                      |
-|       3        |                                          Sistema: Legge i dati inseriti.                                          |
-|       4        |                                   Sistema: Dato il nome utente, cerca l’utente.                                   |
-|       5        | Sistema: Recupera la password, la confronta con quella fornita. I dati non coincidono, l’utente non è autorizzato |
-|       6        |                                 Sistema: mostra a schermo un messaggio di errore                                  |
-
-#### Scenario 1.3
-
-| Scenario 1.3   |                         L'utente non è registrato `(Code 404)`                          |
-| -------------- | :-------------------------------------------------------------------------------------: |
-| Precondition   |                                   U non è registrato                                    |
-| Post condition |                                     U non è loggato                                     |
-| Step#          |                                       Descrizione                                       |
-| 1              |                         Sistema: Chiede `username`, `password`.                         |
-| 2              |                         User: Inserisce `username`, `password`.                         |
-| 3              |                             Sistema: Legge i dati inseriti.                             |
-| 4              | Sistema: Cerca l’utente dato il nome utente. Utente non trovato. Utente non autorizzato |
-| 5              |                    Sistema: mostra a schermo un messaggio di errore                     |
-
 ### Use Case 2, Creazione Account (UC3)
 
 | Actors Involved  |            Admin             |
 | :--------------: | :--------------------------: |
-|   Precondition   | L'utente U non ha un account |
-|  Post condition  |       User registrato        |
+|   Precondition   | L'utente non ha un account |
+|  Post condition  |       Utente registrato        |
 | Nominal Scenario |         Scenario 2.1         |
 |     Variants     |           Nessuna            |
-|    Exceptions    | Scenario 2.2, 2.3, 2.4, 2.5  |
+|    Exceptions    | ADD ECCEZIONI                |
 
 #### Scenario 2.1
 
 |  Scenario 2.1  |                                                     Registrazione `(Code 201)`                                                     |
 | :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                        U non ha un account                                                         |
-| Post condition |                                                            U registrato                                                            |
+|  Precondition  |                                                        L'utente non ha un account                                                         |
+| Post condition |                                                            Utente registrato                                                            |
 |     Step#      |                                                            Descrizione                                                             |
 |       1        |                                             Admin: Clicca il pulsante di registrazione                                             |
 |       2        |                                  Sistema: Verifica la presenza di un token valido nella richiesta                                  |
@@ -270,79 +243,21 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       8        |                                       Sistema: Crea un nuovo user e lo memorizza nel sistema                                       |
 |       9        |                                         Sistema: mostra a schermo un messaggio di successo                                         |
 
-#### Scenario 2.2
-
-|  Scenario 2.2  |                                                Username già in uso `(Code 409)`                                                 |
-| :------------: | :-----------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                         U ha un account                                                         |
-| Post condition |                                                      Registrazione fallita                                                      |
-|     Step#      |                                                           Descrizione                                                           |
-|       1        |                                           Admin: Clicca il pulsante di registrazione                                            |
-|       2        |                                Sistema: Verifica la presenza di un token valido nella richiesta                                 |
-|       3        |                                              Sistema: Rileva che il token è valido                                              |
-|       4        |                                         Sistema: Chiede `username`, `password`, `ruolo`                                         |
-|       5        |                                        Admin: Inserisce `username`, `password`, `ruolo`                                         |
-|       6        |                                                  Sistema: Legge i dati immessi                                                  |
-|       7        | Sistema: Controlla che i dati immessi non siano associati a nessun account esistente. Risulta già un account per i dati immessi |
-|       8        |                                        Sistema: mostra a schermo un messaggio di errore                                         |
-
-#### Scenario 3.3
-
-|  Scenario 3.3  |                               User inserisce parametri vuoti `(Code 400)`                               |
-| :------------: | :-----------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                           U non ha un account                                           |
-| Post condition |                                          Registrazione fallita                                          |
-|     Step#      |                                               Descrizione                                               |
-|       1        |                               Admin: Clicca il pulsante di registrazione                                |
-|       2        |                    Sistema: Verifica la presenza di un token valido nella richiesta                     |
-|       3        |                                  Sistema: Rileva che il token è valido                                  |
-|       4        |                             Sistema: Chiede`username`, `password`, `ruolo`                              |
-|       5        |                            Admin: Inserisce `username`, `password`, `ruolo`                             |
-|       6        |                                      Sistema: Legge i dati immessi                                      |
-|       7        | Sistema: Controlla che tutti i parametri richiesti siano soddisfatti. Almeno un parametro risulta vuoto |
-|       8        |                            Sistema: mostra a schermo un messaggio di errore                             |
-
-#### Scenario 3.4
-
-|  Scenario 3.4  |             Token mancante o malformato `(Code 401)`              |
-| :------------: | :---------------------------------------------------------------: |
-|  Precondition  |                        U non ha un account                        |
-| Post condition |                       Registrazione fallita                       |
-|     Step#      |                            Descrizione                            |
-|       1        |            Admin: Clicca il pulsante di registrazione             |
-|       2        | Sistema: Verifica la presenza di un token valido nella richiesta  |
-|       3        | Sistema: Rileva che il token è assente o in un formato non valido |
-|       4        |           Sistema: Blocca il processo di registrazione            |
-|       5        |               Sistema: Mostra un messaggio d'errore               |
-
-#### Scenario 3.5
-
-|  Scenario 3.5  |                         Diritti insufficienti `(Code 403)`                         |
-| :------------: | :--------------------------------------------------------------------------------: |
-|  Precondition  |                                U non ha un account                                 |
-| Post condition |                               Registrazione fallita                                |
-|     Step#      |                                    Descrizione                                     |
-|       1        |                     Admin: Clicca il pulsante di registrazione                     |
-|       2        |          Sistema: Verifica la presenza di un token valido nella richiesta          |
-|       3        | Sistema: Rileva che l'utente associato al token non ha i diritti di registrazionee |
-|       4        |                    Sistema: Blocca il processo di registrazione                    |
-|       5        |                       Sistema: Mostra un messaggio d'errore                        |
-
 ### Use Case 4, Rimozione Account (UC4)
 
 | Actors Involved  |                Admin                 |
 | :--------------: | :----------------------------------: |
 |   Precondition   |    Almeno un utente è registrato     |
-|  Post condition  | L'aacount dello user viene eliminato |
+|  Post condition  | L'acount utente eliminato |
 | Nominal Scenario |             Scenario 4.1             |
 |     Variants     |               Nessuna                |
-|    Exceptions    |          4.1, 4.2, 4.3, 4.4          |
+|    Exceptions    |          ADD ECCEZIONI               |
 
 #### Scenario 4.1
 
 |  Scenario 4.1  |                       Eliminazione Utente `(Code 204)`                        |
 | :------------: | :---------------------------------------------------------------------------: |
-|  Precondition  |                            Utente U ha un account                             |
+|  Precondition  |                            Utente ha un account                             |
 | Post condition |                           Account utente eliminato                            |
 |     Step#      |                                  Descrizione                                  |
 |       1        |               Admin: Clicca il pulsante di eliminazione accuont               |
@@ -355,48 +270,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       8        |                          Sistema: Elimina l'account                           |
 |       9        |              Sistema: mostra a schermo un messaggio di successo               |
 
-#### Scenario 4.2
-
-|  Scenario 4.2  |             Token mancante o malformato `(Code 401)`              |
-| :------------: | :---------------------------------------------------------------: |
-|  Precondition  |                      Utente U ha un account                       |
-| Post condition |                   Eliminazione Account fallita                    |
-|     Step#      |                            Descrizione                            |
-|       1        |             Admin: Clicca il pulsante di elimanzione              |
-|       2        | Sistema: Verifica la presenza di un token valido nella richiesta  |
-|       3        | Sistema: Rileva che il token è assente o in un formato non valido |
-|       4        |            Sistema: Blocca il processo di elimanzione             |
-|       5        |               Sistema: Mostra un messaggio d'errore               |
-
-#### Scenario 4.3
-
-|  Scenario 4.3  |                            Diritti insufficienti `(Code 403)`                             |
-| :------------: | :---------------------------------------------------------------------------------------: |
-|  Precondition  |                                  Utente U ha un account                                   |
-| Post condition |                               Eliminazione Account fallita                                |
-|     Step#      |                                        Descrizione                                        |
-|       1        |                         Admin: Clicca il pulsante di elimanzione                          |
-|       2        |             Sistema: Verifica la presenza di un token valido nella richiesta              |
-|       3        | Sistema: Sistema: Rileva che l'utente associato al token non ha i diritti di eliminazione |
-|       4        |                        Sistema: Blocca il processo di elimanzione                         |
-|       5        |                           Sistema: Mostra un messaggio d'errore                           |
-
-#### Scenario 4.4
-
-|  Scenario 4.4  |                               Account utente non trovato `(Code 404)`                               |
-| :------------: | :-------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                       Utente U ha un account                                        |
-| Post condition |                                      Account utente eliminato                                       |
-|     Step#      |                                             Descrizione                                             |
-|       1        |                          Admin: Clicca il pulsante di eliminazione accuont                          |
-|       2        |                  Sistema: Verifica la presenza di un token valido nella richiesta                   |
-|       3        |                                Sistema: Rileva che il token è valido                                |
-|       4        |                                     Sistema: Chiede `username`                                      |
-|       5        |                                     Admin: Inserisce `username`                                     |
-|       6        |                                    Sistema: Legge i dati immessi                                    |
-|       7        | Sistema: Controlla che i dati immessi siano associati a un account esistente. L'account non trovato |
-|       8        |                                Sistema: Mostra un messaggio d'errore                                |
-
 ### Use Case 5, Visualizzazione Account (UC5)
 
 | Actors Involved  |                                   Admin                                   |
@@ -405,7 +278,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | L’admin visualizza la lista completa degli account registrati nel sistema |
 | Nominal Scenario |                               Scenario 5.1                                |
 |     Variants     |                                    5.2                                    |
-|    Exceptions    |                                 5.3, 5.4                                  |
+|    Exceptions    |                                 ADD ECCEZIONI                              |
 
 #### Scenario 5.1
 
@@ -420,60 +293,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |             Sistema: recupera tutti gli account dal database              |
 |       6        |          Sistema: mostra a schermo l'elenco degli utenti trovati          |
 
-#### Scenario 5.2
-
-|  Scenario 5.2  |          Visualizzazione account specifico `(Code 200)`          |
-| :------------: | :--------------------------------------------------------------: |
-|  Precondition  |           L’admin è loggato e ha i permessi necessari            |
-| Post condition |             L’admin visualizza l'account specificato             |
-|     Step#      |                           Descrizione                            |
-|       1        |         Admin: Clicca il pulsante di Visualizza Account          |
-|       2        | Sistema: Verifica la presenza di un token valido nella richiesta |
-|       3        |              Sistema: Rileva che il token è valido               |
-|       4        |        Admin: seleziona o cerca l’account da visualizzare        |
-|       4        |             Sistema: recupera l'account dal database             |
-|       6        |          Sistema: mostra a schermol'account specificato          |
-
-#### Scenario 5.3
-
-|  Scenario 5.3  |             Token mancante o malformato `(Code 401)`              |
-| :------------: | :---------------------------------------------------------------: |
-|  Precondition  |          Admin clicca il pulsante di Visualizza Account           |
-| Post condition |                  Visualizzazione Account fallita                  |
-|     Step#      |                            Descrizione                            |
-|       1        |       Admin: Clicca il pulsante di visualizzazione account        |
-|       2        | Sistema: Verifica la presenza di un token valido nella richiesta  |
-|       3        | Sistema: Rileva che il token è assente o in un formato non valido |
-|       4        |          Sistema: Blocca il processo di visualizzazione           |
-|       5        |               Sistema: Mostra un messaggio d'errore               |
-
-#### Scenario 5.4
-
-|  Scenario 5.4  |                            Diritti insufficienti `(Code 403)`                             |
-| :------------: | :---------------------------------------------------------------------------------------: |
-|  Precondition  |                      Admin clicca il pulsante di Visualizza Account                       |
-| Post condition |                               Eliminazione Account fallita                                |
-|     Step#      |                                        Descrizione                                        |
-|       1        |                   Admin: Clicca il pulsante di visualizzazione account                    |
-|       2        |             Sistema: Verifica la presenza di un token valido nella richiesta              |
-|       3        | Sistema: Sistema: Rileva che l'utente associato al token non ha i diritti di eliminazione |
-|       4        |                      Sistema: Blocca il processo di visualizzazione                       |
-|       5        |                           Sistema: Mostra un messaggio d'errore                           |
-
-#### Scenario 5.5
-
-#### DA FINIRE
-
-|  Scenario 5.5  |                              Utente non trovato `(Code 404)`                              |
-| :------------: | :---------------------------------------------------------------------------------------: |
-|  Precondition  |                      Admin clicca il pulsante di Visualizza Account                       |
-| Post condition |                               Eliminazione Account fallita                                |
-|     Step#      |                                        Descrizione                                        |
-|       1        |                   Admin: Clicca il pulsante di visualizzazione account                    |
-|       2        |             Sistema: Verifica la presenza di un token valido nella richiesta              |
-|       3        | Sistema: Sistema: Rileva che l'utente associato al token non ha i diritti di eliminazione |
-|       4        |                      Sistema: Blocca il processo di visualizzazione                       |
-|       5        |                           Sistema: Mostra un messaggio d'errore                           |
+se fai il visualizza mettere
 
 ### Use Case 10, View users (UC10)
 
