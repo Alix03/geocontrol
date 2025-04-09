@@ -109,29 +109,29 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | :-----: | --------------------------------------------------------------------------------------- |
 | **FR1** | **Autenticazione e gestione utenti**                                                    |
 |  FR1.1  | Login                                                                                   |
-|  FR1.2  | Logout                                                                                  |
-|  FR1.3  | Creazione Account                                                                       |
-|  FR1.4  | Rimozione Account                                                                       |
-|  FR1.5  | Visualizzazione Account                                                                 |
+|  FR1.2  | Creazione Account                                                                       |
+|  FR1.3  | Rimozione Account                                                                       |
+|  FR1.4  | Visualizzazione Elenco Account                                                          |
+|  FR1.4.1| Visualizza Specifico Account                                                             | 
 | **FR2** | **Gestione Topologia**                                                                  |
 |  FR2.1  | Gestione Network                                                                        |
 | FR2.1.1 | Creazione Network                                                                       |
 | FR2.1.2 | Modifica Network                                                                        |
 | FR2.1.3 | Eliminazione Network                                                                    |
 | FR2.1.4 | Visualizzazione di tutti i Network                                                      |
-| FR2.1.5 | Visualizzazione di un Network specifico                                                 |
+| FR2.1.4.1 | Visualizzazione di un Network specifico                                                 |
 |  FR2.2  | Gestione Gateway                                                                        |
 | FR2.2.1 | Creazione Gateway                                                                       |
 | FR2.2.2 | Modifica Gateway                                                                        |
 | FR2.2.3 | Eliminazione Gateway                                                                    |
 | FR2.2.4 | Visualizzazione di un Gateway specifico                                                 |
-| FR2.2.5 | Visualizzazione di tutti i Gateway associati a un Network specifico                     |
+| FR2.2.4.1 | Visualizzazione di tutti i Gateway associati a un Network specifico                     |
 |  FR2.3  | Gestione Sensore                                                                        |
 | FR2.3.1 | Creazione Sensore                                                                       |
 | FR2.3.2 | Modifica Sensore                                                                        |
 | FR2.3.3 | Eliminazione Sensore                                                                    |
 | FR2.3.4 | Visualizzazione Sensore specifico                                                       |
-| FR2.3.5 | Visualizzazione di tutti i Sensori associati a un Gateway specifico                     |
+| FR2.3.4.1 | Visualizzazione di tutti i Sensori associati a un Gateway specifico                     |
 |  FR2.4  | Associazioni                                                                            |
 | FR2.4.1 | Aggiunta del Gateway a Network                                                          |
 | FR2.4.2 | Rimozione del Gateway da Network                                                        |
@@ -161,7 +161,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | FR4.5.2 | Visualizzazione statistiche per uno specifico sensore                                   |
 | FR4.5.3 | Visualizzazione outliers per un insieme di Sensori di un Network specifico              |
 | FR4.5.4 | Visualizzazione outliers per uno specifico sensore                                      |
-| **FR5** | **Gestione caduta Connessione**                                                         |
+| **FR5** | **Gestione Errori**                                                                     |
+| FR5.1   | E400-	Invalid input data                                                                |
+| FR5.2   | E401-	Unauthorized                                                                      |
+| FR5.3   | E403-	Insufficient rights                                                               |
+| FR5.4   | E409-	Network code already in use                                                       |
+| FR5.5   | E500- Internal server error                                                             |
+
 
 ## Non Functional Requirements
 
@@ -237,53 +243,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | 4              | Sistema: Cerca l’utente dato il nome utente. Utente non trovato. Utente non autorizzato |
 | 5              |                    Sistema: mostra a schermo un messaggio di errore                     |
 
-### Use case 2, Logout (UC2)
-
-| Actors Involved  |            User             |
-| :--------------: | :-------------------------: |
-|   Precondition   |       Utente U esiste       |
-|  Post condition  | U non è loggato nel sistema |
-| Nominal Scenario |        Scenario 2.1         |
-|     Variants     |           Nessuna           |
-|    Exceptions    |        Scenario 2.2         |
-
-#### Scenario 2.1
-
-| Scenario 2.1   |                      Logout                       |
-| -------------- | :-----------------------------------------------: |
-| Precondition   |                    U è loggato                    |
-| Post condition |                  U non è loggato                  |
-| Step#          |                    Descrizione                    |
-| 1              |          User: Clicca pulsante di Logout          |
-| 2              | Sistema: Controlla che U sia loggato nel sistema  |
-| 3              | Sistema: rimuove l'autorizzazone-user per l'uente |
-| 4              | Sistema: mostra un messaggio di conferma logout.  |
-
-#### Scenario 2.2
-
-| Scenario 2.2   |          User non è loggato nel sistema          |
-| -------------- | :----------------------------------------------: |
-| Precondition   |                 U non è loggato                  |
-| Post condition |                 U non è loggato                  |
-| Step#          |                   Descrizione                    |
-| 1              |         User: Clicca pulsante di Logout          |
-| 2              | Sistema: Controlla che U sia loggato nel sistema |
-| 3              |    Sistema: U non risulta loggato nel sistema    |
-| 4              |      Sistema: mostra un messaggio di errore      |
-
-### Use Case 3, Creazione Account (UC3)
+### Use Case 2, Creazione Account (UC3)
 
 | Actors Involved  |            Admin             |
 | :--------------: | :--------------------------: |
 |   Precondition   | L'utente U non ha un account |
 |  Post condition  |       User registrato        |
-| Nominal Scenario |         Scenario 3.1         |
+| Nominal Scenario |         Scenario 2.1         |
 |     Variants     |           Nessuna            |
-|    Exceptions    | Scenario 3.2, 3.3, 3.4, 3.5  |
+|    Exceptions    | Scenario 2.2, 2.3, 2.4, 2.5  |
 
-#### Scenario 3.1
+#### Scenario 2.1
 
-|  Scenario 3.1  |                                                     Registrazione `(Code 201)`                                                     |
+|  Scenario 2.1  |                                                     Registrazione `(Code 201)`                                                     |
 | :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                                        U non ha un account                                                         |
 | Post condition |                                                            U registrato                                                            |
@@ -298,9 +270,9 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       8        |                                       Sistema: Crea un nuovo user e lo memorizza nel sistema                                       |
 |       9        |                                         Sistema: mostra a schermo un messaggio di successo                                         |
 
-#### Scenario 3.2
+#### Scenario 2.2
 
-|  Scenario 3.2  |                                                Username già in uso `(Code 409)`                                                 |
+|  Scenario 2.2  |                                                Username già in uso `(Code 409)`                                                 |
 | :------------: | :-----------------------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                                         U ha un account                                                         |
 | Post condition |                                                      Registrazione fallita                                                      |
