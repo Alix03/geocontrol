@@ -475,7 +475,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |                      Sistema: Blocca il processo di visualizzazione                       |
 |       5        |                           Sistema: Mostra un messaggio d'errore                           |
 
-### Use Case 10, View users (UC10)
+### Use Case 10, Creazione Network (UC10)
 
 | Actors Involved  |                              Admin, Operator                              |
 | :--------------: | :-----------------------------------------------------------------------: |
@@ -709,7 +709,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server |
 |       3        |        Il sistema restituisce il codice di errore `500 InternalServerError`         |
 
-### Use Case 13, Recupero lista Network (UC13)
+### Use Case 13, Visualizzazione di tutti i Network (UC13)
 
 | Actors Involved  |             Admin, Operator, Viewer             |
 | :--------------: | :---------------------------------------------: |
@@ -752,7 +752,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |    Il sistema riscontra un errore interno durante l'elaborazione     |
 |       3        | Il sistema restituisce il codice di errore `500 InternalServerError` |
 
-### Use Case 14, Recupero singolo Network (UC14)
+### Use Case 14, Visualizzazione di un Network specifico (UC14)
 
 | Actors Involved  |               Admin, Operator, Viewer               |
 | :--------------: | :-------------------------------------------------: |
