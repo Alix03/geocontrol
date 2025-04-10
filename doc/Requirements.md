@@ -880,7 +880,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       6        | Sistema: Se la data specificata dall'utente non ha fuso orario UTC effettua conversione timestamp da UTC a orario locale (UC24) |
 |       7        |         Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network secondo i filtri indicati         |
 
-### Use Case 26, Inserimento misurazioni (UC26)
+### Use Case 26, Inserimento misurazioni (FR3.3)
 
 | Actors Involved  |            Admin, Operator            |
 | :--------------: | :-----------------------------------: |
