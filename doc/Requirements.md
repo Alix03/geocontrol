@@ -171,8 +171,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ## Non Functional Requirements
 
-\<Describe constraints on functional requirements>
-
 |  ID  | Type (efficiency, reliability, ..) |                                                                         Description                                                                          | Refers to |
 | :--: | :--------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------: |
 | NFR1 |            Affidabilità            |                                                     Non più di 6 misurazioni perse per sensore all’anno                                                      |    FR3    |
@@ -187,10 +185,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 # Use case diagram and use cases
 
 ## Use case diagram
-
-\<define here UML Use case diagram UCD summarizing all use cases, and their relationships>
-
-\<next describe here each use case in the UCD>
 
 ### Use Case 1, Login (UC10)
 
@@ -1247,6 +1241,264 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | Utente: Compila correttamente il modulo e invia la richiesta di creazione |
 |       2        | Durante l'elaborazione si verifica un errore interno                   |
 |       3        | Sistema: Restituisce `500 InternalServerError`                         |
+
+### Use Case 21, Modifica Sensore (UC21)
+
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator e il sensore esiste sul gateway indicato |
+|  Post condition  |            Il sensore viene aggiornato nel sistema            |
+| Nominal Scenario |                  Scenario 21.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    | Scenario 21.2, Scenario 21.3, Scenario 21.4, Scenario 21.5, Scenario 21.6, Scenario 21.7 |
+
+#### Scenario 21.1
+
+| Scenario 21.1  |                           Modifica sensore con successo `(204 No Content)`                            |
+| :------------: | :-----------------------------------------------------------------------------------------------------: |
+|  Precondition  |             L'utente è autenticato come Admin o Operator e il sensore esistente è referenziato             |
+| Post condition |          Il sistema aggiorna il sensore con i dati forniti           |
+|     Step#      |                                          Description                                                     |
+|       1        | Utente: Accede alla sezione "Gestione Gateway/Sensori" e seleziona il sensore da modificare (identificato da `sensorMac`) |
+|       2        | Utente: Aggiorna i campi `macAddress`, `name`, `description`  |
+|       3        | Utente: Invia la richiesta PATCH all’endpoint `/networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}`   |
+|       4        | Sistema: Valida i dati, aggiorna il sensore e restituisce il codice `204 No Content`                         |
+
+#### Scenario 21.2
+
+| Scenario 21.2  |                 Dati mancanti o input non valido `(400 BadRequest)`                 |
+| :------------: | :-------------------------------------------------------------------------------------: |
+|  Precondition  |        L'utente è autenticato, ma il modulo di modifica è incompleto o malformato         |
+| Post condition |                      Nessuna modifica viene applicata                                  |
+|     Step#      |                                  Description                                           |
+|       1        | Utente: Invia la richiesta PATCH omettendo campi obbligatori o inserendo valori non validi   |
+|       2        | Sistema: Valida i dati, rileva l’errore e restituisce `400 BadRequest`                     |
+
+#### Scenario 21.3
+
+| Scenario 21.3  |            Token assente o non valido `(401 UnauthorizedError)`             |
+| :------------: | :---------------------------------------------------------------------------: |
+|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
+| Post condition |                     Nessuna modifica viene applicata                          |
+|     Step#      |                               Description                                      |
+|       1        | Utente: Tenta di inviare la richiesta PATCH senza un header `Authorization` valido   |
+|       2        | Sistema: Verifica il token e lo considera non valido                          |
+|       3        | Sistema: Restituisce `401 UnauthorizedError`                                  |
+
+#### Scenario 21.4
+
+| Scenario 21.4  |         Ruolo non autorizzato `(403 InsufficientRightsError)`         |
+| :------------: | :-------------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato con token valido, ma ha ruolo Viewer            |
+| Post condition |                   Nessuna modifica viene applicata                    |
+|     Step#      |                              Description                              |
+|       1        | Utente: Autenticato come Viewer tenta di modificare un sensore         |
+|       2        | Sistema: Verifica il token e il ruolo dell’utente                      |
+|       3        | Sistema: Rileva che l'utente non ha i permessi necessari                 |
+|       4        | Sistema: Restituisce `403 InsufficientRightsError`                     |
+
+#### Scenario 21.5
+
+| Scenario 21.5  |          Network/Gateway/Sensor non trovato `(404 NotFoundError)`          |
+| :------------: | :-------------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode`, `gatewayMac` o `sensorMac` specificati non corrispondono a un elemento esistente |
+| Post condition |                      Nessuna modifica viene applicata                    |
+|     Step#      |                                Description                                   |
+|       1        | Utente: Invia la richiesta PATCH con un `networkCode`, `gatewayMac` o `sensorMac` inesistenti  |
+|       2        | Sistema: Non trova l'elemento corrispondente e restituisce `404 NotFoundError`                 |
+
+#### Scenario 21.6
+
+| Scenario 21.6  |           Sensor mac address già in use `(409 ConflictError)`           |
+| :------------: | :---------------------------------------------------------------------: |
+|  Precondition  | L'utente tenta di aggiornare il sensore assegnandogli un `macAddress` già usato da un altro sensore nel sistema |
+| Post condition |                      Nessuna modifica viene applicata                  |
+|     Step#      |                             Description                                  |
+|       1        | Utente: Invia la richiesta PATCH con un nuovo `macAddress` già usato da un altro sensore nel sistema   |
+|       2        | Sistema: Rileva la duplicazione e restituisce `409 ConflictError`        |
+
+#### Scenario 21.7
+
+| Scenario 21.7  |          Errore interno del server `(500 InternalServerError)`          |
+| :------------: | :------------------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato, ma durante l'elaborazione si verifica un errore inatteso del server |
+| Post condition |                        Nessuna modifica viene applicata                   |
+|     Step#      |                                Description                                  |
+|       1        | Utente: Invia la richiesta PATCH per aggiornare il sensore               |
+|       2        | Durante l'elaborazione, il sistema riscontra un errore interno             |
+|       3        | Sistema: Restituisce `500 InternalServerError`                           |
+
+### Use Case 22, Eliminazione Sensore (UC22)
+
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator |
+|  Post condition  |              Il sensore viene eliminato dal sistema              |
+| Nominal Scenario |                  Scenario 22.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    | Scenario 22.2, Scenario 22.3, Scenario 22.4, Scenario 22.5 |
+
+#### Scenario 22.1
+
+| Scenario 22.1  |                         Eliminazione sensore con successo `(204 No Content)`                         |
+| :------------: | :-----------------------------------------------------------------------------------------------------: |
+|  Precondition  |   L'utente è autenticato come Admin o Operator e il sensore da eliminare esiste   |
+| Post condition |      Il sistema elimina il sensore       |
+|     Step#      |                                             Description                                                  |
+|       1        | Utente: Accede alla sezione "Gestione Gateway/Sensori" e individua il sensore da eliminare, identificato da `sensorMac`  |
+|       2        | Utente: Invia la richiesta DELETE all’endpoint `/networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}`      |
+|       3        | Sistema: Verifica il token e i parametri ricevuti                                          |
+|       4        | Sistema: Elimina il sensore dal sistema e restituisce il codice `204 No Content`             |
+
+#### Scenario 22.2
+
+| Scenario 22.2  |               Token assente o non valido `(401 UnauthorizedError)`               |
+| :------------: | :--------------------------------------------------------------------------------: |
+|  Precondition  |  L'utente non ha effettuato il login o il token è assente, scaduto o malformato      |
+| Post condition |                  Nessuna eliminazione del sensore avviene                         |
+|     Step#      |                                   Description                                      |
+|       1        | Utente: Tenta di inviare la richiesta DELETE senza un header `Authorization` valido  |
+|       2        | Sistema: Verifica il token e rileva che è assente o non valido                        |
+|       3        | Sistema: Restituisce `401 UnauthorizedError`                                        |
+
+#### Scenario 22.3
+
+| Scenario 22.3  |               Ruolo non autorizzato `(403 InsufficientRightsError)`               |
+| :------------: | :--------------------------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato con token valido, ma ha ruolo Viewer, non abilitato per eliminare sensori |
+| Post condition |                         Nessun sensore viene eliminato                          |
+|     Step#      |                                  Description                                       |
+|       1        | Utente: Autenticato come Viewer tenta di inviare una richiesta DELETE per un sensore  |
+|       2        | Sistema: Verifica il token e il ruolo dell’utente e rileva permessi insufficienti      |
+|       3        | Sistema: Restituisce `403 InsufficientRightsError`                                  |
+
+#### Scenario 22.4
+
+| Scenario 22.4  |             Network/Gateway/Sensor non trovato `(404 NotFoundError)`              |
+| :------------: | :---------------------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode`, `gatewayMac` o `sensorMac` specificati non corrispondono a nessun elemento esistente |
+| Post condition |                         Nessun sensore viene eliminato                          |
+|     Step#      |                                 Description                                         |
+|       1        | Utente: Invia la richiesta DELETE usando un `networkCode`, `gatewayMac` o `sensorMac` inesistenti      |
+|       2        | Sistema: Non trova l'elemento corrispondente e restituisce `404 NotFoundError`       |
+
+#### Scenario 22.5
+
+| Scenario 22.5  |           Errore interno del server `(500 InternalServerError)`           |
+| :------------: | :-------------------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato, ma durante l'elaborazione si verifica un errore inatteso del server    |
+| Post condition |                    Nessuna eliminazione viene effettuata                    |
+|     Step#      |                                  Description                                         |
+|       1        | Utente: Invia una richiesta DELETE valida per eliminare il sensore           |
+|       2        | Durante l'elaborazione, il sistema riscontra un errore interno                |
+|       3        | Sistema: Restituisce `500 InternalServerError`                              |
+
+### Use Case 23, Visualizzazione Sensore specifico (UC23)
+
+| Actors Involved  |         Admin, Operator, Viewer          |
+| :--------------: | :--------------------------------------: |
+|   Precondition   | L'utente è autenticato con token valido   |
+|  Post condition  | Il sistema restituisce i dettagli del sensore richiesto |
+| Nominal Scenario |               Scenario 23.1              |
+|     Variants     |                  None                  |
+|    Exceptions    | Scenario 23.2, Scenario 23.3, Scenario 23.4 |
+
+#### Scenario 23.1
+
+| Scenario 23.1  |          Visualizzazione sensore con successo `(200 OK)`          |
+| :------------: | :-----------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato (Admin, Operator o Viewer) con token valido    |
+| Post condition | Il sistema restituisce il sensore richiesto  |
+|     Step#      |                              Description                              |
+|       1        | Utente: Invia una richiesta GET all’endpoint `/networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}` con i parametri corretti. |
+|       2        | Sistema: Verifica il token e controlla che i parametri `networkCode`, `gatewayMac` e `sensorMac` siano validi. |
+|       3        | Sistema: Recupera i dettagli del sensore e restituisce il sensore richiesto con codice `200 OK`. |
+
+#### Scenario 23.2
+
+| Scenario 23.2  |           Token assente o non valido `(401 UnauthorizedError)`          |
+| :------------: | :------------------------------------------------------------------------: |
+|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
+| Post condition |                        Nessun sensore viene restituito                   |
+|     Step#      |                                  Description                                  |
+|       1        | Utente: Invia la richiesta GET senza il header `Authorization` valido. |
+|       2        | Sistema: Verifica il token e lo considera non valido.                  |
+|       3        | Sistema: Restituisce `401 UnauthorizedError`.                         |
+
+#### Scenario 23.3
+
+| Scenario 23.3  |         Network/Gateway/Sensor non trovato `(404 NotFoundError)`         |
+| :------------: | :-------------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode`, `gatewayMac` o `sensorMac` specificati non corrispondono a un elemento esistente |
+| Post condition |                         Nessun sensore viene restituito                   |
+|     Step#      |                                Description                                   |
+|       1        | Utente: Invia la richiesta GET con parametri inesistenti o errati.       |
+|       2        | Sistema: Non trova il sensore corrispondente e restituisce `404 NotFoundError`. |
+
+#### Scenario 23.4
+
+| Scenario 23.4  |           Errore interno del server `(500 InternalServerError)`           |
+| :------------: | :-------------------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato, ma si verifica un errore inatteso lato server        |
+| Post condition |                        Nessun sensore viene restituito                   |
+|     Step#      |                                  Description                                   |
+|       1        | Utente: Invia una richiesta GET valida per recuperare i dettagli del sensore. |
+|       2        | Sistema: Durante l’elaborazione si verifica un errore interno.          |
+|       3        | Sistema: Restituisce `500 InternalServerError`.                        |
+
+### Use Case 24, Visualizzazione di tutti i Sensori associati a un Gateway specifico (UC24)
+
+| Actors Involved  |        Admin, Operator, Viewer         |
+| :--------------: | :------------------------------------: |
+|   Precondition   | L'utente è autenticato con token valido |
+|  Post condition  | Il sistema restituisce la lista dei sensori associati al gateway richiesto |
+| Nominal Scenario |           Scenario 24.1               |
+|     Variants     |                None                  |
+|    Exceptions    | Scenario 24.2, Scenario 24.3, Scenario 24.4 |
+
+#### Scenario 24.1
+
+| Scenario 24.1  |               Recupero elenco sensori con successo `(200 OK)`               |
+| :------------: | :---------------------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato (Admin, Operator o Viewer) con token valido          |
+| Post condition | Il sistema restituisce la lista dei sensori associati al gateway richiesto    |
+|     Step#      |                                Description                                    |
+|       1        | Utente: Seleziona la rete di interesse e il relativo gateway  |
+|       2        | Utente: Invia una richiesta GET all’endpoint `/networks/{networkCode}/gateways/{gatewayMac}/sensors` |
+|       3        | Sistema: Riceve la richiesta, verifica il token e i parametri forniti       |
+|       4        | Sistema: Recupera la lista dei sensori associati al gateway e la restituisce con codice `200 OK`. |
+
+#### Scenario 24.2
+
+| Scenario 24.2  |         Token assente o non valido `(401 UnauthorizedError)`          |
+| :------------: | :---------------------------------------------------------------------: |
+|  Precondition  | L'utente non ha effettuato il login o il token è assente, scaduto o malformato |
+| Post condition |                Nessuna lista di sensori viene restituita               |
+|     Step#      |                                Description                                   |
+|       1        | Utente: Invia la richiesta GET senza header `Authorization` valido.     |
+|       2        | Sistema: Verifica il token e rileva l’assenza o il formato non valido.      |
+|       3        | Sistema: Restituisce `401 UnauthorizedError`.                          |
+
+#### Scenario 24.3
+
+| Scenario 24.3  |         Network/Gateway non trovato `(404 NotFoundError)`         |
+| :------------: | :-----------------------------------------------------------------: |
+|  Precondition  | Il `networkCode` o il `gatewayMac` specificati non corrispondono a elementi esistenti. |
+| Post condition |                   Nessuna lista di sensori viene restituita            |
+|     Step#      |                                Description                                   |
+|       1        | Utente: Invia una richiesta GET utilizzando un `networkCode` o un `gatewayMac` inesistenti. |
+|       2        | Sistema: Non trova il network o il gateway  e restituisce `404 NotFoundError`.        |
+
+#### Scenario 24.4
+
+| Scenario 24.4  |         Errore interno del server `(500 InternalServerError)`         |
+| :------------: | :---------------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato, ma si verifica un errore inatteso lato server    |
+| Post condition |                Nessuna lista di sensori viene restituita                |
+|     Step#      |                                Description                                   |
+|       1        | Utente: Invia una richiesta GET valida per recuperare la lista dei sensori.  |
+|       2        | Sistema: Durante l’elaborazione, si verifica un errore interno.           |
+|       3        | Sistema: Restituisce `500 InternalServerError`.                         |
 
 
 ### Use Case 25, Associazione della misurazione al corrispondente sensore (UC25)
