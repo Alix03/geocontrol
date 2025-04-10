@@ -161,12 +161,11 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | FR4.5.2 | Visualizzazione statistiche per uno specifico sensore                                   |
 | FR4.5.3 | Visualizzazione outliers per un insieme di Sensori di un Network specifico              |
 | FR4.5.4 | Visualizzazione outliers per uno specifico sensore                                      |
-| **FR5** | **Gestione Errori**                                                                     |
-| FR5.1   | E400-	Invalid input data                                                                |
-| FR5.2   | E401-	Unauthorized                                                                      |
-| FR5.3   | E403-	Insufficient rights                                                               |
-| FR5.4   | E409-	Network code already in use                                                       |
-| FR5.5   | E500- Internal server error                                                             |
+| **FR5** | **Gestione Errori di Sistema**                                                          |
+| FR5.1   | E400-	Dati in input malformati                                                          |
+| FR5.2   | E401-	Non Autorizzato                                                                   |
+| FR5.3   | E403-	Diritti Insufficienti                                                             |
+| FR5.4   | E500- Errore interno del server                                                         |
 
 
 ## Non Functional Requirements
@@ -1198,6 +1197,113 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       9        |                                                             Sistema: calcola la media                                                             |
 |       11       |                                                        Sistema: invia la media all'utente                                                         |
 |       12       |                                                         Utente: legge la media richieste                                                          |
+
+### Use Case E400, Dati in input malformati (FR5.1)
+
+| Actors Involved  |                           Utente                             |
+| :--------------: | :-------------------------------------------------------:    |
+|   Precondition   |          L'utente inserisce dati nel sistema.                |
+|  Post condition  |          Il sistema restituisce il messaggio di errore 400.             |
+| Nominal Scenario |    E400.1                                                    |
+
+
+### Scenario E400.1
+
+|  Scenario E400.1|                                              Dati in input malformati                                           |
+| :------------: | :-------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                             L'utente inserisce dati nel sistema.                                |
+| Post condition |                                         Il sistema restituisce il messaggio di errore 400.            |
+|     Step#      |                                                   Descrizione                                                   |
+|       1        |                              Utente: Inserisce dati richiesti  con un campo mancante o in formato errato.       |
+|       2        |            Sistema: Verifica i dati immessi dall'uetnte e rileva l'errore 400 BadRequest                        |
+|       3        |                                         Sistema: Restituisce il messaggio di errore 400.                           |
+
+### Use Case E401, Non Autorizzato (FR5.2)
+
+| Actors Involved  |                           Utente                             |
+| :--------------: | :-------------------------------------------------------:    |
+|   Precondition   | L'utente non dispone di un token valido o non ha effettuato il login. |
+|  Post condition  | Il sistema restituisce l'errore 401     |
+| Nominal Scenario |    E401.1                                                    |
+
+
+### Scenario E401.1
+
+|  Scenario E401.1|                                              Non Autorizzato                                           |
+| :------------: | :-------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |            L'utente non dispone di un token valido o non ha effettuato il login.                                |
+| Post condition |                                         Il sistema restituisce l'errore 401      |
+|     Step#      |                                                   Descrizione                                                   |
+|       1        |                              Utente: Invia una richiesta per accedere a una risorsa protetta                    |
+|       2        |            Sistema: Rileva un token non valido o mancante nell’header della richiesta                                              |
+|       3        |                                         Sistema: Restituisce il messaggio di errore 401.                        |
+
+### Use Case E403, Diritti Insufficienti (FR5.3)
+
+| Actors Involved  |                           Utente                             |
+| :--------------: | :-------------------------------------------------------:    |
+|   Precondition   |  L'utente è autenticato nel sistema ma con ruolo inadeguato  |
+|  Post condition  | Il sistema restituisce l'errore 403  |
+| Nominal Scenario |    E403.1                                                    |
+
+
+### Scenario E403.1
+
+|  Scenario E403.1|                                              Non Autorizzato                                           |
+| :------------: | :-------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                L'utente è autenticato nel sistema ma con ruolo inadeguato                       |
+| Post condition |                                          Il sistema restituisce l'errore 403      |
+|     Step#      |                                                   Descrizione                                                   |
+|       1        |          Utente: Tenta di accedere a una risorsa che richiede un ruolo specifico                                |
+|       2        |            Sistema: Controlla il ruolo dell'utente                                                                |
+|       3        |                                Sistema:  Rileva che l’utente non ha i permessi necessari                        |
+|       4        |                                         Sistema:  Restituisce il messaggio di errore 403.                       |
+
+### Use Case E500, Errore interno del server (FR5.4)
+
+| Actors Involved  |                           Utente                             |
+| :--------------: | :-------------------------------------------------------:    |
+|   Precondition   |  L'utente effettua una richiesta valida                         |
+|  Post condition  | Il sistema restituisce l'errore 500  |
+| Nominal Scenario |    E500.1                                                    |
+
+
+### Scenario E500.1
+
+|  Scenario E500.1|                                             Errore interno del server                                          |
+| :------------: | :-------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                 L'utente effettua una richiesta valida                                          |
+| Post condition |                  Il sistema restituisce l'errore 500                |
+|     Step#      |                                                   Descrizione                                                   |
+|       1        |                                Utente: Effettua una richiesta valida                                            |
+|       2        |                        Sistema: La richiesta fallisce per un errore interno                            |
+|       4        |                                         Sistema:  Restituisce il messaggio di errore 500.                       |
+
+### Scenario E404
+
+|  Scenario E404|                                             Risorsa non trovata                                          |
+| :------------: | :-------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |             L’utente effettua una richiesta verso una risorsa X                                                  |
+| Post condition |                  Il sistema restituisce l'errore 404                |
+|     Step#      |                                                   Descrizione                                                   |
+|       1        |                                Utente: Effettua una richiesta per la risorsa X                                            |
+|       2        |                        Sistema: Riceve la richiesta e ricerca la risorsa X                           |
+|       3        |                        Sistema: Non trova la risorsa richiesta                            |
+|       4        |                                         Sistema:  Restituisce il messaggio di errore 404.                       |
+
+### Scenario E409
+
+|  Scenario E409|                                             Risorsa già in uso                                         |
+| :------------: | :-------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |             L’utente tenta di creare/modificare una risorsa X con un identificativo già esistente                                                  |
+| Post condition |                  Il sistema restituisce l'errore 409                |
+|     Step#      |                                                   Descrizione                                                   |
+|       1        |                                Utente: Effettua una richiesta di creazione/modifica per la risorsa X                                            |
+|       2        |                        Sistema: riceve i dati e verifica l'esistenza della risorsa                        |
+|       3        |                        Sistema:Trova la risorsa nel sistema e ne blocca la creazione/modifica                            |
+|       4        |                                         Sistema:  Restituisce il messaggio di errore 409.                       |
+
+
 
 # Glossary
 
