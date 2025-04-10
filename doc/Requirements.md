@@ -892,7 +892,8 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        |           Utente: Accede alla sezione di visualizzazione delle misurazioni            |
 |       2        |                             Utente: Seleziona un network                              |
 |       3        |                          INCLUDE Calcolo statistiche (UC...)                          |
-|       4        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network |
+|       4        |        Sistema: Recupera le misurazioni dei sensori appartenenenti al network         |
+|       5        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network |
 
 #### Scenario 25.2
 
@@ -905,8 +906,9 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                       Utente: Seleziona un network e i filtri di interesse (sensori, intervallo di tempo)                       |
 |       3        |             Sistema: Se la data non ha fuso orario UTC effettua conversione timestamp da orario locale a UTC (UC23)             |
 |       4        |                                               INCLUDE Calcolo statistiche (UC...)                                               |
-|       5        | Sistema: Se la data specificata dall'utente non ha fuso orario UTC effettua conversione timestamp da UTC a orario locale (UC24) |
-|       6        |         Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network secondo i filtri indicati         |
+|       5        |                             Sistema: Recupera le misurazioni dei sensori appartenenenti al network                              |
+|       6        | Sistema: Se la data specificata dall'utente non ha fuso orario UTC effettua conversione timestamp da UTC a orario locale (UC24) |
+|       7        |         Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network secondo i filtri indicati         |
 
 ### Use Case 26, Inserimento misurazioni (UC26)
 
