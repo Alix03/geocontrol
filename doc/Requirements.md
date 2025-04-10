@@ -1235,7 +1235,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Post condition |                                         Il sistema restituisce l'errore 401      |
 |     Step#      |                                                   Descrizione                                                   |
 |       1        |                              Utente: Invia una richiesta per accedere a una risorsa protetta                    |
-|       2        |            Sistema: Non trova il token nell’header della richiesta                                              |
+|       2        |            Sistema: Rileva un token non valido o mancante nell’header della richiesta                                              |
 |       3        |                                         Sistema: Restituisce il messaggio di errore 401.                        |
 
 ### Use Case E403, Diritti Insufficienti (FR5.3)
@@ -1255,7 +1255,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Post condition |                                          Il sistema restituisce l'errore 403      |
 |     Step#      |                                                   Descrizione                                                   |
 |       1        |          Utente: Tenta di accedere a una risorsa che richiede un ruolo specifico                                |
-|       2        |            Sistema: Controlla il ruolo nel token                                                                |
+|       2        |            Sistema: Controlla il ruolo dell'utente                                                                |
 |       3        |                                Sistema:  Rileva che l’utente non ha i permessi necessari                        |
 |       4        |                                         Sistema:  Restituisce il messaggio di errore 403.                       |
 
@@ -1263,7 +1263,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 | Actors Involved  |                           Utente                             |
 | :--------------: | :-------------------------------------------------------:    |
-|   Precondition   |  L'utente interagisce col sistema                        |
+|   Precondition   |  L'utente effettua una richiesta valida                         |
 |  Post condition  | Il sistema restituisce l'errore 500  |
 | Nominal Scenario |    E500.1                                                    |
 
@@ -1276,7 +1276,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Post condition |                  Il sistema restituisce l'errore 500                |
 |     Step#      |                                                   Descrizione                                                   |
 |       1        |                                Utente: Effettua una richiesta valida                                            |
-|       2        |                        Sistema: La richiesta fallisce per un errore interno inatteso                            |
+|       2        |                        Sistema: La richiesta fallisce per un errore interno                            |
 |       4        |                                         Sistema:  Restituisce il messaggio di errore 500.                       |
 
 ### Scenario E404
@@ -1287,7 +1287,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Post condition |                  Il sistema restituisce l'errore 404                |
 |     Step#      |                                                   Descrizione                                                   |
 |       1        |                                Utente: Effettua una richiesta per la risorsa X                                            |
-|       2        |                        Sistema: Riceve la rchihesta e ricerca la risorsa X                           |
+|       2        |                        Sistema: Riceve la richiesta e ricerca la risorsa X                           |
 |       3        |                        Sistema: Non trova la risorsa richiesta                            |
 |       4        |                                         Sistema:  Restituisce il messaggio di errore 404.                       |
 
@@ -1295,12 +1295,12 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |  Scenario E409|                                             Risorsa già in uso                                         |
 | :------------: | :-------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |             L’utente tenta di creare una risorsa X con un identificativo già esistente                                                  |
+|  Precondition  |             L’utente tenta di creare/modificare una risorsa X con un identificativo già esistente                                                  |
 | Post condition |                  Il sistema restituisce l'errore 409                |
 |     Step#      |                                                   Descrizione                                                   |
-|       1        |                                Utente: Effettua una richiesta di creazione per la risorsa X                                            |
+|       1        |                                Utente: Effettua una richiesta di creazione/modifica per la risorsa X                                            |
 |       2        |                        Sistema: riceve i dati e verifica l'esistenza della risorsa                        |
-|       3        |                        Sistema:Trova la risorsa nel sistema e ne blocca la creazione                            |
+|       3        |                        Sistema:Trova la risorsa nel sistema e ne blocca la creazione/modifica                            |
 |       4        |                                         Sistema:  Restituisce il messaggio di errore 409.                       |
 
 
