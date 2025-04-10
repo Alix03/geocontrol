@@ -802,36 +802,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |        Il sistema riscontra un errore interno inatteso         |
 |       3        |    Il sistema restituisce errore `500 InternalServerError`     |
 
-### Use Case 20, Aggiunta del Gateway a Network (FR2.4.1)
-
-| Actors Involved  |            Admin, Operator            |
-| :--------------: | :-----------------------------------: |
-|   Precondition   |   Il network deve essere registrato   |
-|  Post condition  |         Misurazione inserita          |
-| Nominal Scenario |             Scenario 26.1             |
-|     Variants     |                Nessuna                |
-|    Exceptions    | Scenario 26.2, 26.3, 26.4, 26.5, 26.6 |
-
-(ci vuole il controllo sul timestamp?)
-
-#### Scenario 20.1
-
-| Scenario 20.1  |                                                Misurazione creata `(Code 201)`                                                |
-| :------------: | :---------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                    Il sensore è registrato                                                    |
-| Post condition |                                                     Misurazione inserita                                                      |
-|     Step#      |                                                          Descrizione                                                          |
-|       1        |                                  Utente: Clicca il pulsante di inserimento della misurazione                                  |
-|       2        |                               Sistema: Verifica la presenza di un token valido nella richiesta                                |
-|       3        |                                             Sistema: Rileva che il token è valido                                             |
-|       4        |                     Sistema: Chiede `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`                      |
-|       5        | Utente: Inserisce `codice network`, `mac gateway`, `mac sensore`, `valore misurazione` (da tastiera o tramite menù a tendina) |
-|       6        |                                                 Sistema: Legge i dati immessi                                                 |
-|       7        |            Sistema: Controlla che i dati immessi corrispondano a network, gateway e sensori esistenti e associati             |
-|       8        |                      Sistema: Controlla che il valore della misurazione rientri tra i valori del dominio                      |
-|       9        |                                         Sistema: Memorizza la misurazione nel sistema                                         |
-|       10       |                                      Sistema: mostra a schermo un messaggio di successo                                       |
-
 ### Use Case 23, Conversione timestamp da orario locale a UTC (FR3.1.1)
 
 | Actors Involved  |       Admin, Operator, Viewer       |
