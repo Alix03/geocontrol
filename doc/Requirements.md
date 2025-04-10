@@ -807,6 +807,448 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |        Il sistema riscontra un errore interno inatteso         |
 |       3        |    Il sistema restituisce errore `500 InternalServerError`     |
 
+### Use Case 15, Creazione Gateway (UC15)
+
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator |
+|  Post condition  |            Il gateway viene creato nel sistema            |
+| Nominal Scenario |                  Scenario 15.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    | Scenario 15.2, Scenario 15.3, Scenario 15.4, Scenario 15.5, Scenario 15.6, Scenario 15.7 |
+
+#### Scenario 15.1
+
+| Scenario 15.1  |                                    Creazione gateway con successo `(201 Created)`                                    |
+| :------------: | :--------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                    L’utente è autenticato come Admin o Operator                                        |
+| Post condition |                                 Il gateway viene creato e risulta visibile nel sistema                                 |
+|     Step#      |                                                   Description                                                          |
+|       1        |                         Utente: Accede alla sezione "Reti" e seleziona la rete di interesse                           |
+|       2        |                                     Utente: seleziona "Crea nuovo gateway"                                            |
+|       3        | Utente: Compila i campi `macAddress`, `name`, `description` (es. 94:3F:BE:4C:4A:79, GW01, on-field aggregation node)    |
+|       4        |                                         Utente: Invia la richiesta di creazione                                       |
+|       5        |                  Sistema: Valida i dati, registra il gateway e restituisce il codice `201 Created`                    |
+
+#### Scenario 15.2
+
+| Scenario 15.2  |                 Dati mancanti o input non valido `(400 BadRequest)`                 |
+| :------------: | :---------------------------------------------------------------------------------: |
+|  Precondition  |           L'utente è autenticato ma il modulo è incompleto o malformato            |
+| Post condition |                           Nessun gateway viene creato                               |
+|     Step#      |                                    Description                                      |
+|       1        | Utente: Omette il campo obbligatorio `macAddress` o inserisce valori non validi    |
+|       2        |                Utente: Invia la richiesta di creazione del gateway                 |
+|       3        | Sistema: Valida i dati, rileva l’errore e restituisce `400 BadRequest`            |
+
+#### Scenario 15.3
+
+| Scenario 15.3  |             Token assente o non valido `(401 UnauthorizedError)`              |
+| :------------: | :---------------------------------------------------------------------------: |
+|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
+| Post condition |                       Nessun gateway viene creato                              |
+|     Step#      |                               Description                                      |
+|       1        |     Utente: Tenta di inviare una richiesta di creazione di un gateway         |
+|       2        | La richiesta è priva di header `Authorization` o il token ha un formato non valido |
+|       3        |   Sistema: Intercetta la richiesta, verifica il token e lo considera invalido |
+|       4        |       Sistema: Restituisce il codice di errore `401 UnauthorizedError`       |
+
+#### Scenario 15.4
+
+| Scenario 15.4  |         Ruolo non autorizzato `(403 InsufficientRightsError)`         |
+| :------------: | :-------------------------------------------------------------------: |
+|  Precondition  |     L'utente è autenticato con token valido, ma ha ruolo Viewer       |
+| Post condition |                     Nessun gateway viene creato                       |
+|     Step#      |                              Description                              |
+|       1        |   Utente: Autenticato come Viewer tenta di creare un gateway   |
+|       2        |          Sistema: Verifica il token e il ruolo utente              |
+|       3        |    Sistema: Rileva permessi insufficienti per l'operazione         |
+|       4        |  Sistema: Restituisce `403 InsufficientRightsError`                |
+
+#### Scenario 15.5
+
+| Scenario 15.5  |             Network non trovato `(404 NotFoundError)`             |
+| :------------: | :--------------------------------------------------------------: |
+|  Precondition  | L’utente fa una richiesta di creazione su un `networkCode` inesistente |
+| Post condition |                  Nessun gateway viene creato                     |
+|     Step#      |                           Description                            |
+|       1        |Utente: Seleziona un `networkCode` non presente nel sistema     |
+|       2        | Sistema: Non trova la rete e restituisce `404 NotFoundError`   |
+
+#### Scenario 15.6
+
+| Scenario 15.6  |            MAC address già esistente `(409 ConflictError)`           |
+| :------------: | :-----------------------------------------------------------------: |
+|  Precondition  | L’utente inserisce un `macAddress` gateway già presente nel sistema |
+| Post condition |                  Nessun gateway viene creato                        |
+|     Step#      |                             Description                            |
+|       1        |   Utente: Compila il modulo con un `macAddress` associato già ad un Gateway esistente         |
+|       2        | Sistema: Valida i dati, rileva la duplicazione e riporta un errore `(409 ConflictError)` |
+
+#### Scenario 15.7
+
+| Scenario 15.7  |           Errore interno del server `(500 InternalServerError)`           |
+| :------------: | :------------------------------------------------------------------------: |
+|  Precondition  | L’utente è autenticato, ma si verifica un errore inatteso lato server      |
+| Post condition |                          Nessun gateway viene creato                       |
+|     Step#      |                                 Description                                |
+|       1        | Utente: Compila il modulo correttamente e invia la richiesta di creazione |
+|       2        | Durante l'elaborazione si verifica un errore interno                       |
+|       3        | Sistema: Restituisce `500 InternalServerError`                           |
+
+### Use Case 16, Modifica Gateway (UC16)
+
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator |
+|  Post condition  |            Il gateway viene aggiornato nel sistema            |
+| Nominal Scenario |                  Scenario 16.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    | Scenario 16.2, Scenario 16.3, Scenario 16.4, Scenario 16.5, Scenario 16.6, Scenario 16.7 |
+
+#### Scenario 16.1
+
+| Scenario 16.1  |                                    Modifica gateway con successo `(204 No Content)`                                    |
+| :------------: | :----------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                     L’utente è autenticato come Admin o Operator                                        |
+| Post condition |                            Il gateway viene aggiornato ed è visibile con i dati aggiornati                              |
+|     Step#      |                                                       Description                                                        |
+|       1        | Utente: Accede all’elenco dei gateway associati a una determinata rete (es. sezione "Gestione Gateway").               |
+|       2        | Utente: Seleziona un gateway esistente e sceglie l’opzione "Modifica gateway".                                          |
+|       3        | Utente: Aggiorna i campi `macAddress`, `name`, `description` |
+|       4        | Utente: Invia la richiesta di modifica con i dati aggiornati.                                                   |
+|       5        | Sistema: Valida i dati, aggiorna il gateway e restituisce il codice `204 No Content`.                                   |
+
+#### Scenario 16.2
+
+| Scenario 16.2  |                 Dati mancanti o input non valido `(400 BadRequest)`                 |
+| :------------: | :---------------------------------------------------------------------------------: |
+|  Precondition  |           L'utente è autenticato ma il modulo di modifica è incompleto o malformato |
+| Post condition |                             Nessun aggiornamento viene applicato                     |
+|     Step#      |                                        Description                                  |
+|       1        |   Utente: Omette campi obbligatori o inserisce valori non validi   |
+|       2        |                  Utente: Invia la richiesta di modifica del gateway            |
+|       3        |   Sistema: Valida i dati, rileva l’errore e restituisce `400 BadRequest`             |
+
+#### Scenario 16.3
+
+| Scenario 16.3  |             Token assente o non valido `(401 UnauthorizedError)`              |
+| :------------: | :---------------------------------------------------------------------------: |
+|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
+| Post condition |                        Nessun aggiornamento viene applicato                    |
+|     Step#      |                               Description                                      |
+|       1        |   Utente: Tenta di inviare una richiesta per modificare un gateway      |
+|       2        |   La richiesta non contiene header `Authorization` oppure il token è non valido |
+|       3        |   Sistema: Intercetta la richiesta, verifica il token e lo considera invalido  |
+|       4        |   Sistema: Restituisce `401 UnauthorizedError`                                 |
+
+#### Scenario 16.4
+
+| Scenario 16.4  |         Ruolo non autorizzato `(403 InsufficientRightsError)`         |
+| :------------: | :-------------------------------------------------------------------: |
+|  Precondition  |     L'utente è autenticato con token valido, ma ha ruolo Viewer       |
+| Post condition |                   Nessun aggiornamento viene applicato                |
+|     Step#      |                              Description                              |
+|       1        | Utente: Autenticato come Viewer tenta di modificare un gateway        |
+|       2        | Sistema: Verifica il token e il ruolo dell’utente.                    |
+|       3        | Sistema: Rileva permessi insufficienti per l'operazione.              |
+|       4        | Sistema: Restituisce `403 InsufficientRightsError`.                   |
+
+#### Scenario 16.5
+
+| Scenario 16.5  |           Network/Gateway non trovato `(404 NotFoundError)`            |
+| :------------: | :--------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode` o il `gatewayMac` specificati non esistono nel sistema |
+| Post condition |                 Nessuna modifica viene applicata                       |
+|     Step#      |                                  Description                           |
+|       1        |   Utente: Seleziona o inserisce un `networkCode` e/o `gatewayMac` inesistenti.  |
+|       2        |   Sistema: Non trova l’elemento corrispondente e restituisce `404 NotFoundError`. |
+
+#### Scenario 16.6
+
+| Scenario 16.6  |            MAC address già esistente `(409 ConflictError)`           |
+| :------------: | :-----------------------------------------------------------------: |
+|  Precondition  | L’utente aggiorna il `macAddress` del gateway con uno già presente nel sistema |
+| Post condition |                  Nessun aggiornamento viene applicato               |
+|     Step#      |                             Description                             |
+|       1        |   Utente: Inserisce nella richiesta un `macAddress` associato a un altro Gateway    |
+|       2        |   Sistema: Rileva il conflitto e restituisce `409 ConflictError`.   |
+
+#### Scenario 16.7
+
+| Scenario 16.7  |           Errore interno del server `(500 InternalServerError)`           |
+| :------------: | :------------------------------------------------------------------------: |
+|  Precondition  | L’utente è autenticato, ma si verifica un errore inatteso lato server      |
+| Post condition |                      Nessun aggiornamento viene applicato                  |
+|     Step#      |                               Description                                  |
+|       1        | Utente: Compila correttamente i campi per la modifica del gateway e invia la richiesta |
+|       2        |  Durante l'elaborazione si verifica un errore interno                     |
+|       3        |  Sistema: Restituisce `500 InternalServerError`                            |
+
+### Use Case 17, Eliminazione Gateway (UC17)
+
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator |
+|  Post condition  |            Il gateway viene eliminato dal sistema            |
+| Nominal Scenario |                  Scenario 17.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    | Scenario 17.2, Scenario 17.3, Scenario 17.4, Scenario 17.5 |
+
+#### Scenario 17.1
+
+| Scenario 17.1  |                           Eliminazione gateway con successo `(204 No Content)`                            |
+| :------------: | :-------------------------------------------------------------------------------------------------------: |
+|  Precondition  |              L'utente è autenticato come Admin o Operator e il gateway esiste nel sistema                |
+| Post condition |                    Il gateway viene eliminato e non risulta più presente nel sistema               |
+|     Step#      |                                              Description                                                 |
+|       1        | Utente: Accede alla sezione "Gestione Gateway" e seleziona un gateway da eliminare.      |
+|       2        | Utente: Esegue l'azione di eliminazione confermando la rimozione.                               |
+|       3        | Sistema: Verifica il `networkCode` e il `gatewayMac`, procede all'eliminazione e restituisce `204 No Content`. |
+
+#### Scenario 17.2
+
+| Scenario 17.2  |             Token assente o non valido `(401 UnauthorizedError)`             |
+| :------------: | :--------------------------------------------------------------------------: |
+|  Precondition  | L'utente non ha effettuato il login, o il token è assente, scaduto o malformato |
+| Post condition |                    Nessun gateway viene eliminato                             |
+|     Step#      |                               Description                                     |
+|       1        | Utente: Tenta di inviare una richiesta per eliminare un gateway       |
+|       2        | La richiesta è priva di header `Authorization` o il token non è valido       |
+|       3        | Sistema: Intercetta la richiesta, verifica il token e lo considera invalido  |
+|       4        | Sistema: Restituisce il codice di errore `401 UnauthorizedError`             |
+
+#### Scenario 17.3
+
+| Scenario 17.3  |        Ruolo non autorizzato `(403 InsufficientRightsError)`        |
+| :------------: | :-----------------------------------------------------------------: |
+|  Precondition  |      L'utente è autenticato con token valido, ma ha ruolo Viewer    |
+| Post condition |                   Nessun gateway viene eliminato                    |
+|     Step#      |                            Description                              |
+|       1        | Utente: Autenticato come Viewer tenta di eliminare un gateway      |
+|       2        | Sistema: Verifica il token e il ruolo                              |
+|       3        | Sistema: Rileva che l'utente non ha i permessi necessari           |
+|       4        | Sistema: Restituisce `403 InsufficientRightsError`                 |
+
+#### Scenario 17.4
+
+| Scenario 17.4  |               Network/Gateway non trovato `(404 NotFoundError)`               |
+| :------------: | :--------------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode` o il `gatewayMac` specificati non esistono nel sistema       |
+| Post condition |                        Nessun gateway viene eliminato                         |
+|     Step#      |                                 Description                                   |
+|       1        | Utente: Seleziona un `networkCode` o un `gatewayMac` inesistente             |
+|       2        | Sistema: Non trova il gateway e restituisce `404 NotFoundError`              |
+
+#### Scenario 17.5
+
+| Scenario 17.5  |           Errore interno del server `(500 InternalServerError)`           |
+| :------------: | :------------------------------------------------------------------------: |
+|  Precondition  | L’utente è autenticato, ma si verifica un errore inatteso lato server      |
+| Post condition |                       Nessun gateway viene eliminato                        |
+|     Step#      |                                 Description                                |
+|       1        | Utente: Invia correttamente la richiesta per eliminare un gateway  |
+|       2        | Sistema: Durante l'elaborazione si verifica un errore interno             |
+|       3        | Sistema: Restituisce `500 InternalServerError`                            |
+
+### Use Case 18, Visualizzazione di un Gateway specifico (UC18)
+
+| Actors Involved  |            Admin, Operator, Viewer            |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   |       L'utente è autenticato con token valido |
+|  Post condition  |      Il gateway viene visualizzato            |
+| Nominal Scenario |                 Scenario 18.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    | Scenario 18.2, Scenario 18.3, Scenario 18.4   |
+
+#### Scenario 18.1
+
+| Scenario 18.1  |                   Visualizzazione gateway con successo `(200 OK)`                   |
+| :------------: | :---------------------------------------------------------------------------------: |
+|  Precondition  |         L'utente è autenticato come Admin, Operator o Viewer con token valido          |
+| Post condition |         Il sistema restituisce i dettagli del gateway con codice `200 OK`           |
+|     Step#      |                                      Description                                    |
+|       1        | Utente: Accede all’interfaccia di gestione e seleziona la rete di interesse |
+|       2        | Utente: Visualizza l’elenco dei gateway di quella rete e sceglie quello desiderato  |
+|       3        | Utente: Invia una richiesta per visualizzare il gateway specifico                   |
+|       4        | Sistema: Riceve la richiesta, verifica il token, recupera il gateway e restituisce un payload con `200 OK` |
+
+#### Scenario 18.2
+
+| Scenario 18.2  |            Token assente o non valido `(401 UnauthorizedError)`             |
+| :------------: | :-------------------------------------------------------------------------: |
+|  Precondition  | L'utente non ha effettuato il login o il token è assente, scaduto o malformato |
+| Post condition |                    Nessun gateway viene restituito                           |
+|     Step#      |                               Description                                    |
+|       1        | Utente: Tenta di inviare la richiesta senza header `Authorization` valido |
+|       2        | Sistema: Verifica il token e lo considera non valido                        |
+|       3        | Sistema: Restituisce `401 UnauthorizedError`                                |
+
+#### Scenario 18.3
+
+| Scenario 18.3  |           Network/Gateway non trovato `(404 NotFoundError)`            |
+| :------------: | :--------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode` o il `gatewayMac` specificati non esistono nel sistema |
+| Post condition |                   Nessun gateway viene restituito                      |
+|     Step#      |                                Description                             |
+|       1        | Utente: Effettua la richiesta GET con un `networkCode` o `gatewayMac` inesistente |
+|       2        | Sistema: Non trova il gateway e restituisce `404 NotFoundError`        |
+
+#### Scenario 18.4
+
+| Scenario 18.4  |             Errore interno del server `(500 InternalServerError)`             |
+| :------------: | :---------------------------------------------------------------------------: |
+|  Precondition  |   L’utente è autenticato, ma si verifica un errore inatteso lato server        |
+| Post condition |                       Nessun gateway viene restituito                          |
+|     Step#      |                                Description                                    |
+|       1        | Utente: Invia una richiesta valida per ottenere i dettagli del gateway        |
+|       2        | Durante l'elaborazione si verifica un errore interno                          |
+|       3        | Sistema: Restituisce `500 InternalServerError`                                |
+
+### Use Case 19, Visualizzazione di tutti i Gateway associati a un Network specifico (UC19)
+
+| Actors Involved  |                Admin, Operator, Viewer                |
+| :--------------: | :---------------------------------------------------: |
+|   Precondition   |  L'utente è autenticato con token valido (qualsiasi ruolo) |
+|  Post condition  | Viene mostrata la lista dei Gateway appartenenti alla rete richiesta |
+| Nominal Scenario |                    Scenario 19.1                       |
+|     Variants     |                         None                          |
+|    Exceptions    | Scenario 19.2, Scenario 19.3, Scenario 19.4           |
+
+#### Scenario 19.1
+
+| Scenario 19.1  |          Recupero elenco gateway con successo `(200 OK)`          |
+| :------------: | :--------------------------------------------------------------: |
+|  Precondition  |  L'utente è autenticato (Admin, Operator o Viewer) con token valido |
+| Post condition |     Il sistema restituisce una lista (anche vuota) di gateway     |
+|     Step#      |                           Description                            |
+|       1        | Utente: Accede alla sezione "Reti" e seleziona la rete di interesse |
+|       2        | Utente: Sceglie l’operazione "Visualizza gateway" per la rete selezionata |
+|       3        | Utente: Invia una richiesta GET a `/networks/{networkCode}/gateways` |
+|       4        | Sistema: Verifica il token, recupera i gateway associati alla rete e ritorna `200 OK` con la lista |
+
+#### Scenario 19.2
+
+| Scenario 19.2  |      Token assente o non valido `(401 UnauthorizedError)`       |
+| :------------: | :------------------------------------------------------------: |
+|  Precondition  |   L'utente non ha effettuato il login o il token non è valido  |
+| Post condition |               Nessun elenco di gateway viene restituito        |
+|     Step#      |                         Description                            |
+|       1        | Utente: Invia una richiesta GET a `/networks/{networkCode}/gateways` senza header `Authorization` valido |
+|       2        | Sistema: Verifica il token e rileva che è mancante o malformato |
+|       3        | Sistema: Restituisce `401 UnauthorizedError`                   |
+
+#### Scenario 19.3
+
+| Scenario 19.3  |          Network non trovato `(404 NotFoundError)`          |
+| :------------: | :---------------------------------------------------------: |
+|  Precondition  | L'utente specifica un `networkCode` inesistente nel sistema |
+| Post condition |         Nessun elenco di gateway viene restituito           |
+|     Step#      |                           Description                       |
+|       1        | Utente: Seleziona o inserisce un `networkCode` non presente nel sistema |
+|       2        | Sistema: Non trova la rete e restituisce `404 NotFoundError` |
+
+#### Scenario 19.4
+
+| Scenario 19.4  |         Errore interno del server `(500 InternalServerError)`         |
+| :------------: | :-------------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato, ma si verifica un errore inatteso lato server |
+| Post condition |              Nessuna lista di gateway viene restituita               |
+|     Step#      |                               Description                            |
+|       1        | Utente: Invia una richiesta valida per recuperare i gateway di una rete |
+|       2        | Durante l'elaborazione si verifica un errore interno                 |
+|       3        | Sistema: Restituisce `500 InternalServerError`                       |
+
+### Use Case 20, Creazione Sensore (UC20)
+
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator |
+|  Post condition  |            Il sensore viene creato nel sistema           |
+| Nominal Scenario |                  Scenario 20.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    | Scenario 20.2, Scenario 20.3, Scenario 20.4, Scenario 20.5, Scenario 20.6, Scenario 20.7 |
+
+#### Scenario 20.1
+
+| Scenario 20.1  |                                 Creazione sensore con successo `(201 Created)`                                |
+| :------------: | :-----------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                    L’utente è autenticato come Admin o Operator                              |
+| Post condition |                                   Il sensore viene creato e risulta visibile nel sistema                     |
+|     Step#      |                                                    Description                                               |
+|       1        | Utente: Accede alla sezione "Gestione Gateway" per il gateway di interesse          |
+|       2        | Utente: Seleziona "Crea nuovo sensore"                                                                      |
+|       3        | Utente: Compila i campi `macAddress`, `name`, `description`, `variable`, `unit`  |
+|       4        | Utente: Invia la richiesta di creazione POST a `/networks/{networkCode}/gateways/{gatewayMac}/sensors`     |
+|       5        | Sistema: Valida i dati, registra il nuovo sensore e restituisce il codice `201 Created`                      |
+
+#### Scenario 20.2
+
+| Scenario 20.2  |                 Dati mancanti o input non valido `(400 BadRequest)`                 |
+| :------------: | :---------------------------------------------------------------------------------: |
+|  Precondition  |           L'utente è autenticato ma il modulo è incompleto o malformato            |
+| Post condition |                           Nessun sensore viene creato                               |
+|     Step#      |                                    Description                                      |
+|       1        | Utente: Omette il campo obbligatorio `macAddress` o inserisce valori non validi     |
+|       2        | Utente: Invia la richiesta di creazione del sensore                                 |
+|       3        | Sistema: Valida i dati, rileva l’errore e restituisce `400 BadRequest`              |
+
+#### Scenario 20.3
+
+| Scenario 20.3  |            Token assente o non valido `(401 UnauthorizedError)`             |
+| :------------: | :-------------------------------------------------------------------------: |
+|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
+| Post condition |                      Nessun sensore viene creato                             |
+|     Step#      |                               Description                                    |
+|       1        | Utente: Tenta di inviare una richiesta di creazione di un sensore           |
+|       2        | La richiesta è priva di header `Authorization` o il token ha un formato non valido  |
+|       3        | Sistema: Intercetta la richiesta, verifica il token e lo considera invalido |
+|       4        | Sistema: Restituisce `401 UnauthorizedError`                                 |
+
+#### Scenario 20.4
+
+| Scenario 20.4  |          Ruolo non autorizzato `(403 InsufficientRightsError)`         |
+| :------------: | :--------------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato con token valido, ma ha ruolo Viewer            |
+| Post condition |                     Nessun sensore viene creato                        |
+|     Step#      |                                Description                             |
+|       1        | Utente: Autenticato come Viewer tenta di creare un sensore            |
+|       2        | Sistema: Verifica il token e il ruolo                                 |
+|       3        | Sistema: Rileva permessi insufficienti                                |
+|       4        | Sistema: Restituisce `403 InsufficientRightsError`                    |
+
+#### Scenario 20.5
+
+| Scenario 20.5  |               Network/Gateway non trovato `(404 NotFoundError)`                |
+| :------------: | :---------------------------------------------------------------------------: |
+|  Precondition  | L’utente fa una richiesta di creazione su un `networkCode` o `gatewayMac` inesistente |
+| Post condition |                          Nessun sensore viene creato                           |
+|     Step#      |                                  Description                                   |
+|       1        | Utente: Seleziona un `networkCode` o un `gatewayMac` non presente nel sistema  |
+|       2        | Sistema: Non trova gli elementi corrispondenti e restituisce `404 NotFoundError` |
+
+#### Scenario 20.6
+
+| Scenario 20.6  |           MAC address già esistente `(409 ConflictError)`            |
+| :------------: | :-----------------------------------------------------------------: |
+|  Precondition  | L’utente inserisce un `macAddress` già presente come sensore nel sistema |
+| Post condition |                  Nessun sensore viene creato                        |
+|     Step#      |                             Description                            |
+|       1        | Utente: Compila il modulo con un `macAddress` già registrato per un sensore esistente |
+|       2        | Sistema: Valida i dati, rileva la duplicazione e riporta un errore `409 ConflictError` |
+
+#### Scenario 20.7
+
+| Scenario 20.7  |          Errore interno del server `(500 InternalServerError)`          |
+| :------------: | :---------------------------------------------------------------------: |
+|  Precondition  | L’utente è autenticato, ma si verifica un errore inatteso lato server   |
+| Post condition |                        Nessun sensore viene creato                      |
+|     Step#      |                                Description                              |
+|       1        | Utente: Compila correttamente il modulo e invia la richiesta di creazione |
+|       2        | Durante l'elaborazione si verifica un errore interno                   |
+|       3        | Sistema: Restituisce `500 InternalServerError`                         |
+
+
 ### Use Case 25, Associazione della misurazione al corrispondente sensore (UC25)
 
 (da finire)
