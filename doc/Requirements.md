@@ -105,68 +105,64 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ## Functional Requirements
 
-|   ID    | Description                                                                             |
-| :-----: | --------------------------------------------------------------------------------------- |
-| **FR1** | **Autenticazione e gestione utenti**                                                    |
-|  FR1.1  | Login                                                                                   |
-|  FR1.2  | Creazione Account                                                                       |
-|  FR1.3  | Rimozione Account                                                                       |
-|  FR1.4  | Visualizzazione Elenco Account                                                          |
-|  FR1.4.1| Visualizza Specifico Account                                                             | 
-| **FR2** | **Gestione Topologia**                                                                  |
-|  FR2.1  | Gestione Network                                                                        |
-| FR2.1.1 | Creazione Network                                                                       |
-| FR2.1.2 | Modifica Network                                                                        |
-| FR2.1.3 | Eliminazione Network                                                                    |
-| FR2.1.4 | Visualizzazione di tutti i Network                                                      |
+|    ID     | Description                                                                             |
+| :-------: | --------------------------------------------------------------------------------------- |
+|  **FR1**  | **Autenticazione e gestione utenti**                                                    |
+|   FR1.1   | Login                                                                                   |
+|   FR1.2   | Creazione Account                                                                       |
+|   FR1.3   | Rimozione Account                                                                       |
+|   FR1.4   | Visualizzazione Elenco Account                                                          |
+|  FR1.4.1  | Visualizza Specifico Account                                                            |
+|  **FR2**  | **Gestione Topologia**                                                                  |
+|   FR2.1   | Gestione Network                                                                        |
+|  FR2.1.1  | Creazione Network                                                                       |
+|  FR2.1.2  | Modifica Network                                                                        |
+|  FR2.1.3  | Eliminazione Network                                                                    |
+|  FR2.1.4  | Visualizzazione di tutti i Network                                                      |
 | FR2.1.4.1 | Visualizzazione di un Network specifico                                                 |
-|  FR2.2  | Gestione Gateway                                                                        |
-| FR2.2.1 | Creazione Gateway                                                                       |
-| FR2.2.2 | Modifica Gateway                                                                        |
-| FR2.2.3 | Eliminazione Gateway                                                                    |
-| FR2.2.4 | Visualizzazione di un Gateway specifico                                                 |
+|   FR2.2   | Gestione Gateway                                                                        |
+|  FR2.2.1  | Creazione Gateway                                                                       |
+|  FR2.2.2  | Modifica Gateway                                                                        |
+|  FR2.2.3  | Eliminazione Gateway                                                                    |
+|  FR2.2.4  | Visualizzazione di un Gateway specifico                                                 |
 | FR2.2.4.1 | Visualizzazione di tutti i Gateway associati a un Network specifico                     |
-|  FR2.3  | Gestione Sensore                                                                        |
-| FR2.3.1 | Creazione Sensore                                                                       |
-| FR2.3.2 | Modifica Sensore                                                                        |
-| FR2.3.3 | Eliminazione Sensore                                                                    |
-| FR2.3.4 | Visualizzazione Sensore specifico                                                       |
+|   FR2.3   | Gestione Sensore                                                                        |
+|  FR2.3.1  | Creazione Sensore                                                                       |
+|  FR2.3.2  | Modifica Sensore                                                                        |
+|  FR2.3.3  | Eliminazione Sensore                                                                    |
+|  FR2.3.4  | Visualizzazione Sensore specifico                                                       |
 | FR2.3.4.1 | Visualizzazione di tutti i Sensori associati a un Gateway specifico                     |
-|  FR2.4  | Associazioni                                                                            |
-| FR2.4.1 | Aggiunta del Gateway a Network                                                          |
-| FR2.4.2 | Rimozione del Gateway da Network                                                        |
-| FR2.4.3 | Aggiunta sensore al Gateway                                                             |
-| FR2.4.4 | Rimozione sensore dal Gateway                                                           |
-| FR2.4.5 | Aggiunta associazione tra Gateway                                                       |
-| FR2.4.6 | Rimozione associazione tra Gateway                                                      |
-| **FR3** | **Gestione Misurazioni**                                                                |
-|  FR3.1  | Raccolta delle misurazioni trasmesse dai gateway                                        |
-| FR3.1.1 | Associazione della misurazione al corrispondente sensore                                |
-| FR3.1.2 | Conversione dal timestamp locale del sensore a UTC                                      |
-|  FR3.2  | Archiviazione dei dati convertiti nel sistema                                           |
-|  FR3.3  | Visualizzazione misurazioni                                                             |
-| FR3.3.1 | Visualizzazione misurazioni per un insieme di sensori di un Network specifico           |
-| FR3.3.2 | Visualizzazione misurazioni per un Sensore specifico                                    |
-|  FR3.4  | Inserimento misurazioni                                                                 |
-|  FR3.5  | Conversione timestamp da UTC a orario locale del viewer                                 |
-| **FR4** | **Analisi dei dati e rilevamento anomalie**                                             |
-|  FR4.1  | Calcolo della media delle misurazioni in un dato intervallo temporale                   |
-|  FR4.2  | Calcolo della varianza delle misurazioni in un dato intervallo temporale                |
-|  FR4.3  | Calcolo delle soglie (superiore e inferiore) per identificare potenziali valori anomali |
-| FR4.3.1 | Calcolo sogliaSuperiore = μ + 2σ                                                        |
-| FR4.3.2 | Calcolo sogliaInferiore = μ - 2σ                                                        |
-|  FR4.4  | Identificazione outlier                                                                 |
-|  FR4.5  | Visualizzazione statistiche                                                             |
-| FR4.5.1 | Visualizzazione statistiche per un insieme di Sensori di un Network specifico           |
-| FR4.5.2 | Visualizzazione statistiche per uno specifico sensore                                   |
-| FR4.5.3 | Visualizzazione outliers per un insieme di Sensori di un Network specifico              |
-| FR4.5.4 | Visualizzazione outliers per uno specifico sensore                                      |
-| **FR5** | **Gestione Errori di Sistema**                                                          |
+|   FR2.4   | Associazioni                                                                            |
+|  FR2.4.1  | Aggiunta del Gateway a Network                                                          |
+|  FR2.4.2  | Rimozione del Gateway da Network                                                        |
+|  FR2.4.3  | Aggiunta sensore al Gateway                                                             |
+|  FR2.4.4  | Rimozione sensore dal Gateway                                                           |
+|  **FR3**  | **Gestione Misurazioni**                                                                |
+|   FR3.2   | Visualizzazione misurazioni                                                             |
+|  FR3.2.1  | Visualizzazione misurazioni di un network                                               |
+|  FR3.2.2  | Visualizzazione filtrata misurazioni di un network                                      |
+|  FR3.2.3  | Visualizzazione misurazioni di un network con fuso orario locale                        |
+|  FR3.2.4  | Visualizzazione misurazioni di uno specifico sensore                                    |
+|  FR3.2.5  | Visualizzazione filtrata misurazioni di uno specifico sensore                           |
+|  FR3.2.6  | Visualizzazione misurazioni di uno specifico sensore con fuso orario locale             |
+|   FR3.3   | Inserimento misurazioni                                                                 |
+|  **FR4**  | **Analisi dei dati e rilevamento anomalie**                                             |
+|   FR4.1   | Calcolo della media delle misurazioni in un dato intervallo temporale                   |
+|   FR4.2   | Calcolo della varianza delle misurazioni in un dato intervallo temporale                |
+|   FR4.3   | Calcolo delle soglie (superiore e inferiore) per identificare potenziali valori anomali |
+|  FR4.3.1  | Calcolo sogliaSuperiore = μ + 2σ                                                        |
+|  FR4.3.2  | Calcolo sogliaInferiore = μ - 2σ                                                        |
+|   FR4.4   | Identificazione outlier                                                                 |
+|   FR4.5   | Visualizzazione statistiche                                                             |
+|  FR4.5.1  | Visualizzazione statistiche per un insieme di Sensori di un Network specifico           |
+|  FR4.5.2  | Visualizzazione statistiche per uno specifico sensore                                   |
+|  FR4.5.3  | Visualizzazione outliers per un insieme di Sensori di un Network specifico              |
+|  FR4.5.4  | Visualizzazione outliers per uno specifico sensore                                      |
+|  **FR5**  | **Gestione Errori**                                                                     |
 | FR5.1   | E400-	Dati in input malformati                                                          |
 | FR5.2   | E401-	Non Autorizzato                                                                   |
 | FR5.3   | E403-	Diritti Insufficienti                                                             |
-| FR5.4   | E500- Errore interno del server                                                         |
-
+|   FR5.4   | E500- Errore interno del server                                                             |
 
 ## Non Functional Requirements
 
@@ -178,13 +174,12 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | NFR2 |            Affidabilità            |                            Implementazione di meccanismi di ritrasmissione automatica in caso di errore nella ricezione dei dati                             |    FR3    |
 | NFR3 |            Prestazioni             |                               Il sistema deve garantire prestazioni stabili anche in presenza di molteplici reti e dispositivi                               |    FR3    |
 | NFR4 |             Sicurezza              |                              L’accesso al sistema deve essere regolato tramite autenticazione e autorizzazione basata su ruoli                               |    FR1    |
-| NFR5 |             Sicurezza              |                                             La comunicazione tra gateway e server deve avvenire su canali sicuri                                             |    FR1    |
 | NFR6 |            Portabilità             |              Compatibilità con diversi modelli di sensori e protocolli di comunicazione, senza necessità di modifiche sostanziali al software.               | FR2, FR3  |
 | NFR7 |             Efficienza             |                                              Acquisizione e registrazione dei dati dei sensori ogni 10 minuti.                                               |   FR3.1   |
 | NFR8 |           Manutenibilità           | Il sistema deve essere modulare e facilmente estendibile, consentendo interventi di aggiornamento o correzione senza compromettere il funzionamento globale. |   Tutti   |
 | NFR9 |            Portabilità             |              Il sistema deve poter convertire e memorizzare tutti i timestamp in formato ISO 8601 con fuso orario UTC              | FR2, FR3  |
 
-# Use case diagram and use cases
+# Use case diagram and use case5
 
 ## Use case diagram
 
@@ -807,87 +802,189 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |        Il sistema riscontra un errore interno inatteso         |
 |       3        |    Il sistema restituisce errore `500 InternalServerError`     |
 
-### Use Case 25, Associazione della misurazione al corrispondente sensore (UC25)
+### Use Case 25, Visualizzazione misurazioni di un network (FR3.2.1, FR3.2.2, FR3.2.3)
 
-(da finire)
-| Actors Involved | Gateway |
-| :--------------: | :------------------------------: |
-| Precondition | Il sensore deve essere registrato |
-| Post condition | La misurazione viene salvata |
-| Nominal Scenario | Scenario 25.1 |
-| Variants | Nessuna |
-| Exceptions | |
+| Actors Involved  |                    Admin, Operator, Viewer                     |
+| :--------------: | :------------------------------------------------------------: |
+|   Precondition   | L’utente ha accesso alla sezione "Visualizzazione Misurazioni" |
+|  Post condition  |                Le misurazioni vengono mostrate                 |
+| Nominal Scenario |                         Scenario 25.1                          |
+|     Variants     |                      Scenario 25.2, 25.3                       |
+|    Exceptions    |                 Scenario 25.4, UCE401, UCE500                  |
 
 #### Scenario 25.1
 
-| Scenario 25.1  |                                       Associazione della misurazione al sensore con successo                                       |
-| :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                 I sensori devono essere registrati                                                  |
-| Post condition |                                                    La misurazione viene salvata                                                    |
-|     Step#      |                                                            Descrizione                                                             |
-|       1        |                                             Gateway: Invia i dati al sistema                                         |
-|       4        |                                          Sistema: Verifica che il MAC del gateway è registrato                                          |
-|       5        |                                 Sistema: Verifica che il MAC del sensore                          |
-|       6        |                                                   Sistema: Legge i dati immessi                                                    |
-|       7        | Sistema: Controlla che i dati immessi non siano associati a nessun account esistente. Non esiste già un account per i dati immessi |
-|       8        |                                       Sistema: Crea un nuovo user e lo memorizza nel sistema                                       |
-|       9        |                                         Sistema: mostra a schermo un messaggio di successo                                         |
+| Scenario 25.1  |                Visualizzazione misurazioni di un network `(Code 200)`                 |
+| :------------: | :-----------------------------------------------------------------------------------: |
+|  Precondition  |            L’utente ha accesso alla sezione "Visualizzazione Misurazioni"             |
+| Post condition |                            Le misurazioni vengono mostrate                            |
+|     Step#      |                                      Descrizione                                      |
+|       1        |           Utente: Accede alla sezione di visualizzazione delle misurazioni            |
+|       2        |                             Utente: Seleziona un network                              |
+|       3        |            Sistema: Riceve la richiesta e verifica l'esistenza del network            |
+|       4        |                          INCLUDE Calcolo statistiche (UC...)                          |
+|       5        |        Sistema: Recupera le misurazioni dei sensori appartenenenti al network         |
+|       6        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network |
 
-### Use Case 26, Inserimento misurazioni (UC26)
+#### Scenario 25.2
 
-| Actors Involved  |            Admin, Operator            |
-| :--------------: | :-----------------------------------: |
-|   Precondition   |        Il sensore è registrato        |
-|  Post condition  |         Misurazione inserita          |
-| Nominal Scenario |             Scenario 26.1             |
-|     Variants     |                Nessuna                |
-|    Exceptions    | Scenario 26.2, 26.3, 26.4, 26.5, 26.6 |
+| Scenario 25.2  |                         Visualizzazione filtrata misurazioni di un network `(Code 200)`                         |
+| :------------: | :-------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                         L’utente ha accesso alla sezione "Visualizzazione Misurazioni"                          |
+| Post condition |                                         Le misurazioni vengono mostrate                                         |
+|     Step#      |                                                   Descrizione                                                   |
+|       1        |                        Utente: Accede alla sezione di visualizzazione delle misurazioni                         |
+|       3        |                         Sistema: Riceve la richiesta e verifica l'esistenza del network                         |
+|       4        |                                       INCLUDE Calcolo statistiche (UC...)                                       |
+|       5        |                     Sistema: Recupera le misurazioni dei sensori appartenenenti al network                      |
+|       6        |              Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network              |
+|       2        |                     Utente: Seleziona i filtri di interesse (sensori, intervallo di tempo)                      |
+|       3        |                   Sistema: Verifica l'esistenza dei sensori e il formato delle date di tempo                    |
+|       5        |                                       INCLUDE Calcolo statistiche (UC...)                                       |
+|       6        |                     Sistema: Recupera le misurazioni dei sensori appartenenenti al network                      |
+|       7        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network secondo i filtri indicati |
 
+#### Scenario 25.3
 
+| Scenario 25.3  |                      Visualizzazione misurazioni di un network con fuso orario locale `(Code 200)`                       |
+| :------------: | :----------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                              L’utente ha accesso alla sezione "Visualizzazione Misurazioni"                              |
+| Post condition |                                             Le misurazioni vengono mostrate                                              |
+|     Step#      |                                                       Descrizione                                                        |
+|       1        |                             Utente: Accede alla sezione di visualizzazione delle misurazioni                             |
+|       3        |                             Sistema: Riceve la richiesta e verifica l'esistenza del network                              |
+|       4        |                                           INCLUDE Calcolo statistiche (UC...)                                            |
+|       5        |                          Sistema: Recupera le misurazioni dei sensori appartenenenti al network                          |
+|       6        |                  Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network                   |
+|       8        |                         Utente: Richiede la visualizzazione dei timestamp con fuso orario locale                         |
+|       9        |                    Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente                     |
+|       10       | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network con fuso orario locale dell'utente |
 
-(ci vuole il controllo sul timestamp?)
+### Scenario 25.4
+
+| Scenario 25.4  |                 Network non trovato `(Code 404)`                 |
+| :------------: | :--------------------------------------------------------------: |
+|  Precondition  |  L’utente ha accesso alla sezione "Visualizzazione Misurazioni"  |
+| Post condition |               Il sistema restituisce l'errore 404                |
+|     Step#      |                           Descrizione                            |
+|       1        | Utente: Accede alla sezione di visualizzazione delle misurazioni |
+|       2        |                   Utente: Seleziona un network                   |
+|       3        |        Sistema: Riceve la richiesta e ricerca il network         |
+|       4        |             Sistema: Non trova il network richiesto              |
+|       5        |         Sistema: Restituisce il messaggio di errore 404.         |
+
+### Use Case 26, Visualizzazione misurazioni di uno specifico sensore (FR3.2.4, FR3.2.5, FR3.2.6)
+
+| Actors Involved  |                    Admin, Operator, Viewer                     |
+| :--------------: | :------------------------------------------------------------: |
+|   Precondition   | L’utente ha accesso alla sezione "Visualizzazione Misurazioni" |
+|  Post condition  |                Le misurazioni vengono mostrate                 |
+| Nominal Scenario |                         Scenario 26.1                          |
+|     Variants     |                      Scenario 26.2, 26.3                       |
+|    Exceptions    |                 Scenario 26.4, UCE401, UCE500                  |
 
 #### Scenario 26.1
 
-| Scenario 26.1  |                                                Misurazione creata `(Code 201)`                                                |
-| :------------: | :---------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                    Il sensore è registrato                                                    |
-| Post condition |                                                     Misurazione inserita                                                      |
-|     Step#      |                                                          Descrizione                                                          |
-|       1        |                                  Utente: Clicca il pulsante di inserimento della misurazione                                  |
-|       2        |                               Sistema: Verifica la presenza di un token valido nella richiesta                                |
-|       3        |                                             Sistema: Rileva che il token è valido                                             |
-|       4        |                     Sistema: Chiede `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`                      |
-|       5        | Utente: Inserisce `codice network`, `mac gateway`, `mac sensore`, `valore misurazione` (da tastiera o tramite menù a tendina) |
-|       6        |                                                 Sistema: Legge i dati immessi                                                 |
-|       7        |            Sistema: Controlla che i dati immessi corrispondano a network, gateway e sensori esistenti e associati             |
-|       8        |                      Sistema: Controlla che il valore della misurazione rientri tra i valori del dominio                      |
-|       9        |                                         Sistema: Memorizza la misurazione nel sistema                                         |
-|       10       |                                      Sistema: mostra a schermo un messaggio di successo                                       |
+| Scenario 26.1  |           Visualizzazione misurazioni di uno specifico sensore `(Code 200)`           |
+| :------------: | :-----------------------------------------------------------------------------------: |
+|  Precondition  |            L’utente ha accesso alla sezione "Visualizzazione Misurazioni"             |
+| Post condition |                            Le misurazioni vengono mostrate                            |
+|     Step#      |                                      Descrizione                                      |
+|       1        |           Utente: Accede alla sezione di visualizzazione delle misurazioni            |
+|       2        |                 Utente: Seleziona un network, un gateway e un sensore                 |
+|       3        |                Sistema: Verifica l'esistenza delle entità selezionate                 |
+|       4        |                          INCLUDE Calcolo statistiche (UC...)                          |
+|       5        |                     Sistema: Recupera le misurazioni del sensore                      |
+|       6        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network |
 
-| Scenario 26.2  |                                              Dati di input invalidi `(Code 400)`                                              |
-| :------------: | :---------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                    Il sensore è registrato                                                    |
-| Post condition |                                             Inserimento della misurazione fallita                                             |
-|     Step#      |                                                          Descrizione                                                          |
-|       1        |                                  Utente: Clicca il pulsante di inserimento della misurazione                                  |
-|       2        |                               Sistema: Verifica la presenza di un token valido nella richiesta                                |
-|       3        |                                             Sistema: Rileva che il token è valido                                             |
-|       4        |                     Sistema: Chiede `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`                      |
-|       5        | Utente: Inserisce `codice network`, `mac gateway`, `mac sensore`, `valore misurazione` (da tastiera o tramite menù a tendina) |
-|       6        |                                                 Sistema: Legge i dati immessi                                                 |
-|       7        |                      Sistema: Controlla che il valore della misurazione rientri tra i valori del dominio                      |
-|       8        |                                       Sistema: mostra a schermo un messaggio di errore                                        |
+#### Scenario 26.2
 
-| Scenario 26.3  |                   Non autorizzato `(Code 401)`                   |
-| :------------: | :--------------------------------------------------------------: |
-|  Precondition  |                     Il sensore è registrato                      |
-| Post condition |              Inserimento della misurazione fallita               |
-|     Step#      |                           Descrizione                            |
-|       1        |   Utente: Clicca il pulsante di inserimento della misurazione    |
-|       2        | Sistema: Verifica la presenza di un token valido nella richiesta |
-|       3        |            Sistema: Rileva che il token non è valido             |
-|       9        |         Sistema: mostra a schermo un messaggio di errore         |
+| Scenario 26.2  |              Visualizzazione filtrata misurazioni di uno specifico sensore `(Code 200)`              |
+| :------------: | :--------------------------------------------------------------------------------------------------: |
+|  Precondition  |                    L’utente ha accesso alla sezione "Visualizzazione Misurazioni"                    |
+| Post condition |                                   Le misurazioni vengono mostrate                                    |
+|     Step#      |                                             Descrizione                                              |
+|       1        |                   Utente: Accede alla sezione di visualizzazione delle misurazioni                   |
+|       2        |                        Utente: Seleziona un network, un gateway e un sensore                         |
+|       3        |                        Sistema: Verifica l'esistenza delle entità selezionate                        |
+|       4        |                                 INCLUDE Calcolo statistiche (UC...)                                  |
+|       5        |                             Sistema: Recupera le misurazioni del sensore                             |
+|       6        |        Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network         |
+|       2        |                    Utente: Seleziona i filtri di interesse (intervallo di tempo)                     |
+|       3        |                           Sistema: Verifica il formato delle date di tempo                           |
+|       5        |                                 INCLUDE Calcolo statistiche (UC...)                                  |
+|       6        |                             Sistema: Recupera le misurazioni del sensore                             |
+|       8        | Sistema: Restituisce le misurazioni e statistiche del sensore appartenente secondo i filtri indicati |
+|       8        |               Utente: Richiede la visualizzazione dei timestamp con fuso orario locale               |
+|       9        |          Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente           |
+|       10       |       Sistema: Restituisce le misurazioni e statistiche del sensore secondo i filtri indicati        |
+
+#### Scenario 26.3
+
+| Scenario 26.3  |     Visualizzazione misurazioni di uno specifico sensore con fuso orario locale `(Code 200)`     |
+| :------------: | :----------------------------------------------------------------------------------------------: |
+|  Precondition  |                  L’utente ha accesso alla sezione "Visualizzazione Misurazioni"                  |
+| Post condition |                                 Le misurazioni vengono mostrate                                  |
+|     Step#      |                                           Descrizione                                            |
+|       1        |                 Utente: Accede alla sezione di visualizzazione delle misurazioni                 |
+|       2        |                      Utente: Seleziona un network, un gateway e un sensore                       |
+|       3        |                      Sistema: Verifica l'esistenza delle entità selezionate                      |
+|       4        |                               INCLUDE Calcolo statistiche (UC...)                                |
+|       5        |                           Sistema: Recupera le misurazioni del sensore                           |
+|       6        |      Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network       |
+|       8        |             Utente: Richiede la visualizzazione dei timestamp con fuso orario locale             |
+|       9        |        Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente         |
+|       10       | Sistema: Restituisce le misurazioni e statistiche del sensore con fuso orario locale dell'utente |
+
+### Scenario 26.4
+
+| Scenario 26.4  |                       Entità non trovata `(Code 404)`                        |
+| :------------: | :--------------------------------------------------------------------------: |
+|  Precondition  |        L’utente ha accesso alla sezione "Visualizzazione Misurazioni"        |
+| Post condition |                     Il sistema restituisce l'errore 404                      |
+|     Step#      |                                 Descrizione                                  |
+|       1        |       Utente: Accede alla sezione di visualizzazione delle misurazioni       |
+|       2        |            Utente: Seleziona un network, un gateway e un sensore             |
+|       3        | Sistema: Riceve la richiesta e verifica l'esistenza delle entità selezionate |
+|       4        |  Sistema: Non trova una delle entità richieste (network, gateway, sensore)   |
+|       5        |               Sistema: Restituisce il messaggio di errore 404.               |
+
+### Use Case 27, Inserimento misurazioni (FR3.3)
+
+| Actors Involved  |                      Admin, Operator                       |
+| :--------------: | :--------------------------------------------------------: |
+|   Precondition   | L’utente ha accesso alla sezione "Inserimento Misurazioni" |
+|  Post condition  |                    Misurazione inserita                    |
+| Nominal Scenario |                       Scenario 27.1                        |
+|     Variants     |                          Nessuna                           |
+|    Exceptions    |       Scenario 27.2, UCE400, UCE401, UCE403, UCE500        |
+
+#### Scenario 27.1
+
+| Scenario 27.1  |                                               Misurazione creata `(Code 201)`                                               |
+| :------------: | :-------------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                 L’utente ha accesso alla sezione "Inserimento Misurazioni"                                  |
+| Post condition |                                                    Misurazione inserita                                                     |
+|     Step#      |                                                         Descrizione                                                         |
+|       1        |                                Utente: Accede alla sezione di inserimento della misurazione                                 |
+|       4        |       Utente: Inserisce `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`, `timestamp misurazione`       |
+|       5        |           Sistema: Controlla che i dati immessi corrispondano a network, gateway e sensori esistenti e associati            |
+|       6        | Sistema: Controlla che il valore della misurazione rientri tra i valori del dominio e che il timestamp abbia formato valido |
+|       7        |                                              Sistema: Memorizza la misurazione                                              |
+|       8        |                                     Sistema: mostra a schermo un messaggio di successo                                      |
+
+### Scenario 27.2
+
+| Scenario 27.2  |                                         Entità non trovata `(Code 404)`                                         |
+| :------------: | :-------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                           L’utente ha accesso alla sezione "Inserimento Misurazioni"                            |
+| Post condition |                                       Il sistema restituisce l'errore 404                                       |
+|     Step#      |                                                   Descrizione                                                   |
+|       1        |                          Utente: Accede alla sezione di inserimento della misurazione                           |
+|       2        | Utente: Inserisce `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`, `timestamp misurazione` |
+|       3        |     Sistema: Controlla che i dati immessi corrispondano a network, gateway e sensore esistenti e associati      |
+|       4        |                    Sistema: Non trova una delle entità richieste (network, gateway, sensore)                    |
+|       5        |                                Sistema: Restituisce il messaggio di errore 404.                                 |
 
 ### Use Case A, Visualizzazione Statistiche (UCA)
 
