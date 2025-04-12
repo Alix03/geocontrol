@@ -219,8 +219,8 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 | Scenario 1.3   |                         L'utente non è registrato `(Code 404)`                          |
 | -------------- | :-------------------------------------------------------------------------------------: |
-| Precondition   |                                   U non è registrato                                    |
-| Post condition |                                     U non è loggato                                     |
+| Precondition   |                                   L'utente non è registrato                                    |
+| Post condition |                                     L'utente non è loggato                                     |
 | Step#          |                                       Descrizione                                       |
 | 1              |                         Sistema: Chiede `username`, `password`.                         |
 | 2              |                         User: Inserisce `username`, `password`.                         |
