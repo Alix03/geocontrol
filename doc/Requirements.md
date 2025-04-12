@@ -112,7 +112,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  FR1.2  | Creazione Account                                                                       |
 |  FR1.3  | Rimozione Account                                                                       |
 |  FR1.4  | Visualizzazione Elenco Account                                                          |
-|  FR1.4.1| Visualizza Specifico Account                                                             | 
+|  FR1.5  | Visualizza Specifico Account                                                            | 
 | **FR2** | **Gestione Topologia**                                                                  |
 |  FR2.1  | Gestione Network                                                                        |
 | FR2.1.1 | Creazione Network                                                                       |
@@ -191,15 +191,15 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 \<next describe here each use case in the UCD>
 
-### Use Case 1, Login (UC10)
+### Use Case 1, Login (FR1.1)
 
-| Actors Involved  |           utente           |
-| :--------------: | :----------------------: |
-|   Precondition   | L'utente non è loggato |
-|  Post condition  |   L'utente è loggato   |
-| Nominal Scenario |       Scenario 1.1       |
-|     Variants     |         Nessuna          |
-|    Exceptions    |  ADD ECCEZIONI           |
+| Actors Involved  |           utente                       |
+| :--------------: | :----------------------:               |
+|   Precondition   | L'utente non è loggato                 |
+|  Post condition  |   L'utente è loggato                   |
+| Nominal Scenario |       Scenario 1.1                     |
+|     Variants     |         Nessuna                        |
+|    Exceptions    |  Scenario 1.2, UCE400, UCE401, UCE500  |
 
 #### Scenario 1.1
 
@@ -215,22 +215,35 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       5        | Sistema: Recupera la password, la confronta con quella fornita. I dati coincidono, l’utente è autorizzato |
 |       6        |                         Sistema: Associa allo user un token di accesso temporaneo                         |
 
-### Use Case 2, Creazione Account (UC3)
+#### Scenario 1.2
 
-| Actors Involved  |            Admin             |
-| :--------------: | :--------------------------: |
-|   Precondition   | L'utente non ha un account |
-|  Post condition  |       Utente registrato        |
-| Nominal Scenario |         Scenario 2.1         |
-|     Variants     |           Nessuna            |
-|    Exceptions    | ADD ECCEZIONI                |
+| Scenario 1.3   |                         L'utente non è registrato `(Code 404)`                          |
+| -------------- | :-------------------------------------------------------------------------------------: |
+| Precondition   |                                   U non è registrato                                    |
+| Post condition |                                     U non è loggato                                     |
+| Step#          |                                       Descrizione                                       |
+| 1              |                         Sistema: Chiede `username`, `password`.                         |
+| 2              |                         User: Inserisce `username`, `password`.                         |
+| 3              |                             Sistema: Legge i dati inseriti.                             |
+| 4              | Sistema: Cerca l’utente dato il nome utente. Utente non trovato. Utente non autorizzato |
+| 5              |                    Sistema: mostra a schermo un messaggio di errore                     |
+
+### Use Case 2, Creazione Account (FR1.2)
+
+| Actors Involved  |            Admin                                 |
+| :--------------: | :--------------------------:                     |
+|   Precondition   | L'utente non ha un account                       |
+|  Post condition  |       Utente registrato                          |
+| Nominal Scenario |         Scenario 2.1                             |
+|     Variants     |           Nessuna                                |
+|    Exceptions    | Scenario 2.2, UCE400, UCE401, UCE403, UCE500     |
 
 #### Scenario 2.1
 
 |  Scenario 2.1  |                                                     Registrazione `(Code 201)`                                                     |
 | :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                        L'utente non ha un account                                                         |
-| Post condition |                                                            Utente registrato                                                            |
+|  Precondition  |                                                        L'utente non ha un account                                                  |
+| Post condition |                                                            Utente registrato                                                       |
 |     Step#      |                                                            Descrizione                                                             |
 |       1        |                                             Admin: Clicca il pulsante di registrazione                                             |
 |       2        |                                  Sistema: Verifica la presenza di un token valido nella richiesta                                  |
@@ -242,21 +255,33 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       8        |                                       Sistema: Crea un nuovo user e lo memorizza nel sistema                                       |
 |       9        |                                         Sistema: mostra a schermo un messaggio di successo                                         |
 
-### Use Case 4, Rimozione Account (UC4)
+#### Scenario 2.2
 
-| Actors Involved  |                Admin                 |
-| :--------------: | :----------------------------------: |
-|   Precondition   |    Almeno un utente è registrato     |
-|  Post condition  | L'acount utente eliminato |
-| Nominal Scenario |             Scenario 4.1             |
-|     Variants     |               Nessuna                |
-|    Exceptions    |          ADD ECCEZIONI               |
+|  Scenario 2.2  |                                             username già in uso  `(Code 409)`                                    |
+| :------------: | :-------------------------------------------------------------------------------------------------------------:  |
+|  Precondition  |             L’utente tenta di creare un account utente con un identificativo già esistente                       |
+| Post condition |                                     Il sistema restituisce l'errore 409                                          |
+|     Step#      |                                                   Descrizione                                                    |
+|       1        |                        Utente: Effettua una richiesta di creazione account, inserendo i dati nel sistema         |
+|       2        |                        Sistema: riceve i dati e verifica l'esistenza della risorsa                               |
+|       3        |                        Sistema:Trova la risorsa nel sistema e ne blocca la creazione                             |
+|       4        |                                         Sistema:  Restituisce il messaggio di errore 409.                        |
+
+### Use Case 4, Rimozione Account (FR1.3)
+
+| Actors Involved  |                Admin                         |
+| :--------------: | :----------------------------------:         |
+|   Precondition   |  Almeno un utente è registrato nel sistema   |
+|  Post condition  | L'acount utente eliminato                    |
+| Nominal Scenario |             Scenario 4.1                     |
+|     Variants     |               Nessuna                        |
+|    Exceptions    | Scenario 4.2, UCE401, UCE403, UCE500         |
 
 #### Scenario 4.1
 
 |  Scenario 4.1  |                       Eliminazione Utente `(Code 204)`                        |
 | :------------: | :---------------------------------------------------------------------------: |
-|  Precondition  |                            Utente ha un account                             |
+|  Precondition  |              Almeno un utente è registrato nel sistema                        |
 | Post condition |                           Account utente eliminato                            |
 |     Step#      |                                  Descrizione                                  |
 |       1        |               Admin: Clicca il pulsante di eliminazione accuont               |
@@ -269,15 +294,32 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       8        |                          Sistema: Elimina l'account                           |
 |       9        |              Sistema: mostra a schermo un messaggio di successo               |
 
-### Use Case 5, Visualizzazione Account (UC5)
+### Scenario 4.2
+
+| Scenario 4.2   |                         L'utente non è registrato `(Code 404)`                                       |
+| -------------- | :-------------------------------------------------------------------------------------:              |  
+| Precondition   |     L’utente da eliminare non è presente nel sistema                                                 |
+| Post condition |    Nessun account eliminato,  Il sistema restituisce l'errore 404                                    |
+| Step#          |                                       Descrizione                                                    |
+| 1              |                         Admin: Clicca il pulsante di eliminazione account                            |
+| 2              |                        Sistema: Verifica la presenza di un token valido nella richiesta              |
+| 3              |                           Sistema: Rileva che il token è valido                                      |
+| 4              |                           Sistema: Chiede `username`                                                 |
+| 5              |                   Admin: Inserisce `username`                                                        |
+| 6              |                   Sistema: Legge i dati immessi                                                      |
+| 7              |                  Sistema: Cerca l’utente con lo `username` specificato, ma non trova alcun account   |
+| 8              |                  Sistema: Restituisce il messaggio di errore 404                                      |
+
+
+### Use Case 5, Visualizzazione Elenco Account (FR1.4)
 
 | Actors Involved  |                                   Admin                                   |
 | :--------------: | :-----------------------------------------------------------------------: |
 |   Precondition   |                L’admin è loggato e ha i permessi necessari                |
 |  Post condition  | L’admin visualizza la lista completa degli account registrati nel sistema |
 | Nominal Scenario |                               Scenario 5.1                                |
-|     Variants     |                                    5.2                                    |
-|    Exceptions    |                                 ADD ECCEZIONI                              |
+|     Variants     |                                    Nessuna                                |
+|    Exceptions    |        Scenario 5.2, UCE401, UCE403, UCE500                               |
 
 #### Scenario 5.1
 
@@ -289,10 +331,32 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        |              Admin: Clicca il pulsante di Visualizza Account              |
 |       2        |     Sistema: Verifica la presenza di un token valido nella richiesta      |
 |       3        |                   Sistema: Rileva che il token è valido                   |
-|       4        |             Sistema: recupera tutti gli account dal database              |
+|       4        |  Sistema:  Recupera dal database la lista completa degli account registrati  |
 |       6        |          Sistema: mostra a schermo l'elenco degli utenti trovati          |
 
-se fai il visualizza mettere
+### Use Case 6, Visualizzazione Specifico Account (FFR1.5)
+
+| Actors Involved  |                                   Admin                                   |
+| :--------------: | :-----------------------------------------------------------------------: |
+|   Precondition   |                L’admin è loggato e ha i permessi necessari                |
+|  Post condition  |                L’admin visualizza uno specifico account Utente            |
+| Nominal Scenario |                               Scenario 6.1                                |
+|     Variants     |                                    Nessuna                                |
+|    Exceptions    |        Scenario 6.2, UCE401, UCE403, UCE500                               |
+
+#### Scenario 6.1
+
+|  Scenario 6.1  |                Visualizzazione specifico account `(Code 200)`             |
+| :------------: | :-----------------------------------------------------------------------: |
+|  Precondition  |                L’admin è loggato e ha i permessi necessari                |
+| Post condition |                 L’admin visualizza uno specifico account Utente           |
+|     Step#      |                                Descrizione                                |
+|       1        |              Admin: Accede alla sezione di  Visualizza Account            |
+|       2        |              Admin: Inserisce lo username dell’utente da visualizzare     |
+|       3        |     Sistema: Verifica la presenza di un token valido nella richiesta      |
+|       4        |                   Sistema: Rileva che il token è valido                   |
+|       5        |  Sistema:  Recupera dal database l'account utente richiesto               |
+|       6        |          Sistema: mostra a schermo l'account utente richiesto              |
 
 ### Use Case 10, Creazione Network (UC10)
 
