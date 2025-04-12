@@ -138,14 +138,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  FR2.4.3  | Aggiunta sensore al Gateway                                                             |
 |  FR2.4.4  | Rimozione sensore dal Gateway                                                           |
 |  **FR3**  | **Gestione Misurazioni**                                                                |
-|   FR3.1   | Conversione timestamp                                                                   |
-|  FR3.1.1  | Conversione timestamp da orario locale a UTC                                            |
-|  FR3.1.2  | Conversione timestamp da UTC a orario locale                                            |
 |   FR3.2   | Visualizzazione misurazioni                                                             |
 |  FR3.2.1  | Visualizzazione misurazioni di un network                                               |
 |  FR3.2.2  | Visualizzazione filtrata misurazioni di un network                                      |
-|  FR3.2.3  | Visualizzazione misurazioni di uno specifico sensore                                    |
-|  FR3.2.3  | Visualizzazione filtrata misurazioni di uno specifico sensore                           |
+|  FR3.2.3  | Visualizzazione misurazioni di un network con fuso orario locale                                     |
+|  FR3.2.4  | Visualizzazione misurazioni di uno specifico sensore                                    |
+|  FR3.2.5  | Visualizzazione filtrata misurazioni di uno specifico sensore                           |
+|  FR3.2.6  | Visualizzazione misurazioni di uno specifico sensore con fuso orario locale                         |
 |   FR3.3   | Inserimento misurazioni                                                                 |
 |  **FR4**  | **Analisi dei dati e rilevamento anomalie**                                             |
 |   FR4.1   | Calcolo della media delle misurazioni in un dato intervallo temporale                   |
@@ -803,15 +802,15 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |        Il sistema riscontra un errore interno inatteso         |
 |       3        |    Il sistema restituisce errore `500 InternalServerError`     |
 
-### Use Case 25, Visualizzazione misurazioni di un network (FR3.2.1, FR3.2.2)
+### Use Case 25, Visualizzazione misurazioni di un network (FR3.2.1, FR3.2.2, FR3.2.3)
 
 | Actors Involved  |                    Admin, Operator, Viewer                     |
 | :--------------: | :------------------------------------------------------------: |
 |   Precondition   | L’utente ha accesso alla sezione "Visualizzazione Misurazioni" |
 |  Post condition  |                Le misurazioni vengono mostrate                 |
 | Nominal Scenario |                         Scenario 25.1                          |
-|     Variants     |                         Scenario 25.2                          |
-|    Exceptions    |                 Scenario 25.3, UCE401, UCE500                  |
+|     Variants     |                      Scenario 25.2, 25.3                       |
+|    Exceptions    |                 Scenario 25.4, UCE401, UCE500                  |
 
 #### Scenario 25.1
 
@@ -835,18 +834,35 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Post condition |                                         Le misurazioni vengono mostrate                                         |
 |     Step#      |                                                   Descrizione                                                   |
 |       1        |                        Utente: Accede alla sezione di visualizzazione delle misurazioni                         |
-|       2        |               Utente: Seleziona un network e i filtri di interesse (sensori, intervallo di tempo)               |
-|       3        |                   Sistema: Verifica l'esistenza del network e il formato delle date di tempo                    |
+|       3        |                         Sistema: Riceve la richiesta e verifica l'esistenza del network                         |
+|       4        |                                       INCLUDE Calcolo statistiche (UC...)                                       |
+|       5        |                     Sistema: Recupera le misurazioni dei sensori appartenenenti al network                      |
+|       6        |              Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network              |
+|       2        |                     Utente: Seleziona i filtri di interesse (sensori, intervallo di tempo)                      |
+|       3        |                   Sistema: Verifica l'esistenza dei sensori e il formato delle date di tempo                    |
 |       5        |                                       INCLUDE Calcolo statistiche (UC...)                                       |
 |       6        |                     Sistema: Recupera le misurazioni dei sensori appartenenenti al network                      |
 |       7        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network secondo i filtri indicati |
-|       8        |                    Utente: Richiede la visualizzazione dei timestamp con fuso orario locale                     |
-|       9        |                Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente                |
-|       10       | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network secondo i filtri indicati |
 
-### Scenario 25.3
+#### Scenario 25.3
 
-| Scenario 25.3  |                 Network non trovato `(Code 404)`                 |
+| Scenario 25.3  |                      Visualizzazione misurazioni di un network con fuso orario locale `(Code 200)`                       |
+| :------------: | :----------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                              L’utente ha accesso alla sezione "Visualizzazione Misurazioni"                              |
+| Post condition |                                             Le misurazioni vengono mostrate                                              |
+|     Step#      |                                                       Descrizione                                                        |
+|       1        |                             Utente: Accede alla sezione di visualizzazione delle misurazioni                             |
+|       3        |                             Sistema: Riceve la richiesta e verifica l'esistenza del network                              |
+|       4        |                                           INCLUDE Calcolo statistiche (UC...)                                            |
+|       5        |                          Sistema: Recupera le misurazioni dei sensori appartenenenti al network                          |
+|       6        |                  Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network                   |
+|       8        |                         Utente: Richiede la visualizzazione dei timestamp con fuso orario locale                         |
+|       9        |                    Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente                     |
+|       10       | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network con fuso orario locale dell'utente |
+
+### Scenario 25.4
+
+| Scenario 25.4  |                 Network non trovato `(Code 404)`                 |
 | :------------: | :--------------------------------------------------------------: |
 |  Precondition  |  L’utente ha accesso alla sezione "Visualizzazione Misurazioni"  |
 | Post condition |               Il sistema restituisce l'errore 404                |
@@ -857,15 +873,15 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |             Sistema: Non trova il network richiesto              |
 |       5        |         Sistema: Restituisce il messaggio di errore 404.         |
 
-### Use Case 26, Visualizzazione misurazioni di uno specifico sensore (FR3.2.3, FR3.2.4)
+### Use Case 26, Visualizzazione misurazioni di uno specifico sensore (FR3.2.4, FR3.2.5, FR3.2.6)
 
 | Actors Involved  |                    Admin, Operator, Viewer                     |
 | :--------------: | :------------------------------------------------------------: |
 |   Precondition   | L’utente ha accesso alla sezione "Visualizzazione Misurazioni" |
 |  Post condition  |                Le misurazioni vengono mostrate                 |
 | Nominal Scenario |                         Scenario 26.1                          |
-|     Variants     |                         Scenario 26.2                          |
-|    Exceptions    |                 Scenario 26.3, UCE401, UCE500                  |
+|     Variants     |                      Scenario 26.2, 26.3                       |
+|    Exceptions    |                 Scenario 26.4, UCE401, UCE500                  |
 
 #### Scenario 26.1
 
@@ -876,7 +892,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |     Step#      |                                      Descrizione                                      |
 |       1        |           Utente: Accede alla sezione di visualizzazione delle misurazioni            |
 |       2        |                 Utente: Seleziona un network, un gateway e un sensore                 |
-|       3        |     Sistema: Riceve la richiesta e verifica l'esistenza delle entità selezionate      |
+|       3        |                Sistema: Verifica l'esistenza delle entità selezionate                 |
 |       4        |                          INCLUDE Calcolo statistiche (UC...)                          |
 |       5        |                     Sistema: Recupera le misurazioni del sensore                      |
 |       6        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network |
@@ -889,8 +905,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Post condition |                                   Le misurazioni vengono mostrate                                    |
 |     Step#      |                                             Descrizione                                              |
 |       1        |                   Utente: Accede alla sezione di visualizzazione delle misurazioni                   |
-|       2        |  Utente: Seleziona un network, un gateway, un sensore e i filtri di interesse (intervallo di tempo)  |
-|       3        |       Sistema: Verifica l'esistenza delle entità selezionate e il formato delle date di tempo        |
+|       2        |                        Utente: Seleziona un network, un gateway e un sensore                         |
+|       3        |                        Sistema: Verifica l'esistenza delle entità selezionate                        |
+|       4        |                                 INCLUDE Calcolo statistiche (UC...)                                  |
+|       5        |                             Sistema: Recupera le misurazioni del sensore                             |
+|       6        |        Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network         |
+|       2        |                    Utente: Seleziona i filtri di interesse (intervallo di tempo)                     |
+|       3        |                           Sistema: Verifica il formato delle date di tempo                           |
 |       5        |                                 INCLUDE Calcolo statistiche (UC...)                                  |
 |       6        |                             Sistema: Recupera le misurazioni del sensore                             |
 |       8        | Sistema: Restituisce le misurazioni e statistiche del sensore appartenente secondo i filtri indicati |
@@ -898,9 +919,26 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       9        |          Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente           |
 |       10       |       Sistema: Restituisce le misurazioni e statistiche del sensore secondo i filtri indicati        |
 
-### Scenario 26.3
+#### Scenario 26.3
 
-| Scenario 26.3  |                       Entità non trovata `(Code 404)`                        |
+| Scenario 26.3  |     Visualizzazione misurazioni di uno specifico sensore con fuso orario locale `(Code 200)`     |
+| :------------: | :----------------------------------------------------------------------------------------------: |
+|  Precondition  |                  L’utente ha accesso alla sezione "Visualizzazione Misurazioni"                  |
+| Post condition |                                 Le misurazioni vengono mostrate                                  |
+|     Step#      |                                           Descrizione                                            |
+|       1        |                 Utente: Accede alla sezione di visualizzazione delle misurazioni                 |
+|       2        |                      Utente: Seleziona un network, un gateway e un sensore                       |
+|       3        |                      Sistema: Verifica l'esistenza delle entità selezionate                      |
+|       4        |                               INCLUDE Calcolo statistiche (UC...)                                |
+|       5        |                           Sistema: Recupera le misurazioni del sensore                           |
+|       6        |      Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network       |
+|       8        |             Utente: Richiede la visualizzazione dei timestamp con fuso orario locale             |
+|       9        |        Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente         |
+|       10       | Sistema: Restituisce le misurazioni e statistiche del sensore con fuso orario locale dell'utente |
+
+### Scenario 26.4
+
+| Scenario 26.4  |                       Entità non trovata `(Code 404)`                        |
 | :------------: | :--------------------------------------------------------------------------: |
 |  Precondition  |        L’utente ha accesso alla sezione "Visualizzazione Misurazioni"        |
 | Post condition |                     Il sistema restituisce l'errore 404                      |
