@@ -141,10 +141,10 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |   FR3.2   | Visualizzazione misurazioni                                                             |
 |  FR3.2.1  | Visualizzazione misurazioni di un network                                               |
 |  FR3.2.2  | Visualizzazione filtrata misurazioni di un network                                      |
-|  FR3.2.3  | Visualizzazione misurazioni di un network con fuso orario locale                                     |
+|  FR3.2.3  | Visualizzazione misurazioni di un network con fuso orario locale                        |
 |  FR3.2.4  | Visualizzazione misurazioni di uno specifico sensore                                    |
 |  FR3.2.5  | Visualizzazione filtrata misurazioni di uno specifico sensore                           |
-|  FR3.2.6  | Visualizzazione misurazioni di uno specifico sensore con fuso orario locale                         |
+|  FR3.2.6  | Visualizzazione misurazioni di uno specifico sensore con fuso orario locale             |
 |   FR3.3   | Inserimento misurazioni                                                                 |
 |  **FR4**  | **Analisi dei dati e rilevamento anomalie**                                             |
 |   FR4.1   | Calcolo della media delle misurazioni in un dato intervallo temporale                   |
