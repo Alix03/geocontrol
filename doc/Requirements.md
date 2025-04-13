@@ -464,7 +464,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |                      Sistema: Blocca il processo di visualizzazione                       |
 |       5        |                           Sistema: Mostra un messaggio d'errore                           |
 
-### Use Case 10, Creazione Network (UC10)
+### Use Case 10, Creazione Network (FR2.1.2)
 
 | Actors Involved  |                              Admin, Operator                              |
 | :--------------: | :-----------------------------------------------------------------------: |
@@ -545,7 +545,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server |
 |       3        |       Il sistema restituisce il codice di errore `(500 InternalServerError)`        |
 
-### Use Case 11, Modifica Network (UC11)
+### Use Case 11, Modifica Network (FR2.1.2)
 
 | Actors Involved  |                                     Admin, Operator                                      |
 | :--------------: | :--------------------------------------------------------------------------------------: |
@@ -633,7 +633,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server  |
 |       3        |        Il sistema restituisce il codice di errore `(500 InternalServerError)`        |
 
-### Use Case 12, Eliminazione Network (UC12)
+### Use Case 12, Eliminazione Network (FR2.1.3)
 
 | Actors Involved  |                      Admin, Operator                       |
 | :--------------: | :--------------------------------------------------------: |
@@ -698,7 +698,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server |
 |       3        |        Il sistema restituisce il codice di errore `500 InternalServerError`         |
 
-### Use Case 13, Visualizzazione di tutti i Network (UC13)
+### Use Case 13, Visualizzazione di tutti i Network (FR2.1.4)
 
 | Actors Involved  |             Admin, Operator, Viewer             |
 | :--------------: | :---------------------------------------------: |
@@ -741,7 +741,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |    Il sistema riscontra un errore interno durante l'elaborazione     |
 |       3        | Il sistema restituisce il codice di errore `500 InternalServerError` |
 
-### Use Case 14, Visualizzazione di un Network specifico (UC14)
+### Use Case 14, Visualizzazione di un Network specifico (FR2.1.4.1)
 
 | Actors Involved  |               Admin, Operator, Viewer               |
 | :--------------: | :-------------------------------------------------: |
@@ -796,7 +796,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |        Il sistema riscontra un errore interno inatteso         |
 |       3        |    Il sistema restituisce errore `500 InternalServerError`     |
 
-### Use Case 15, Creazione Gateway (UC15)
+### Use Case 15, Creazione Gateway (FR2.2.1)
 
 | Actors Involved  |                Admin, Operator                |
 | :--------------: | :-------------------------------------------: |
@@ -885,7 +885,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Durante l'elaborazione si verifica un errore interno                       |
 |       3        | Sistema: Restituisce `500 InternalServerError`                           |
 
-### Use Case 16, Modifica Gateway (UC16)
+### Use Case 16, Modifica Gateway (FR2.2.2)
 
 | Actors Involved  |                Admin, Operator                |
 | :--------------: | :-------------------------------------------: |
@@ -974,7 +974,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |  Durante l'elaborazione si verifica un errore interno                     |
 |       3        |  Sistema: Restituisce `500 InternalServerError`                            |
 
-### Use Case 17, Eliminazione Gateway (UC17)
+### Use Case 17, Eliminazione Gateway (FR2.2.3)
 
 | Actors Involved  |                Admin, Operator                |
 | :--------------: | :-------------------------------------------: |
@@ -1040,7 +1040,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Sistema: Durante l'elaborazione si verifica un errore interno             |
 |       3        | Sistema: Restituisce `500 InternalServerError`                            |
 
-### Use Case 18, Visualizzazione di un Gateway specifico (UC18)
+### Use Case 18, Visualizzazione di un Gateway specifico (FR2.2.4)
 
 | Actors Involved  |            Admin, Operator, Viewer            |
 | :--------------: | :-------------------------------------------: |
@@ -1094,7 +1094,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Durante l'elaborazione si verifica un errore interno                          |
 |       3        | Sistema: Restituisce `500 InternalServerError`                                |
 
-### Use Case 19, Visualizzazione di tutti i Gateway associati a un Network specifico (UC19)
+### Use Case 19, Visualizzazione di tutti i Gateway associati a un Network specifico (FR2.2.4.1)
 
 | Actors Involved  |                Admin, Operator, Viewer                |
 | :--------------: | :---------------------------------------------------: |
@@ -1148,7 +1148,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Durante l'elaborazione si verifica un errore interno                 |
 |       3        | Sistema: Restituisce `500 InternalServerError`                       |
 
-### Use Case 20, Creazione Sensore (UC20)
+### Use Case 20, Creazione Sensore (FR2.3.1)
 
 | Actors Involved  |                Admin, Operator                |
 | :--------------: | :-------------------------------------------: |
@@ -1237,7 +1237,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Durante l'elaborazione si verifica un errore interno                   |
 |       3        | Sistema: Restituisce `500 InternalServerError`                         |
 
-### Use Case 21, Modifica Sensore (UC21)
+### Use Case 21, Modifica Sensore (FR2.3.2)
 
 | Actors Involved  |                Admin, Operator                |
 | :--------------: | :-------------------------------------------: |
@@ -1323,7 +1323,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Durante l'elaborazione, il sistema riscontra un errore interno             |
 |       3        | Sistema: Restituisce `500 InternalServerError`                           |
 
-### Use Case 22, Eliminazione Sensore (UC22)
+### Use Case 22, Eliminazione Sensore (FR2.3.3)
 
 | Actors Involved  |                Admin, Operator                |
 | :--------------: | :-------------------------------------------: |
@@ -1388,7 +1388,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Durante l'elaborazione, il sistema riscontra un errore interno                |
 |       3        | Sistema: Restituisce `500 InternalServerError`                              |
 
-### Use Case 23, Visualizzazione Sensore specifico (UC23)
+### Use Case 23, Visualizzazione Sensore specifico (FR2.3.4)
 
 | Actors Involved  |         Admin, Operator, Viewer          |
 | :--------------: | :--------------------------------------: |
@@ -1441,7 +1441,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Sistema: Durante l’elaborazione si verifica un errore interno.          |
 |       3        | Sistema: Restituisce `500 InternalServerError`.                        |
 
-### Use Case 24, Visualizzazione di tutti i Sensori associati a un Gateway specifico (UC24)
+### Use Case 24, Visualizzazione di tutti i Sensori associati a un Gateway specifico (FR2.3.4.1)
 
 | Actors Involved  |        Admin, Operator, Viewer         |
 | :--------------: | :------------------------------------: |
