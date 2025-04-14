@@ -159,10 +159,10 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  FR4.5.3  | Visualizzazione outliers per un insieme di Sensori di un Network specifico              |
 |  FR4.5.4  | Visualizzazione outliers per uno specifico sensore                                      |
 |  **FR5**  | **Gestione Errori**                                                                     |
-| FR5.1   | E400-	Dati in input malformati                                                          |
-| FR5.2   | E401-	Non Autorizzato                                                                   |
-| FR5.3   | E403-	Diritti Insufficienti                                                             |
-|   FR5.4   | E500- Errore interno del server                                                             |
+|   FR5.1   | E400- Dati in input malformati                                                          |
+|   FR5.2   | E401- Non Autorizzato                                                                   |
+|   FR5.3   | E403- Diritti Insufficienti                                                             |
+|   FR5.4   | E500- Errore interno del server                                                         |
 
 ## Non Functional Requirements
 
@@ -177,7 +177,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | NFR6 |            Portabilità             |              Compatibilità con diversi modelli di sensori e protocolli di comunicazione, senza necessità di modifiche sostanziali al software.               | FR2, FR3  |
 | NFR7 |             Efficienza             |                                              Acquisizione e registrazione dei dati dei sensori ogni 10 minuti.                                               |   FR3.1   |
 | NFR8 |           Manutenibilità           | Il sistema deve essere modulare e facilmente estendibile, consentendo interventi di aggiornamento o correzione senza compromettere il funzionamento globale. |   Tutti   |
-| NFR9 |            Portabilità             |              Il sistema deve poter convertire e memorizzare tutti i timestamp in formato ISO 8601 con fuso orario UTC              | FR2, FR3  |
+| NFR9 |            Portabilità             |                           Il sistema deve poter convertire e memorizzare tutti i timestamp in formato ISO 8601 con fuso orario UTC                           | FR2, FR3  |
 
 # Use case diagram and use case5
 
@@ -482,16 +482,16 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 10.1
 
-| Scenario 10.1  |                                                               Creazione rete con successo `(Code 201)`                                                                |
-| :------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                             L'utente è autenticato come Admin o Operator                                                              |
-| Post condition |                                                            La rete viene creata ed è visibile nel sistema                                                             |
-|     Step#      |                                                                              Description                                                                              |
+| Scenario 10.1  |                                                               Creazione rete con successo `(Code 201)`                                                               |
+| :------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                             L'utente è autenticato come Admin o Operator                                                             |
+| Post condition |                                                            La rete viene creata ed è visibile nel sistema                                                            |
+|     Step#      |                                                                             Description                                                                              |
 |       1        |                                                     Utente: Accede alla sezione "Gestione Reti" dell’interfaccia                                                     |
 |       2        |                                                                 Utente: Seleziona "Crea nuova rete"                                                                  |
 |       3        | Utente: Inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...). Eventuali campi annidati Gateway o Sensor, se presenti, verranno ignorati. |
 |       4        |                                                                 Utente: invia il modulo di creazione                                                                 |
-|       5        |                                           Sistema: Valida i dati, registra la rete e restituisce il codice `201 Created`                                            |
+|       5        |                                            Sistema: Valida i dati, registra la rete e restituisce il codice `201 Created`                                            |
 
 #### Scenario 10.2
 
@@ -967,7 +967,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Post condition |                                                    Misurazione inserita                                                     |
 |     Step#      |                                                         Descrizione                                                         |
 |       1        |                                Utente: Accede alla sezione di inserimento della misurazione                                 |
-|       4        |       Utente: Inserisce `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`, `timestamp misurazione`       |
+|       4        |                 Utente: Seleziona un network, un gateway e un sensore e inserisce i dati della misurazione                  |
 |       5        |           Sistema: Controlla che i dati immessi corrispondano a network, gateway e sensori esistenti e associati            |
 |       6        | Sistema: Controlla che il valore della misurazione rientri tra i valori del dominio e che il timestamp abbia formato valido |
 |       7        |                                              Sistema: Memorizza la misurazione                                              |
@@ -975,16 +975,16 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ### Scenario 27.2
 
-| Scenario 27.2  |                                         Entità non trovata `(Code 404)`                                         |
-| :------------: | :-------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                           L’utente ha accesso alla sezione "Inserimento Misurazioni"                            |
-| Post condition |                                       Il sistema restituisce l'errore 404                                       |
-|     Step#      |                                                   Descrizione                                                   |
-|       1        |                          Utente: Accede alla sezione di inserimento della misurazione                           |
-|       2        | Utente: Inserisce `codice network`, `mac gateway`, `mac sensore`, `valore misurazione`, `timestamp misurazione` |
-|       3        |     Sistema: Controlla che i dati immessi corrispondano a network, gateway e sensore esistenti e associati      |
-|       4        |                    Sistema: Non trova una delle entità richieste (network, gateway, sensore)                    |
-|       5        |                                Sistema: Restituisce il messaggio di errore 404.                                 |
+| Scenario 27.2  |                                    Entità non trovata `(Code 404)`                                     |
+| :------------: | :----------------------------------------------------------------------------------------------------: |
+|  Precondition  |                       L’utente ha accesso alla sezione "Inserimento Misurazioni"                       |
+| Post condition |                                  Il sistema restituisce l'errore 404                                   |
+|     Step#      |                                              Descrizione                                               |
+|       1        |                      Utente: Accede alla sezione di inserimento della misurazione                      |
+|       2        |       Utente: Seleziona un network, un gateway e un sensore e inserisce i dati della misurazione       |
+|       3        | Sistema: Controlla che i dati immessi corrispondano a network, gateway e sensore esistenti e associati |
+|       4        |               Sistema: Non trova una delle entità richieste (network, gateway, sensore)                |
+|       5        |                            Sistema: Restituisce il messaggio di errore 404.                            |
 
 ### Use Case A, Visualizzazione Statistiche (UCA)
 
@@ -1298,110 +1298,104 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ### Use Case E400, Dati in input malformati (FR5.1)
 
-| Actors Involved  |                           Utente                             |
-| :--------------: | :-------------------------------------------------------:    |
-|   Precondition   |          L'utente inserisce dati nel sistema.                |
-|  Post condition  |          Il sistema restituisce il messaggio di errore 400.             |
-| Nominal Scenario |    E400.1                                                    |
-
+| Actors Involved  |                       Utente                       |
+| :--------------: | :------------------------------------------------: |
+|   Precondition   |        L'utente inserisce dati nel sistema.        |
+|  Post condition  | Il sistema restituisce il messaggio di errore 400. |
+| Nominal Scenario |                       E400.1                       |
 
 ### Scenario E400.1
 
-|  Scenario E400.1|                                              Dati in input malformati                                           |
-| :------------: | :-------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                             L'utente inserisce dati nel sistema.                                |
-| Post condition |                                         Il sistema restituisce il messaggio di errore 400.            |
-|     Step#      |                                                   Descrizione                                                   |
-|       1        |                              Utente: Inserisce dati richiesti  con un campo mancante o in formato errato.       |
-|       2        |            Sistema: Verifica i dati immessi dall'uetnte e rileva l'errore 400 BadRequest                        |
-|       3        |                                         Sistema: Restituisce il messaggio di errore 400.                           |
+| Scenario E400.1 |                           Dati in input malformati                            |
+| :-------------: | :---------------------------------------------------------------------------: |
+|  Precondition   |                     L'utente inserisce dati nel sistema.                      |
+| Post condition  |              Il sistema restituisce il messaggio di errore 400.               |
+|      Step#      |                                  Descrizione                                  |
+|        1        |  Utente: Inserisce dati richiesti con un campo mancante o in formato errato.  |
+|        2        | Sistema: Verifica i dati immessi dall'uetnte e rileva l'errore 400 BadRequest |
+|        3        |               Sistema: Restituisce il messaggio di errore 400.                |
 
 ### Use Case E401, Non Autorizzato (FR5.2)
 
-| Actors Involved  |                           Utente                             |
-| :--------------: | :-------------------------------------------------------:    |
+| Actors Involved  |                                Utente                                 |
+| :--------------: | :-------------------------------------------------------------------: |
 |   Precondition   | L'utente non dispone di un token valido o non ha effettuato il login. |
-|  Post condition  | Il sistema restituisce l'errore 401     |
-| Nominal Scenario |    E401.1                                                    |
-
+|  Post condition  |                  Il sistema restituisce l'errore 401                  |
+| Nominal Scenario |                                E401.1                                 |
 
 ### Scenario E401.1
 
-|  Scenario E401.1|                                              Non Autorizzato                                           |
-| :------------: | :-------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |            L'utente non dispone di un token valido o non ha effettuato il login.                                |
-| Post condition |                                         Il sistema restituisce l'errore 401      |
-|     Step#      |                                                   Descrizione                                                   |
-|       1        |                              Utente: Invia una richiesta per accedere a una risorsa protetta                    |
-|       2        |            Sistema: Rileva un token non valido o mancante nell’header della richiesta                                              |
-|       3        |                                         Sistema: Restituisce il messaggio di errore 401.                        |
+| Scenario E401.1 |                              Non Autorizzato                               |
+| :-------------: | :------------------------------------------------------------------------: |
+|  Precondition   |   L'utente non dispone di un token valido o non ha effettuato il login.    |
+| Post condition  |                    Il sistema restituisce l'errore 401                     |
+|      Step#      |                                Descrizione                                 |
+|        1        |      Utente: Invia una richiesta per accedere a una risorsa protetta       |
+|        2        | Sistema: Rileva un token non valido o mancante nell’header della richiesta |
+|        3        |              Sistema: Restituisce il messaggio di errore 401.              |
 
 ### Use Case E403, Diritti Insufficienti (FR5.3)
 
-| Actors Involved  |                           Utente                             |
-| :--------------: | :-------------------------------------------------------:    |
-|   Precondition   |  L'utente è autenticato nel sistema ma con ruolo inadeguato  |
-|  Post condition  | Il sistema restituisce l'errore 403  |
-| Nominal Scenario |    E403.1                                                    |
-
+| Actors Involved  |                           Utente                           |
+| :--------------: | :--------------------------------------------------------: |
+|   Precondition   | L'utente è autenticato nel sistema ma con ruolo inadeguato |
+|  Post condition  |            Il sistema restituisce l'errore 403             |
+| Nominal Scenario |                           E403.1                           |
 
 ### Scenario E403.1
 
-|  Scenario E403.1|                                              Non Autorizzato                                           |
-| :------------: | :-------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                L'utente è autenticato nel sistema ma con ruolo inadeguato                       |
-| Post condition |                                          Il sistema restituisce l'errore 403      |
-|     Step#      |                                                   Descrizione                                                   |
-|       1        |          Utente: Tenta di accedere a una risorsa che richiede un ruolo specifico                                |
-|       2        |            Sistema: Controlla il ruolo dell'utente                                                                |
-|       3        |                                Sistema:  Rileva che l’utente non ha i permessi necessari                        |
-|       4        |                                         Sistema:  Restituisce il messaggio di errore 403.                       |
+| Scenario E403.1 |                             Non Autorizzato                             |
+| :-------------: | :---------------------------------------------------------------------: |
+|  Precondition   |       L'utente è autenticato nel sistema ma con ruolo inadeguato        |
+| Post condition  |                   Il sistema restituisce l'errore 403                   |
+|      Step#      |                               Descrizione                               |
+|        1        | Utente: Tenta di accedere a una risorsa che richiede un ruolo specifico |
+|        2        |                 Sistema: Controlla il ruolo dell'utente                 |
+|        3        |        Sistema: Rileva che l’utente non ha i permessi necessari         |
+|        4        |            Sistema: Restituisce il messaggio di errore 403.             |
 
 ### Use Case E500, Errore interno del server (FR5.4)
 
-| Actors Involved  |                           Utente                             |
-| :--------------: | :-------------------------------------------------------:    |
-|   Precondition   |  L'utente effettua una richiesta valida                         |
-|  Post condition  | Il sistema restituisce l'errore 500  |
-| Nominal Scenario |    E500.1                                                    |
-
+| Actors Involved  |                 Utente                 |
+| :--------------: | :------------------------------------: |
+|   Precondition   | L'utente effettua una richiesta valida |
+|  Post condition  |  Il sistema restituisce l'errore 500   |
+| Nominal Scenario |                 E500.1                 |
 
 ### Scenario E500.1
 
-|  Scenario E500.1|                                             Errore interno del server                                          |
-| :------------: | :-------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                 L'utente effettua una richiesta valida                                          |
-| Post condition |                  Il sistema restituisce l'errore 500                |
-|     Step#      |                                                   Descrizione                                                   |
-|       1        |                                Utente: Effettua una richiesta valida                                            |
-|       2        |                        Sistema: La richiesta fallisce per un errore interno                            |
-|       4        |                                         Sistema:  Restituisce il messaggio di errore 500.                       |
+| Scenario E500.1 |              Errore interno del server               |
+| :-------------: | :--------------------------------------------------: |
+|  Precondition   |        L'utente effettua una richiesta valida        |
+| Post condition  |         Il sistema restituisce l'errore 500          |
+|      Step#      |                     Descrizione                      |
+|        1        |        Utente: Effettua una richiesta valida         |
+|        2        | Sistema: La richiesta fallisce per un errore interno |
+|        4        |   Sistema: Restituisce il messaggio di errore 500.   |
 
 ### Scenario E404
 
-|  Scenario E404|                                             Risorsa non trovata                                          |
-| :------------: | :-------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |             L’utente effettua una richiesta verso una risorsa X                                                  |
-| Post condition |                  Il sistema restituisce l'errore 404                |
-|     Step#      |                                                   Descrizione                                                   |
-|       1        |                                Utente: Effettua una richiesta per la risorsa X                                            |
-|       2        |                        Sistema: Riceve la richiesta e ricerca la risorsa X                           |
-|       3        |                        Sistema: Non trova la risorsa richiesta                            |
-|       4        |                                         Sistema:  Restituisce il messaggio di errore 404.                       |
+| Scenario E404  |                 Risorsa non trovata                 |
+| :------------: | :-------------------------------------------------: |
+|  Precondition  | L’utente effettua una richiesta verso una risorsa X |
+| Post condition |         Il sistema restituisce l'errore 404         |
+|     Step#      |                     Descrizione                     |
+|       1        |   Utente: Effettua una richiesta per la risorsa X   |
+|       2        | Sistema: Riceve la richiesta e ricerca la risorsa X |
+|       3        |       Sistema: Non trova la risorsa richiesta       |
+|       4        |  Sistema: Restituisce il messaggio di errore 404.   |
 
 ### Scenario E409
 
-|  Scenario E409|                                             Risorsa già in uso                                         |
-| :------------: | :-------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |             L’utente tenta di creare/modificare una risorsa X con un identificativo già esistente                                                  |
-| Post condition |                  Il sistema restituisce l'errore 409                |
-|     Step#      |                                                   Descrizione                                                   |
-|       1        |                                Utente: Effettua una richiesta di creazione/modifica per la risorsa X                                            |
-|       2        |                        Sistema: riceve i dati e verifica l'esistenza della risorsa                        |
-|       3        |                        Sistema:Trova la risorsa nel sistema e ne blocca la creazione/modifica                            |
-|       4        |                                         Sistema:  Restituisce il messaggio di errore 409.                       |
-
-
+| Scenario E409  |                                  Risorsa già in uso                                   |
+| :------------: | :-----------------------------------------------------------------------------------: |
+|  Precondition  | L’utente tenta di creare/modificare una risorsa X con un identificativo già esistente |
+| Post condition |                          Il sistema restituisce l'errore 409                          |
+|     Step#      |                                      Descrizione                                      |
+|       1        |         Utente: Effettua una richiesta di creazione/modifica per la risorsa X         |
+|       2        |              Sistema: riceve i dati e verifica l'esistenza della risorsa              |
+|       3        |        Sistema:Trova la risorsa nel sistema e ne blocca la creazione/modifica         |
+|       4        |                   Sistema: Restituisce il messaggio di errore 409.                    |
 
 # Glossary
 
