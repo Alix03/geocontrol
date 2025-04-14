@@ -925,7 +925,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | L'utente visualizza le statistiche richieste |
 | Nominal Scenario |                 Scenario A.1                 |
 |     Variants     |                 Scenario A.2                 |
-|    Exceptions    |              Scenario `Errori`               |
+|    Exceptions    |        Scenario E401.1, E404, E500.1         |
 
 #### Scenario A.1
 
@@ -972,7 +972,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | L'utente visualizza le misurazioni outliers di un network |
 | Nominal Scenario |                       Scenario B.1                        |
 |     Variants     |                       Scenario B.2                        |
-|    Exceptions    |                     Scenario `Errori`                     |
+|    Exceptions    |               Scenario E401.1, E404, E500.1               |
 
 #### Scenario B.1
 
