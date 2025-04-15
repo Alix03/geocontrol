@@ -177,7 +177,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | NFR8 |           Manutenibilità           | Il sistema deve essere modulare e facilmente estendibile, consentendo interventi di aggiornamento o correzione senza compromettere il funzionamento globale. |   Tutti   |
 | NFR9 |            Portabilità             |              Il sistema deve poter convertire e memorizzare tutti i timestamp in formato ISO 8601 con fuso orario UTC              | FR2, FR3  |
 
-# Use case diagram and use case5
+# Use case diagram and use case
 
 ## Use case diagram
 
@@ -472,7 +472,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |                       La rete è creata nel sistema                        |
 | Nominal Scenario |                               Scenario 10.1                               |
 |     Variants     |                                   None                                    |
-|    Exceptions    | Scenario 10.2, Scenario 10.3, Scenario 10.4, Scenario 10.5, Scenario 10.6 |
+|    Exceptions    | Scenario 10.2, Scenario 10.3, Scenario 10.4, Scenario 10.5, UCE500        |
 
 #### Scenario 10.1
 
@@ -534,16 +534,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                                  L'utente invia il modulo di creazione                                   |
 |       3        | Il sistema valida i dati, rileva la duplicazione e restituisce il codice di errore `(409 ConflictError)` |
 
-#### Scenario 10.6
 
-| Scenario 10.6  |                Errore interno del server `(500 InternalServerError)`                |
-| :------------: | :---------------------------------------------------------------------------------: |
-|  Precondition  |        L’utente è autenticato, ma si verifica un errore inatteso lato server        |
-| Post condition |                              Nessuna rete viene creata                              |
-|     Step#      |                                     Description                                     |
-|       1        |            L'utente compila il modulo correttamente e invia la richiesta            |
-|       2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server |
-|       3        |       Il sistema restituisce il codice di errore `(500 InternalServerError)`        |
 
 ### Use Case 11, Modifica Network (FR2.1.2)
 
@@ -553,7 +544,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |                           La rete viene aggiornata nel sistema                           |
 | Nominal Scenario |                                      Scenario 11.1                                       |
 |     Variants     |                                           None                                           |
-|    Exceptions    | Scenario 11.2, Scenario 11.3, Scenario 11.4, Scenario 11.5, Scenario 11.6, Scenario 11.7 |
+|    Exceptions    | Scenario 11.2, Scenario 11.3, Scenario 11.4, Scenario 11.5, Scenario 11.6, UCE500        |
 
 #### Scenario 11.1
 
@@ -622,16 +613,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | L'utente inserisce un nuovo `code` che identifica una rete già esistente |
 |       2        | Il sistema rileva il conflitto e restituisce errore `409 ConflictError`  |
 
-#### Scenario 11.7
-
-| Scenario 11.7  |                Errore interno del server `(500 InternalServerError)`                 |
-| :------------: | :----------------------------------------------------------------------------------: |
-|  Precondition  |        L’utente è autenticato, ma si verifica un errore inatteso lato server         |
-| Post condition |                           Nessuna modifica viene applicata                           |
-|     Step#      |                                     Description                                      |
-|       1        | L'utente compila correttamente il modulo e invia la richiesta di modifica della rete |
-|       2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server  |
-|       3        |        Il sistema restituisce il codice di errore `(500 InternalServerError)`        |
 
 ### Use Case 12, Eliminazione Network (FR2.1.3)
 
@@ -641,7 +622,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            La rete viene eliminata dal sistema             |
 | Nominal Scenario |                       Scenario 12.1                        |
 |     Variants     |                            None                            |
-|    Exceptions    | Scenario 12.2, Scenario 12.3, Scenario 12.4, Scenario 12.5 |
+|    Exceptions    | Scenario 12.2, Scenario 12.3, Scenario 12.4, UCE500        |
 
 #### Scenario 12.1
 
@@ -687,16 +668,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | L'utente invia la richiesta DELETE con un codice rete non presente nel sistema |
 |       2        |     Il sistema non trova la rete e restituisce errore `404 NotFoundError`      |
 
-#### Scenario 12.5
 
-| Scenario 12.5  |                Errore interno del server `(500 InternalServerError)`                |
-| :------------: | :---------------------------------------------------------------------------------: |
-|  Precondition  |        L’utente è autenticato, ma si verifica un errore inatteso lato server        |
-| Post condition |                            Nessuna rete viene eliminata                             |
-|     Step#      |                                     Description                                     |
-|       1        |                 L'utente invia una richiesta valida di eliminazione                 |
-|       2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server |
-|       3        |        Il sistema restituisce il codice di errore `500 InternalServerError`         |
 
 ### Use Case 13, Visualizzazione di tutti i Network (FR2.1.4)
 
@@ -706,7 +678,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | L'elenco delle reti viene restituito all’utente |
 | Nominal Scenario |                  Scenario 13.1                  |
 |     Variants     |                      None                       |
-|    Exceptions    |          Scenario 13.2, Scenario 13.3           |
+|    Exceptions    |          Scenario 13.2, UCE500                  |
 
 #### Scenario 13.1
 
@@ -730,16 +702,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        | Il sistema rileva che il token è assente, scaduto o malformato  |
 |       3        |      Il sistema restituisce errore `401 UnauthorizedError`      |
 
-#### Scenario 13.3
-
-| Scenario 13.3  |        Errore interno del server `(500 InternalServerError)`         |
-| :------------: | :------------------------------------------------------------------: |
-|  Precondition  |     L'utente è autenticato, ma si verifica un errore imprevisto      |
-| Post condition |                    Nessuna lista viene restituita                    |
-|     Step#      |                             Description                              |
-|       1        |     L'utente invia una richiesta valida per la lista delle reti      |
-|       2        |    Il sistema riscontra un errore interno durante l'elaborazione     |
-|       3        | Il sistema restituisce il codice di errore `500 InternalServerError` |
 
 ### Use Case 14, Visualizzazione di un Network specifico (FR2.1.4.1)
 
@@ -749,7 +711,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | I dettagli della rete vengono restituiti all’utente |
 | Nominal Scenario |                    Scenario 14.1                    |
 |     Variants     |                        None                         |
-|    Exceptions    |     Scenario 14.2, Scenario 14.3, Scenario 14.4     |
+|    Exceptions    |     Scenario 14.2, Scenario 14.3, UCE500            |
 
 #### Scenario 14.1
 
@@ -785,17 +747,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |          Il sistema non trova alcuna rete con quel codice           |
 |       3        |          Il sistema restituisce errore `404 NotFoundError`          |
 
-#### Scenario 14.4
-
-| Scenario 14.4  |     Errore interno del server `(500 InternalServerError)`      |
-| :------------: | :------------------------------------------------------------: |
-|  Precondition  |  L’utente è autenticato, ma si verifica un errore lato server  |
-| Post condition |                 Nessuna rete viene restituita                  |
-|     Step#      |                          Description                           |
-|       1        | L'utente invia una richiesta valida per il recupero della rete |
-|       2        |        Il sistema riscontra un errore interno inatteso         |
-|       3        |    Il sistema restituisce errore `500 InternalServerError`     |
-
 ### Use Case 15, Creazione Gateway (FR2.2.1)
 
 | Actors Involved  |                Admin, Operator                |
@@ -804,7 +755,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            Il gateway viene creato nel sistema            |
 | Nominal Scenario |                  Scenario 15.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 15.2, Scenario 15.3, Scenario 15.4, Scenario 15.5, Scenario 15.6, Scenario 15.7 |
+|    Exceptions    | Scenario 15.2, Scenario 15.3, Scenario 15.4, Scenario 15.5, Scenario 15.6, UCE500 |
 
 #### Scenario 15.1
 
@@ -874,16 +825,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        |   Utente: Compila il modulo con un `macAddress` associato già ad un Gateway esistente         |
 |       2        | Sistema: Valida i dati, rileva la duplicazione e riporta un errore `(409 ConflictError)` |
 
-#### Scenario 15.7
-
-| Scenario 15.7  |           Errore interno del server `(500 InternalServerError)`           |
-| :------------: | :------------------------------------------------------------------------: |
-|  Precondition  | L’utente è autenticato, ma si verifica un errore inatteso lato server      |
-| Post condition |                          Nessun gateway viene creato                       |
-|     Step#      |                                 Description                                |
-|       1        | Utente: Compila il modulo correttamente e invia la richiesta di creazione |
-|       2        | Durante l'elaborazione si verifica un errore interno                       |
-|       3        | Sistema: Restituisce `500 InternalServerError`                           |
 
 ### Use Case 16, Modifica Gateway (FR2.2.2)
 
@@ -893,7 +834,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            Il gateway viene aggiornato nel sistema            |
 | Nominal Scenario |                  Scenario 16.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 16.2, Scenario 16.3, Scenario 16.4, Scenario 16.5, Scenario 16.6, Scenario 16.7 |
+|    Exceptions    | Scenario 16.2, Scenario 16.3, Scenario 16.4, Scenario 16.5, Scenario 16.6, UCE500 |
 
 #### Scenario 16.1
 
@@ -963,16 +904,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        |   Utente: Inserisce nella richiesta un `macAddress` associato a un altro Gateway    |
 |       2        |   Sistema: Rileva il conflitto e restituisce `409 ConflictError`.   |
 
-#### Scenario 16.7
-
-| Scenario 16.7  |           Errore interno del server `(500 InternalServerError)`           |
-| :------------: | :------------------------------------------------------------------------: |
-|  Precondition  | L’utente è autenticato, ma si verifica un errore inatteso lato server      |
-| Post condition |                      Nessun aggiornamento viene applicato                  |
-|     Step#      |                               Description                                  |
-|       1        | Utente: Compila correttamente i campi per la modifica del gateway e invia la richiesta |
-|       2        |  Durante l'elaborazione si verifica un errore interno                     |
-|       3        |  Sistema: Restituisce `500 InternalServerError`                            |
 
 ### Use Case 17, Eliminazione Gateway (FR2.2.3)
 
@@ -982,7 +913,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            Il gateway viene eliminato dal sistema            |
 | Nominal Scenario |                  Scenario 17.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 17.2, Scenario 17.3, Scenario 17.4, Scenario 17.5 |
+|    Exceptions    | Scenario 17.2, Scenario 17.3, Scenario 17.4, UCE500 |
 
 #### Scenario 17.1
 
@@ -1029,17 +960,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | Utente: Seleziona un `networkCode` o un `gatewayMac` inesistente             |
 |       2        | Sistema: Non trova il gateway e restituisce `404 NotFoundError`              |
 
-#### Scenario 17.5
-
-| Scenario 17.5  |           Errore interno del server `(500 InternalServerError)`           |
-| :------------: | :------------------------------------------------------------------------: |
-|  Precondition  | L’utente è autenticato, ma si verifica un errore inatteso lato server      |
-| Post condition |                       Nessun gateway viene eliminato                        |
-|     Step#      |                                 Description                                |
-|       1        | Utente: Invia correttamente la richiesta per eliminare un gateway  |
-|       2        | Sistema: Durante l'elaborazione si verifica un errore interno             |
-|       3        | Sistema: Restituisce `500 InternalServerError`                            |
-
 ### Use Case 18, Visualizzazione di un Gateway specifico (FR2.2.4)
 
 | Actors Involved  |            Admin, Operator, Viewer            |
@@ -1048,7 +968,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |      Il gateway viene visualizzato            |
 | Nominal Scenario |                 Scenario 18.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 18.2, Scenario 18.3, Scenario 18.4   |
+|    Exceptions    | Scenario 18.2, Scenario 18.3, UCE500          |
 
 #### Scenario 18.1
 
@@ -1083,16 +1003,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | Utente: Effettua la richiesta GET con un `networkCode` o `gatewayMac` inesistente |
 |       2        | Sistema: Non trova il gateway e restituisce `404 NotFoundError`        |
 
-#### Scenario 18.4
-
-| Scenario 18.4  |             Errore interno del server `(500 InternalServerError)`             |
-| :------------: | :---------------------------------------------------------------------------: |
-|  Precondition  |   L’utente è autenticato, ma si verifica un errore inatteso lato server        |
-| Post condition |                       Nessun gateway viene restituito                          |
-|     Step#      |                                Description                                    |
-|       1        | Utente: Invia una richiesta valida per ottenere i dettagli del gateway        |
-|       2        | Durante l'elaborazione si verifica un errore interno                          |
-|       3        | Sistema: Restituisce `500 InternalServerError`                                |
 
 ### Use Case 19, Visualizzazione di tutti i Gateway associati a un Network specifico (FR2.2.4.1)
 
@@ -1102,7 +1012,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | Viene mostrata la lista dei Gateway appartenenti alla rete richiesta |
 | Nominal Scenario |                    Scenario 19.1                       |
 |     Variants     |                         None                          |
-|    Exceptions    | Scenario 19.2, Scenario 19.3, Scenario 19.4           |
+|    Exceptions    | Scenario 19.2, Scenario 19.3, UCE500                  |
 
 #### Scenario 19.1
 
@@ -1137,17 +1047,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | Utente: Seleziona o inserisce un `networkCode` non presente nel sistema |
 |       2        | Sistema: Non trova la rete e restituisce `404 NotFoundError` |
 
-#### Scenario 19.4
-
-| Scenario 19.4  |         Errore interno del server `(500 InternalServerError)`         |
-| :------------: | :-------------------------------------------------------------------: |
-|  Precondition  | L'utente è autenticato, ma si verifica un errore inatteso lato server |
-| Post condition |              Nessuna lista di gateway viene restituita               |
-|     Step#      |                               Description                            |
-|       1        | Utente: Invia una richiesta valida per recuperare i gateway di una rete |
-|       2        | Durante l'elaborazione si verifica un errore interno                 |
-|       3        | Sistema: Restituisce `500 InternalServerError`                       |
-
 ### Use Case 20, Creazione Sensore (FR2.3.1)
 
 | Actors Involved  |                Admin, Operator                |
@@ -1156,7 +1055,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            Il sensore viene creato nel sistema           |
 | Nominal Scenario |                  Scenario 20.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 20.2, Scenario 20.3, Scenario 20.4, Scenario 20.5, Scenario 20.6, Scenario 20.7 |
+|    Exceptions    | Scenario 20.2, Scenario 20.3, Scenario 20.4, Scenario 20.5, Scenario 20.6, UCE500 |
 
 #### Scenario 20.1
 
@@ -1226,17 +1125,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | Utente: Compila il modulo con un `macAddress` già registrato per un sensore esistente |
 |       2        | Sistema: Valida i dati, rileva la duplicazione e riporta un errore `409 ConflictError` |
 
-#### Scenario 20.7
-
-| Scenario 20.7  |          Errore interno del server `(500 InternalServerError)`          |
-| :------------: | :---------------------------------------------------------------------: |
-|  Precondition  | L’utente è autenticato, ma si verifica un errore inatteso lato server   |
-| Post condition |                        Nessun sensore viene creato                      |
-|     Step#      |                                Description                              |
-|       1        | Utente: Compila correttamente il modulo e invia la richiesta di creazione |
-|       2        | Durante l'elaborazione si verifica un errore interno                   |
-|       3        | Sistema: Restituisce `500 InternalServerError`                         |
-
 ### Use Case 21, Modifica Sensore (FR2.3.2)
 
 | Actors Involved  |                Admin, Operator                |
@@ -1245,7 +1133,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            Il sensore viene aggiornato nel sistema            |
 | Nominal Scenario |                  Scenario 21.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 21.2, Scenario 21.3, Scenario 21.4, Scenario 21.5, Scenario 21.6, Scenario 21.7 |
+|    Exceptions    | Scenario 21.2, Scenario 21.3, Scenario 21.4, Scenario 21.5, Scenario 21.6, UCE500 |
 
 #### Scenario 21.1
 
@@ -1312,17 +1200,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | Utente: Invia la richiesta PATCH con un nuovo `macAddress` già usato da un altro sensore nel sistema   |
 |       2        | Sistema: Rileva la duplicazione e restituisce `409 ConflictError`        |
 
-#### Scenario 21.7
-
-| Scenario 21.7  |          Errore interno del server `(500 InternalServerError)`          |
-| :------------: | :------------------------------------------------------------------------: |
-|  Precondition  | L'utente è autenticato, ma durante l'elaborazione si verifica un errore inatteso del server |
-| Post condition |                        Nessuna modifica viene applicata                   |
-|     Step#      |                                Description                                  |
-|       1        | Utente: Invia la richiesta PATCH per aggiornare il sensore               |
-|       2        | Durante l'elaborazione, il sistema riscontra un errore interno             |
-|       3        | Sistema: Restituisce `500 InternalServerError`                           |
-
 ### Use Case 22, Eliminazione Sensore (FR2.3.3)
 
 | Actors Involved  |                Admin, Operator                |
@@ -1331,7 +1208,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |              Il sensore viene eliminato dal sistema              |
 | Nominal Scenario |                  Scenario 22.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 22.2, Scenario 22.3, Scenario 22.4, Scenario 22.5 |
+|    Exceptions    | Scenario 22.2, Scenario 22.3, Scenario 22.4, UCE500 |
 
 #### Scenario 22.1
 
@@ -1377,17 +1254,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | Utente: Invia la richiesta DELETE usando un `networkCode`, `gatewayMac` o `sensorMac` inesistenti      |
 |       2        | Sistema: Non trova l'elemento corrispondente e restituisce `404 NotFoundError`       |
 
-#### Scenario 22.5
-
-| Scenario 22.5  |           Errore interno del server `(500 InternalServerError)`           |
-| :------------: | :-------------------------------------------------------------------------: |
-|  Precondition  | L'utente è autenticato, ma durante l'elaborazione si verifica un errore inatteso del server    |
-| Post condition |                    Nessuna eliminazione viene effettuata                    |
-|     Step#      |                                  Description                                         |
-|       1        | Utente: Invia una richiesta DELETE valida per eliminare il sensore           |
-|       2        | Durante l'elaborazione, il sistema riscontra un errore interno                |
-|       3        | Sistema: Restituisce `500 InternalServerError`                              |
-
 ### Use Case 23, Visualizzazione Sensore specifico (FR2.3.4)
 
 | Actors Involved  |         Admin, Operator, Viewer          |
@@ -1396,7 +1262,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | Il sistema restituisce i dettagli del sensore richiesto |
 | Nominal Scenario |               Scenario 23.1              |
 |     Variants     |                  None                  |
-|    Exceptions    | Scenario 23.2, Scenario 23.3, Scenario 23.4 |
+|    Exceptions    | Scenario 23.2, Scenario 23.3, UCE500 |
 
 #### Scenario 23.1
 
@@ -1430,17 +1296,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | Utente: Invia la richiesta GET con parametri inesistenti o errati.       |
 |       2        | Sistema: Non trova il sensore corrispondente e restituisce `404 NotFoundError`. |
 
-#### Scenario 23.4
-
-| Scenario 23.4  |           Errore interno del server `(500 InternalServerError)`           |
-| :------------: | :-------------------------------------------------------------------------: |
-|  Precondition  | L'utente è autenticato, ma si verifica un errore inatteso lato server        |
-| Post condition |                        Nessun sensore viene restituito                   |
-|     Step#      |                                  Description                                   |
-|       1        | Utente: Invia una richiesta GET valida per recuperare i dettagli del sensore. |
-|       2        | Sistema: Durante l’elaborazione si verifica un errore interno.          |
-|       3        | Sistema: Restituisce `500 InternalServerError`.                        |
-
 ### Use Case 24, Visualizzazione di tutti i Sensori associati a un Gateway specifico (FR2.3.4.1)
 
 | Actors Involved  |        Admin, Operator, Viewer         |
@@ -1449,7 +1304,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | Il sistema restituisce la lista dei sensori associati al gateway richiesto |
 | Nominal Scenario |           Scenario 24.1               |
 |     Variants     |                None                  |
-|    Exceptions    | Scenario 24.2, Scenario 24.3, Scenario 24.4 |
+|    Exceptions    | Scenario 24.2, Scenario 24.3, UCE500 |
 
 #### Scenario 24.1
 
@@ -1483,17 +1338,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |     Step#      |                                Description                                   |
 |       1        | Utente: Invia una richiesta GET utilizzando un `networkCode` o un `gatewayMac` inesistenti. |
 |       2        | Sistema: Non trova il network o il gateway  e restituisce `404 NotFoundError`.        |
-
-#### Scenario 24.4
-
-| Scenario 24.4  |         Errore interno del server `(500 InternalServerError)`         |
-| :------------: | :---------------------------------------------------------------------: |
-|  Precondition  | L'utente è autenticato, ma si verifica un errore inatteso lato server    |
-| Post condition |                Nessuna lista di sensori viene restituita                |
-|     Step#      |                                Description                                   |
-|       1        | Utente: Invia una richiesta GET valida per recuperare la lista dei sensori.  |
-|       2        | Sistema: Durante l’elaborazione, si verifica un errore interno.           |
-|       3        | Sistema: Restituisce `500 InternalServerError`.                         |
 
 ### Use Case 25, Visualizzazione misurazioni di un network (FR3.2.1, FR3.2.2, FR3.2.3)
 
