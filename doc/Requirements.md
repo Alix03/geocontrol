@@ -472,7 +472,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |                       La rete è creata nel sistema                        |
 | Nominal Scenario |                               Scenario 10.1                               |
 |     Variants     |                                   None                                    |
-|    Exceptions    | UCE400, UCE401, UCE403, Scenario 10.2, UCE500        |
+|    Exceptions    |  Scenario 10.2, UCE400, UCE401, UCE403, UCE500        |
 
 #### Scenario 10.1
 
