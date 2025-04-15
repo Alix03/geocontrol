@@ -483,13 +483,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |     Step#      |                                                                              Description                                                                              |
 |       1        |                                                     Utente: Accede alla sezione "Gestione Reti" dell’interfaccia                                                     |
 |       2        |                                                                 Utente: Seleziona "Crea nuova rete"                                                                  |
-|       3        | Utente: Inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...). Eventuali campi annidati Gateway o Sensor, se presenti, verranno ignorati. |
+|       3        | Utente: Inserisce `code`, `name`, `description` nel modulo. Eventuali campi annidati Gateway o Sensor, se presenti, verranno ignorati. |
 |       4        |                                                                 Utente: invia il modulo di creazione                                                                 |
 |       5        |                                           Sistema: Valida i dati, registra la rete e restituisce il codice `201 Created`                                            |
 
 #### Scenario 10.2
 
-| Scenario 10.5  |                             Codice rete già esistente `(409 ConflictError)`                              |
+| Scenario 10.2  |                             Codice rete già esistente `(409 ConflictError)`                              |
 | :------------: | :------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                      L'utente è autenticato, ma il codice inserito è già registrato                      |
 | Post condition |                                        Nessuna rete viene creata                                         |
@@ -517,13 +517,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |     Step#      |                                                                  Description                                                                   |
 |       1        |                                         L'utente accede alla sezione "Gestione Reti" dell’interfaccia                                          |
 |       2        |                                                   L'utente seleziona una rete da modificare                                                    |
-|       3        | L'utente modifica i campi `code`, `name`, `description` nel modulo.Eventuali campi annidati Gateway o Sensor vengono ignorati e non aggiornati |
+|       3        | L'utente modifica i campi `code`, `name`, `description` nel modulo. Eventuali campi annidati Gateway o Sensor vengono ignorati e non aggiornati |
 |       4        |                                                L'utente invia il modulo di modifica della rete                                                 |
 |       5        |                              Il sistema valida i dati, aggiorna la rete e restituisce il codice `204 No Content`                               |
 
 #### Scenario 11.2
 
-| Scenario 11.5  |                Rete non trovata `(404 NotFoundError)`                 |
+| Scenario 11.2  |                Rete non trovata `(404 NotFoundError)`                 |
 | :------------: | :-------------------------------------------------------------------: |
 |  Precondition  |      L’utente inserisce un codice rete non esistente nel sistema      |
 | Post condition |                   Nessuna modifica viene applicata                    |
@@ -533,7 +533,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 11.3
 
-| Scenario 11.6  |             Codice rete già esistente `(409 ConflictError)`              |
+| Scenario 11.3  |             Codice rete già esistente `(409 ConflictError)`              |
 | :------------: | :----------------------------------------------------------------------: |
 |  Precondition  |       L’utente modifica il codice della rete con uno già esistente       |
 | Post condition |                     Nessuna modifica viene applicata                     |
@@ -566,7 +566,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 12.2
 
-| Scenario 12.4  |                     Rete non trovata `(404 NotFoundError)`                     |
+| Scenario 12.2  |                     Rete non trovata `(404 NotFoundError)`                     |
 | :------------: | :----------------------------------------------------------------------------: |
 |  Precondition  |               L’utente specifica un `networkCode` non esistente                |
 | Post condition |                          Nessuna rete viene eliminata                          |
@@ -621,7 +621,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 14.2
 
-| Scenario 14.3  |               Rete non trovata `(404 NotFoundError)`                |
+| Scenario 14.2  |               Rete non trovata `(404 NotFoundError)`                |
 | :------------: | :-----------------------------------------------------------------: |
 |  Precondition  |     Il `networkCode` specificato non corrisponde ad alcuna rete     |
 | Post condition |                    Nessuna rete viene restituita                    |
@@ -655,7 +655,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 15.2
 
-| Scenario 15.5  |             Network non trovato `(404 NotFoundError)`             |
+| Scenario 15.2  |             Network non trovato `(404 NotFoundError)`             |
 | :------------: | :--------------------------------------------------------------: |
 |  Precondition  | L’utente fa una richiesta di creazione su un `networkCode` inesistente |
 | Post condition |                  Nessun gateway viene creato                     |
@@ -665,7 +665,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 15.3
 
-| Scenario 15.6  |            MAC address già esistente `(409 ConflictError)`           |
+| Scenario 15.3  |            MAC address già esistente `(409 ConflictError)`           |
 | :------------: | :-----------------------------------------------------------------: |
 |  Precondition  | L’utente inserisce un `macAddress` gateway già presente nel sistema |
 | Post condition |                  Nessun gateway viene creato                        |
@@ -699,7 +699,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 16.2
 
-| Scenario 16.5  |           Network/Gateway non trovato `(404 NotFoundError)`            |
+| Scenario 16.2  |           Network/Gateway non trovato `(404 NotFoundError)`            |
 | :------------: | :--------------------------------------------------------------------: |
 |  Precondition  | Il `networkCode` o il `gatewayMac` specificati non esistono nel sistema |
 | Post condition |                 Nessuna modifica viene applicata                       |
@@ -709,7 +709,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 16.3
 
-| Scenario 16.6  |            MAC address già esistente `(409 ConflictError)`           |
+| Scenario 16.3  |            MAC address già esistente `(409 ConflictError)`           |
 | :------------: | :-----------------------------------------------------------------: |
 |  Precondition  | L’utente aggiorna il `macAddress` del gateway con uno già presente nel sistema |
 | Post condition |                  Nessun aggiornamento viene applicato               |
@@ -741,7 +741,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 17.2
 
-| Scenario 17.4  |               Network/Gateway non trovato `(404 NotFoundError)`               |
+| Scenario 17.2  |               Network/Gateway non trovato `(404 NotFoundError)`               |
 | :------------: | :--------------------------------------------------------------------------: |
 |  Precondition  | Il `networkCode` o il `gatewayMac` specificati non esistono nel sistema       |
 | Post condition |                        Nessun gateway viene eliminato                         |
@@ -773,7 +773,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 18.2
 
-| Scenario 18.3  |           Network/Gateway non trovato `(404 NotFoundError)`            |
+| Scenario 18.2  |           Network/Gateway non trovato `(404 NotFoundError)`            |
 | :------------: | :--------------------------------------------------------------------: |
 |  Precondition  | Il `networkCode` o il `gatewayMac` specificati non esistono nel sistema |
 | Post condition |                   Nessun gateway viene restituito                      |
@@ -806,7 +806,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 19.2
 
-| Scenario 19.3  |          Network non trovato `(404 NotFoundError)`          |
+| Scenario 19.2  |          Network non trovato `(404 NotFoundError)`          |
 | :------------: | :---------------------------------------------------------: |
 |  Precondition  | L'utente specifica un `networkCode` inesistente nel sistema |
 | Post condition |         Nessun elenco di gateway viene restituito           |
@@ -839,7 +839,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 20.2
 
-| Scenario 20.5  |               Network/Gateway non trovato `(404 NotFoundError)`                |
+| Scenario 20.2  |               Network/Gateway non trovato `(404 NotFoundError)`                |
 | :------------: | :---------------------------------------------------------------------------: |
 |  Precondition  | L’utente fa una richiesta di creazione su un `networkCode` o `gatewayMac` inesistente |
 | Post condition |                          Nessun sensore viene creato                           |
@@ -849,7 +849,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 20.3
 
-| Scenario 20.6  |           MAC address già esistente `(409 ConflictError)`            |
+| Scenario 20.3  |           MAC address già esistente `(409 ConflictError)`            |
 | :------------: | :-----------------------------------------------------------------: |
 |  Precondition  | L’utente inserisce un `macAddress` già presente come sensore nel sistema |
 | Post condition |                  Nessun sensore viene creato                        |
@@ -881,7 +881,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 21.2
 
-| Scenario 21.5  |          Network/Gateway/Sensor non trovato `(404 NotFoundError)`          |
+| Scenario 21.2  |          Network/Gateway/Sensor non trovato `(404 NotFoundError)`          |
 | :------------: | :-------------------------------------------------------------------------: |
 |  Precondition  | Il `networkCode`, `gatewayMac` o `sensorMac` specificati non corrispondono a un elemento esistente |
 | Post condition |                      Nessuna modifica viene applicata                    |
@@ -891,7 +891,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 21.3
 
-| Scenario 21.6  |           Sensor mac address già in use `(409 ConflictError)`           |
+| Scenario 21.3  |           Sensor mac address già in use `(409 ConflictError)`           |
 | :------------: | :---------------------------------------------------------------------: |
 |  Precondition  | L'utente tenta di aggiornare il sensore assegnandogli un `macAddress` già usato da un altro sensore nel sistema |
 | Post condition |                      Nessuna modifica viene applicata                  |
@@ -923,7 +923,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 22.2
 
-| Scenario 22.4  |             Network/Gateway/Sensor non trovato `(404 NotFoundError)`              |
+| Scenario 22.2  |             Network/Gateway/Sensor non trovato `(404 NotFoundError)`              |
 | :------------: | :---------------------------------------------------------------------------------: |
 |  Precondition  | Il `networkCode`, `gatewayMac` o `sensorMac` specificati non corrispondono a nessun elemento esistente |
 | Post condition |                         Nessun sensore viene eliminato                          |
@@ -954,7 +954,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 23.2
 
-| Scenario 23.3  |         Network/Gateway/Sensor non trovato `(404 NotFoundError)`         |
+| Scenario 23.2  |         Network/Gateway/Sensor non trovato `(404 NotFoundError)`         |
 | :------------: | :-------------------------------------------------------------------------: |
 |  Precondition  | Il `networkCode`, `gatewayMac` o `sensorMac` specificati non corrispondono a un elemento esistente |
 | Post condition |                         Nessun sensore viene restituito                   |
@@ -986,7 +986,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 24.2
 
-| Scenario 24.3  |         Network/Gateway non trovato `(404 NotFoundError)`         |
+| Scenario 24.2  |         Network/Gateway non trovato `(404 NotFoundError)`         |
 | :------------: | :-----------------------------------------------------------------: |
 |  Precondition  | Il `networkCode` o il `gatewayMac` specificati non corrispondono a elementi esistenti. |
 | Post condition |                   Nessuna lista di sensori viene restituita            |
