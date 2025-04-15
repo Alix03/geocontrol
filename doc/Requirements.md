@@ -642,16 +642,16 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 15.1
 
-| Scenario 15.1  |                                    Creazione gateway con successo `(201 Created)`                                    |
+| Scenario 15.1  |                                    Creazione gateway con successo `(201 Created)`                                      |
 | :------------: | :--------------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                    L’utente è autenticato come Admin o Operator                                        |
 | Post condition |                                 Il gateway viene creato e risulta visibile nel sistema                                 |
 |     Step#      |                                                   Description                                                          |
-|       1        |                         Utente: Accede alla sezione "Reti" e seleziona la rete di interesse                           |
-|       2        |                                     Utente: seleziona "Crea nuovo gateway"                                            |
-|       3        | Utente: Compila i campi `macAddress`, `name`, `description` (es. 94:3F:BE:4C:4A:79, GW01, on-field aggregation node)    |
-|       4        |                                         Utente: Invia la richiesta di creazione                                       |
-|       5        |                  Sistema: Valida i dati, registra il gateway e restituisce il codice `201 Created`                    |
+|       1        |                         Utente: Accede alla sezione "Reti" e seleziona la rete di interesse                            |
+|       2        |                                     Utente: seleziona "Crea nuovo gateway"                                             |
+|       3        | Utente: Compila i campi `macAddress`, `name`, `description`                                                            |
+|       4        |                                         Utente: Invia la richiesta di creazione                                        |
+|       5        |                  Sistema: Valida i dati, registra il gateway e restituisce il codice `201 Created`                     |
 
 #### Scenario 15.2
 
@@ -691,7 +691,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Precondition  |                                     L’utente è autenticato come Admin o Operator                                        |
 | Post condition |                            Il gateway viene aggiornato ed è visibile con i dati aggiornati                              |
 |     Step#      |                                                       Description                                                        |
-|       1        | Utente: Accede all’elenco dei gateway associati a una determinata rete (es. sezione "Gestione Gateway").               |
+|       1        | Utente: Accede all’elenco dei gateway associati a una determinata rete               |
 |       2        | Utente: Seleziona un gateway esistente e sceglie l’opzione "Modifica gateway".                                          |
 |       3        | Utente: Aggiorna i campi `macAddress`, `name`, `description` |
 |       4        | Utente: Invia la richiesta di modifica con i dati aggiornati.                                                   |
