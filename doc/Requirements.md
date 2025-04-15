@@ -472,7 +472,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |                       La rete è creata nel sistema                        |
 | Nominal Scenario |                               Scenario 10.1                               |
 |     Variants     |                                   None                                    |
-|    Exceptions    | Scenario 10.2, Scenario 10.3, Scenario 10.4, Scenario 10.5, UCE500        |
+|    Exceptions    | UCE400, UCE401, UCE403, Scenario 10.2, UCE500        |
 
 #### Scenario 10.1
 
@@ -489,42 +489,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 10.2
 
-| Scenario 10.2  |                               Dati mancanti o input non valido `(400 BadRequest)`                                |
-| :------------: | :--------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                          L'utente è autenticato ma il modulo è incompleto o malformato                           |
-| Post condition |                                            Nessuna rete viene creata                                             |
-|     Step#      |                                                   Description                                                    |
-|       1        |          L’utente omette uno o più campi obbligatori (ad esempio `code`) o inserisce valori non validi           |
-|       2        |                                      L'utente invia il modulo di creazione                                       |
-|       3        | Il sistema valida i dati, rileva la mancanza del campo `code` e restituisce il codice di errore `400 BadRequest` |
-
-#### Scenario 10.3
-
-| Scenario 10.3  |                  Token assente o non valido `(401 UnauthorizedError)`                   |
-| :------------: | :-------------------------------------------------------------------------------------: |
-|  Precondition  |   L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato   |
-| Post condition |                                Nessuna rete viene creata                                |
-|     Step#      |                                       Description                                       |
-|       1        |               L'utente tenta di inviare una richiesta per creare una rete               |
-|       2        | La richiesta è priva di header `Authorization` oppure il token ha un formato non valido |
-|       3        |      Il sistema intercetta la richiesta, verifica il token e lo considera invalido      |
-|       4        |           Il sistema restituisce il codice di errore `401 UnauthorizedError`            |
-
-#### Scenario 10.4
-
-| Scenario 10.4  |              Ruolo non autorizzato `(403 InsufficientRightsError)`               |
-| :------------: | :------------------------------------------------------------------------------: |
-|  Precondition  |   L'utente è autenticato correttamente con un token valido, ma ha ruolo Viewer   |
-| Post condition |                            Nessuna rete viene creata                             |
-|     Step#      |                                   Description                                    |
-|       1        |  L'utente accede all’interfaccia come Viewer e apre il modulo “Crea nuova rete”  |
-|       2        | L'utente compila i campi e invia la richiesta per la creazione di una nuova rete |
-|       3        |                    Il sistema verifica che il token è valido                     |
-|       4        |      Il sistema controlla il ruolo utente e rileva i permessi insufficienti      |
-|       5        |    Il sistema restituisce il codice di errore `(403 InsufficientRightsError)`    |
-
-#### Scenario 10.5
-
 | Scenario 10.5  |                             Codice rete già esistente `(409 ConflictError)`                              |
 | :------------: | :------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                      L'utente è autenticato, ma il codice inserito è già registrato                      |
@@ -534,8 +498,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                                  L'utente invia il modulo di creazione                                   |
 |       3        | Il sistema valida i dati, rileva la duplicazione e restituisce il codice di errore `(409 ConflictError)` |
 
-
-
 ### Use Case 11, Modifica Network (FR2.1.2)
 
 | Actors Involved  |                                     Admin, Operator                                      |
@@ -544,7 +506,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |                           La rete viene aggiornata nel sistema                           |
 | Nominal Scenario |                                      Scenario 11.1                                       |
 |     Variants     |                                           None                                           |
-|    Exceptions    | Scenario 11.2, Scenario 11.3, Scenario 11.4, Scenario 11.5, Scenario 11.6, UCE500        |
+|    Exceptions    |  Scenario 11.2, Scenario 11.3, UCE400, UCE401, UCE403, UCE500                            |
 
 #### Scenario 11.1
 
@@ -561,40 +523,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 11.2
 
-| Scenario 11.2  |           Dati mancanti o input non valido `(400 BadRequest)`            |
-| :------------: | :----------------------------------------------------------------------: |
-|  Precondition  |      L'utente è autenticato ma il modulo è incompleto o malformato       |
-| Post condition |                     Nessuna modifica viene applicata                     |
-|     Step#      |                               Description                                |
-|       1        |               L'utente omette uno o più campi obbligatori                |
-|       2        |            L'utente invia la richiesta di modifica della rete            |
-|       3        | Il sistema valida i dati, rileva l’errore e restituisce `400 BadRequest` |
-
-#### Scenario 11.3
-
-| Scenario 11.3  |                 Token assente o non valido `(401 UnauthorizedError)`                 |
-| :------------: | :----------------------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato  |
-| Post condition |                           Nessuna modifica viene applicata                           |
-|     Step#      |                                     Description                                      |
-|       1        | L'utente tenta di inviare una richiesta di modifica della rete senza un token valido |
-|       2        |    Il sistema intercetta la richiesta, verifica il token e lo considera invalido     |
-|       3        |          Il sistema restituisce il codice di errore `401 UnauthorizedError`          |
-
-#### Scenario 11.4
-
-| Scenario 11.4  |          Ruolo non autorizzato `(403 InsufficientRightsError)`           |
-| :------------: | :----------------------------------------------------------------------: |
-|  Precondition  |       L'utente è autenticato con token valido, ma ha ruolo Viewer        |
-| Post condition |                     Nessuna modifica viene applicata                     |
-|     Step#      |                               Description                                |
-|       1        |              L'utente Viewer apre la sezione modifica rete               |
-|       2        |       L'utente compila e invia la richiesta di modifica della rete       |
-|       3        | Il sistema verifica il token e il ruolo, rileva i permessi insufficienti |
-|       4        | Il sistema restituisce il codice di errore `403 InsufficientRightsError` |
-
-#### Scenario 11.5
-
 | Scenario 11.5  |                Rete non trovata `(404 NotFoundError)`                 |
 | :------------: | :-------------------------------------------------------------------: |
 |  Precondition  |      L’utente inserisce un codice rete non esistente nel sistema      |
@@ -603,7 +531,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        |         L'utente seleziona o inserisce un codice rete errato          |
 |       2        | Il sistema non trova la rete e restituisce errore `404 NotFoundError` |
 
-#### Scenario 11.6
+#### Scenario 11.3
 
 | Scenario 11.6  |             Codice rete già esistente `(409 ConflictError)`              |
 | :------------: | :----------------------------------------------------------------------: |
@@ -622,7 +550,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            La rete viene eliminata dal sistema             |
 | Nominal Scenario |                       Scenario 12.1                        |
 |     Variants     |                            None                            |
-|    Exceptions    | Scenario 12.2, Scenario 12.3, Scenario 12.4, UCE500        |
+|    Exceptions    |  Scenario 12.2, UCE401, UCE403, UCE500                     |
 
 #### Scenario 12.1
 
@@ -637,28 +565,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |                       Il sistema restituisce il codice `204 No Content`                        |
 
 #### Scenario 12.2
-
-| Scenario 12.2  |                Token assente o non valido `(401 UnauthorizedError)`                 |
-| :------------: | :---------------------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
-| Post condition |                            Nessuna rete viene eliminata                             |
-|     Step#      |                                     Description                                     |
-|       1        | L'utente invia la richiesta di eliminazione senza un header `Authorization` valido  |
-|       2        |                Il sistema verifica il token e lo considera invalido                 |
-|       3        |              Il sistema restituisce il codice `401 UnauthorizedError`               |
-
-#### Scenario 12.3
-
-| Scenario 12.3  |          Ruolo non autorizzato `(403 InsufficientRightsError)`           |
-| :------------: | :----------------------------------------------------------------------: |
-|  Precondition  |       L'utente è autenticato con token valido, ma ha ruolo Viewer        |
-| Post condition |                       Nessuna rete viene eliminata                       |
-|     Step#      |                               Description                                |
-|       1        |               L'utente Viewer tenta di eliminare una rete                |
-|       2        |   Il sistema verifica il ruolo utente e rileva permessi insufficienti    |
-|       3        | Il sistema restituisce il codice di errore `403 InsufficientRightsError` |
-
-#### Scenario 12.4
 
 | Scenario 12.4  |                     Rete non trovata `(404 NotFoundError)`                     |
 | :------------: | :----------------------------------------------------------------------------: |
@@ -678,7 +584,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | L'elenco delle reti viene restituito all’utente |
 | Nominal Scenario |                  Scenario 13.1                  |
 |     Variants     |                      None                       |
-|    Exceptions    |          Scenario 13.2, UCE500                  |
+|    Exceptions    |          UCE401, UCE500                         |
 
 #### Scenario 13.1
 
@@ -691,18 +597,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                         Il sistema valida il token                          |
 |       3        |       Il sistema restituisce la lista delle reti con codice `200 OK`        |
 
-#### Scenario 13.2
-
-| Scenario 13.2  |      Token assente o non valido `(401 UnauthorizedError)`       |
-| :------------: | :-------------------------------------------------------------: |
-|  Precondition  |  L'utente non ha effettuato il login o ha un token non valido   |
-| Post condition |                 Nessuna lista viene restituita                  |
-|     Step#      |                           Description                           |
-|       1        | L'utente invia la richiesta senza header `Authorization` valido |
-|       2        | Il sistema rileva che il token è assente, scaduto o malformato  |
-|       3        |      Il sistema restituisce errore `401 UnauthorizedError`      |
-
-
 ### Use Case 14, Visualizzazione di un Network specifico (FR2.1.4.1)
 
 | Actors Involved  |               Admin, Operator, Viewer               |
@@ -711,7 +605,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | I dettagli della rete vengono restituiti all’utente |
 | Nominal Scenario |                    Scenario 14.1                    |
 |     Variants     |                        None                         |
-|    Exceptions    |     Scenario 14.2, Scenario 14.3, UCE500            |
+|    Exceptions    |      Scenario 14.2, UCE401, UCE500                  |
 
 #### Scenario 14.1
 
@@ -726,17 +620,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        | Il sistema restituisce i dati della rete con codice `200 OK` |
 
 #### Scenario 14.2
-
-| Scenario 14.2  |      Token assente o non valido `(401 UnauthorizedError)`       |
-| :------------: | :-------------------------------------------------------------: |
-|  Precondition  |  L'utente non ha effettuato il login o ha un token non valido   |
-| Post condition |                  Nessuna rete viene restituita                  |
-|     Step#      |                           Description                           |
-|       1        | L'utente invia la richiesta senza header `Authorization` valido |
-|       2        | Il sistema rileva che il token è assente, scaduto o malformato  |
-|       3        |      Il sistema restituisce errore `401 UnauthorizedError`      |
-
-#### Scenario 14.3
 
 | Scenario 14.3  |               Rete non trovata `(404 NotFoundError)`                |
 | :------------: | :-----------------------------------------------------------------: |
@@ -755,7 +638,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            Il gateway viene creato nel sistema            |
 | Nominal Scenario |                  Scenario 15.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 15.2, Scenario 15.3, Scenario 15.4, Scenario 15.5, Scenario 15.6, UCE500 |
+|    Exceptions    |  Scenario 15.2, Scenario 15.3, UCE400, UCE401, UCE403, UCE500 |
 
 #### Scenario 15.1
 
@@ -772,41 +655,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 15.2
 
-| Scenario 15.2  |                 Dati mancanti o input non valido `(400 BadRequest)`                 |
-| :------------: | :---------------------------------------------------------------------------------: |
-|  Precondition  |           L'utente è autenticato ma il modulo è incompleto o malformato            |
-| Post condition |                           Nessun gateway viene creato                               |
-|     Step#      |                                    Description                                      |
-|       1        | Utente: Omette il campo obbligatorio `macAddress` o inserisce valori non validi    |
-|       2        |                Utente: Invia la richiesta di creazione del gateway                 |
-|       3        | Sistema: Valida i dati, rileva l’errore e restituisce `400 BadRequest`            |
-
-#### Scenario 15.3
-
-| Scenario 15.3  |             Token assente o non valido `(401 UnauthorizedError)`              |
-| :------------: | :---------------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
-| Post condition |                       Nessun gateway viene creato                              |
-|     Step#      |                               Description                                      |
-|       1        |     Utente: Tenta di inviare una richiesta di creazione di un gateway         |
-|       2        | La richiesta è priva di header `Authorization` o il token ha un formato non valido |
-|       3        |   Sistema: Intercetta la richiesta, verifica il token e lo considera invalido |
-|       4        |       Sistema: Restituisce il codice di errore `401 UnauthorizedError`       |
-
-#### Scenario 15.4
-
-| Scenario 15.4  |         Ruolo non autorizzato `(403 InsufficientRightsError)`         |
-| :------------: | :-------------------------------------------------------------------: |
-|  Precondition  |     L'utente è autenticato con token valido, ma ha ruolo Viewer       |
-| Post condition |                     Nessun gateway viene creato                       |
-|     Step#      |                              Description                              |
-|       1        |   Utente: Autenticato come Viewer tenta di creare un gateway   |
-|       2        |          Sistema: Verifica il token e il ruolo utente              |
-|       3        |    Sistema: Rileva permessi insufficienti per l'operazione         |
-|       4        |  Sistema: Restituisce `403 InsufficientRightsError`                |
-
-#### Scenario 15.5
-
 | Scenario 15.5  |             Network non trovato `(404 NotFoundError)`             |
 | :------------: | :--------------------------------------------------------------: |
 |  Precondition  | L’utente fa una richiesta di creazione su un `networkCode` inesistente |
@@ -815,7 +663,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        |Utente: Seleziona un `networkCode` non presente nel sistema     |
 |       2        | Sistema: Non trova la rete e restituisce `404 NotFoundError`   |
 
-#### Scenario 15.6
+#### Scenario 15.3
 
 | Scenario 15.6  |            MAC address già esistente `(409 ConflictError)`           |
 | :------------: | :-----------------------------------------------------------------: |
@@ -834,7 +682,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            Il gateway viene aggiornato nel sistema            |
 | Nominal Scenario |                  Scenario 16.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 16.2, Scenario 16.3, Scenario 16.4, Scenario 16.5, Scenario 16.6, UCE500 |
+|    Exceptions    |  Scenario 16.2, Scenario 16.3, UCE400, UCE401, UCE403, UCE500 |
 
 #### Scenario 16.1
 
@@ -851,41 +699,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 16.2
 
-| Scenario 16.2  |                 Dati mancanti o input non valido `(400 BadRequest)`                 |
-| :------------: | :---------------------------------------------------------------------------------: |
-|  Precondition  |           L'utente è autenticato ma il modulo di modifica è incompleto o malformato |
-| Post condition |                             Nessun aggiornamento viene applicato                     |
-|     Step#      |                                        Description                                  |
-|       1        |   Utente: Omette campi obbligatori o inserisce valori non validi   |
-|       2        |                  Utente: Invia la richiesta di modifica del gateway            |
-|       3        |   Sistema: Valida i dati, rileva l’errore e restituisce `400 BadRequest`             |
-
-#### Scenario 16.3
-
-| Scenario 16.3  |             Token assente o non valido `(401 UnauthorizedError)`              |
-| :------------: | :---------------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
-| Post condition |                        Nessun aggiornamento viene applicato                    |
-|     Step#      |                               Description                                      |
-|       1        |   Utente: Tenta di inviare una richiesta per modificare un gateway      |
-|       2        |   La richiesta non contiene header `Authorization` oppure il token è non valido |
-|       3        |   Sistema: Intercetta la richiesta, verifica il token e lo considera invalido  |
-|       4        |   Sistema: Restituisce `401 UnauthorizedError`                                 |
-
-#### Scenario 16.4
-
-| Scenario 16.4  |         Ruolo non autorizzato `(403 InsufficientRightsError)`         |
-| :------------: | :-------------------------------------------------------------------: |
-|  Precondition  |     L'utente è autenticato con token valido, ma ha ruolo Viewer       |
-| Post condition |                   Nessun aggiornamento viene applicato                |
-|     Step#      |                              Description                              |
-|       1        | Utente: Autenticato come Viewer tenta di modificare un gateway        |
-|       2        | Sistema: Verifica il token e il ruolo dell’utente.                    |
-|       3        | Sistema: Rileva permessi insufficienti per l'operazione.              |
-|       4        | Sistema: Restituisce `403 InsufficientRightsError`.                   |
-
-#### Scenario 16.5
-
 | Scenario 16.5  |           Network/Gateway non trovato `(404 NotFoundError)`            |
 | :------------: | :--------------------------------------------------------------------: |
 |  Precondition  | Il `networkCode` o il `gatewayMac` specificati non esistono nel sistema |
@@ -894,7 +707,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        |   Utente: Seleziona o inserisce un `networkCode` e/o `gatewayMac` inesistenti.  |
 |       2        |   Sistema: Non trova l’elemento corrispondente e restituisce `404 NotFoundError`. |
 
-#### Scenario 16.6
+#### Scenario 16.3
 
 | Scenario 16.6  |            MAC address già esistente `(409 ConflictError)`           |
 | :------------: | :-----------------------------------------------------------------: |
@@ -913,7 +726,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            Il gateway viene eliminato dal sistema            |
 | Nominal Scenario |                  Scenario 17.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 17.2, Scenario 17.3, Scenario 17.4, UCE500 |
+|    Exceptions    |  Scenario 17.2, UCE401, UCE403, UCE500 |
 
 #### Scenario 17.1
 
@@ -927,30 +740,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       3        | Sistema: Verifica il `networkCode` e il `gatewayMac`, procede all'eliminazione e restituisce `204 No Content`. |
 
 #### Scenario 17.2
-
-| Scenario 17.2  |             Token assente o non valido `(401 UnauthorizedError)`             |
-| :------------: | :--------------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login, o il token è assente, scaduto o malformato |
-| Post condition |                    Nessun gateway viene eliminato                             |
-|     Step#      |                               Description                                     |
-|       1        | Utente: Tenta di inviare una richiesta per eliminare un gateway       |
-|       2        | La richiesta è priva di header `Authorization` o il token non è valido       |
-|       3        | Sistema: Intercetta la richiesta, verifica il token e lo considera invalido  |
-|       4        | Sistema: Restituisce il codice di errore `401 UnauthorizedError`             |
-
-#### Scenario 17.3
-
-| Scenario 17.3  |        Ruolo non autorizzato `(403 InsufficientRightsError)`        |
-| :------------: | :-----------------------------------------------------------------: |
-|  Precondition  |      L'utente è autenticato con token valido, ma ha ruolo Viewer    |
-| Post condition |                   Nessun gateway viene eliminato                    |
-|     Step#      |                            Description                              |
-|       1        | Utente: Autenticato come Viewer tenta di eliminare un gateway      |
-|       2        | Sistema: Verifica il token e il ruolo                              |
-|       3        | Sistema: Rileva che l'utente non ha i permessi necessari           |
-|       4        | Sistema: Restituisce `403 InsufficientRightsError`                 |
-
-#### Scenario 17.4
 
 | Scenario 17.4  |               Network/Gateway non trovato `(404 NotFoundError)`               |
 | :------------: | :--------------------------------------------------------------------------: |
@@ -968,7 +757,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |      Il gateway viene visualizzato            |
 | Nominal Scenario |                 Scenario 18.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 18.2, Scenario 18.3, UCE500          |
+|    Exceptions    | Scenario 18.2,  UCE401, UCE500          |
 
 #### Scenario 18.1
 
@@ -983,17 +772,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        | Sistema: Riceve la richiesta, verifica il token, recupera il gateway e restituisce un payload con `200 OK` |
 
 #### Scenario 18.2
-
-| Scenario 18.2  |            Token assente o non valido `(401 UnauthorizedError)`             |
-| :------------: | :-------------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login o il token è assente, scaduto o malformato |
-| Post condition |                    Nessun gateway viene restituito                           |
-|     Step#      |                               Description                                    |
-|       1        | Utente: Tenta di inviare la richiesta senza header `Authorization` valido |
-|       2        | Sistema: Verifica il token e lo considera non valido                        |
-|       3        | Sistema: Restituisce `401 UnauthorizedError`                                |
-
-#### Scenario 18.3
 
 | Scenario 18.3  |           Network/Gateway non trovato `(404 NotFoundError)`            |
 | :------------: | :--------------------------------------------------------------------: |
@@ -1012,7 +790,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | Viene mostrata la lista dei Gateway appartenenti alla rete richiesta |
 | Nominal Scenario |                    Scenario 19.1                       |
 |     Variants     |                         None                          |
-|    Exceptions    | Scenario 19.2, Scenario 19.3, UCE500                  |
+|    Exceptions    |  Scenario 19.2, UCE401, UCE500                  |
 
 #### Scenario 19.1
 
@@ -1027,17 +805,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        | Sistema: Verifica il token, recupera i gateway associati alla rete e ritorna `200 OK` con la lista |
 
 #### Scenario 19.2
-
-| Scenario 19.2  |      Token assente o non valido `(401 UnauthorizedError)`       |
-| :------------: | :------------------------------------------------------------: |
-|  Precondition  |   L'utente non ha effettuato il login o il token non è valido  |
-| Post condition |               Nessun elenco di gateway viene restituito        |
-|     Step#      |                         Description                            |
-|       1        | Utente: Invia una richiesta GET a `/networks/{networkCode}/gateways` senza header `Authorization` valido |
-|       2        | Sistema: Verifica il token e rileva che è mancante o malformato |
-|       3        | Sistema: Restituisce `401 UnauthorizedError`                   |
-
-#### Scenario 19.3
 
 | Scenario 19.3  |          Network non trovato `(404 NotFoundError)`          |
 | :------------: | :---------------------------------------------------------: |
@@ -1055,7 +822,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            Il sensore viene creato nel sistema           |
 | Nominal Scenario |                  Scenario 20.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 20.2, Scenario 20.3, Scenario 20.4, Scenario 20.5, Scenario 20.6, UCE500 |
+|    Exceptions    |  Scenario 20.2, Scenario 20.3, UCE400, UCE401, UCE403, UCE500 |
 
 #### Scenario 20.1
 
@@ -1072,41 +839,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 20.2
 
-| Scenario 20.2  |                 Dati mancanti o input non valido `(400 BadRequest)`                 |
-| :------------: | :---------------------------------------------------------------------------------: |
-|  Precondition  |           L'utente è autenticato ma il modulo è incompleto o malformato            |
-| Post condition |                           Nessun sensore viene creato                               |
-|     Step#      |                                    Description                                      |
-|       1        | Utente: Omette il campo obbligatorio `macAddress` o inserisce valori non validi     |
-|       2        | Utente: Invia la richiesta di creazione del sensore                                 |
-|       3        | Sistema: Valida i dati, rileva l’errore e restituisce `400 BadRequest`              |
-
-#### Scenario 20.3
-
-| Scenario 20.3  |            Token assente o non valido `(401 UnauthorizedError)`             |
-| :------------: | :-------------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
-| Post condition |                      Nessun sensore viene creato                             |
-|     Step#      |                               Description                                    |
-|       1        | Utente: Tenta di inviare una richiesta di creazione di un sensore           |
-|       2        | La richiesta è priva di header `Authorization` o il token ha un formato non valido  |
-|       3        | Sistema: Intercetta la richiesta, verifica il token e lo considera invalido |
-|       4        | Sistema: Restituisce `401 UnauthorizedError`                                 |
-
-#### Scenario 20.4
-
-| Scenario 20.4  |          Ruolo non autorizzato `(403 InsufficientRightsError)`         |
-| :------------: | :--------------------------------------------------------------------: |
-|  Precondition  | L'utente è autenticato con token valido, ma ha ruolo Viewer            |
-| Post condition |                     Nessun sensore viene creato                        |
-|     Step#      |                                Description                             |
-|       1        | Utente: Autenticato come Viewer tenta di creare un sensore            |
-|       2        | Sistema: Verifica il token e il ruolo                                 |
-|       3        | Sistema: Rileva permessi insufficienti                                |
-|       4        | Sistema: Restituisce `403 InsufficientRightsError`                    |
-
-#### Scenario 20.5
-
 | Scenario 20.5  |               Network/Gateway non trovato `(404 NotFoundError)`                |
 | :------------: | :---------------------------------------------------------------------------: |
 |  Precondition  | L’utente fa una richiesta di creazione su un `networkCode` o `gatewayMac` inesistente |
@@ -1115,7 +847,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | Utente: Seleziona un `networkCode` o un `gatewayMac` non presente nel sistema  |
 |       2        | Sistema: Non trova gli elementi corrispondenti e restituisce `404 NotFoundError` |
 
-#### Scenario 20.6
+#### Scenario 20.3
 
 | Scenario 20.6  |           MAC address già esistente `(409 ConflictError)`            |
 | :------------: | :-----------------------------------------------------------------: |
@@ -1133,7 +865,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            Il sensore viene aggiornato nel sistema            |
 | Nominal Scenario |                  Scenario 21.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 21.2, Scenario 21.3, Scenario 21.4, Scenario 21.5, Scenario 21.6, UCE500 |
+|    Exceptions    |  Scenario 21.2, Scenario 21.3, UCE400, UCE401, UCE403, UCE500 |
 
 #### Scenario 21.1
 
@@ -1149,39 +881,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 21.2
 
-| Scenario 21.2  |                 Dati mancanti o input non valido `(400 BadRequest)`                 |
-| :------------: | :-------------------------------------------------------------------------------------: |
-|  Precondition  |        L'utente è autenticato, ma il modulo di modifica è incompleto o malformato         |
-| Post condition |                      Nessuna modifica viene applicata                                  |
-|     Step#      |                                  Description                                           |
-|       1        | Utente: Invia la richiesta PATCH omettendo campi obbligatori o inserendo valori non validi   |
-|       2        | Sistema: Valida i dati, rileva l’errore e restituisce `400 BadRequest`                     |
-
-#### Scenario 21.3
-
-| Scenario 21.3  |            Token assente o non valido `(401 UnauthorizedError)`             |
-| :------------: | :---------------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
-| Post condition |                     Nessuna modifica viene applicata                          |
-|     Step#      |                               Description                                      |
-|       1        | Utente: Tenta di inviare la richiesta PATCH senza un header `Authorization` valido   |
-|       2        | Sistema: Verifica il token e lo considera non valido                          |
-|       3        | Sistema: Restituisce `401 UnauthorizedError`                                  |
-
-#### Scenario 21.4
-
-| Scenario 21.4  |         Ruolo non autorizzato `(403 InsufficientRightsError)`         |
-| :------------: | :-------------------------------------------------------------------: |
-|  Precondition  | L'utente è autenticato con token valido, ma ha ruolo Viewer            |
-| Post condition |                   Nessuna modifica viene applicata                    |
-|     Step#      |                              Description                              |
-|       1        | Utente: Autenticato come Viewer tenta di modificare un sensore         |
-|       2        | Sistema: Verifica il token e il ruolo dell’utente                      |
-|       3        | Sistema: Rileva che l'utente non ha i permessi necessari                 |
-|       4        | Sistema: Restituisce `403 InsufficientRightsError`                     |
-
-#### Scenario 21.5
-
 | Scenario 21.5  |          Network/Gateway/Sensor non trovato `(404 NotFoundError)`          |
 | :------------: | :-------------------------------------------------------------------------: |
 |  Precondition  | Il `networkCode`, `gatewayMac` o `sensorMac` specificati non corrispondono a un elemento esistente |
@@ -1190,7 +889,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | Utente: Invia la richiesta PATCH con un `networkCode`, `gatewayMac` o `sensorMac` inesistenti  |
 |       2        | Sistema: Non trova l'elemento corrispondente e restituisce `404 NotFoundError`                 |
 
-#### Scenario 21.6
+#### Scenario 21.3
 
 | Scenario 21.6  |           Sensor mac address già in use `(409 ConflictError)`           |
 | :------------: | :---------------------------------------------------------------------: |
@@ -1208,7 +907,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |              Il sensore viene eliminato dal sistema              |
 | Nominal Scenario |                  Scenario 22.1                 |
 |     Variants     |                     None                      |
-|    Exceptions    | Scenario 22.2, Scenario 22.3, Scenario 22.4, UCE500 |
+|    Exceptions    |  Scenario 22.2, UCE401, UCE403, UCE500 |
 
 #### Scenario 22.1
 
@@ -1223,28 +922,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        | Sistema: Elimina il sensore dal sistema e restituisce il codice `204 No Content`             |
 
 #### Scenario 22.2
-
-| Scenario 22.2  |               Token assente o non valido `(401 UnauthorizedError)`               |
-| :------------: | :--------------------------------------------------------------------------------: |
-|  Precondition  |  L'utente non ha effettuato il login o il token è assente, scaduto o malformato      |
-| Post condition |                  Nessuna eliminazione del sensore avviene                         |
-|     Step#      |                                   Description                                      |
-|       1        | Utente: Tenta di inviare la richiesta DELETE senza un header `Authorization` valido  |
-|       2        | Sistema: Verifica il token e rileva che è assente o non valido                        |
-|       3        | Sistema: Restituisce `401 UnauthorizedError`                                        |
-
-#### Scenario 22.3
-
-| Scenario 22.3  |               Ruolo non autorizzato `(403 InsufficientRightsError)`               |
-| :------------: | :--------------------------------------------------------------------------------: |
-|  Precondition  | L'utente è autenticato con token valido, ma ha ruolo Viewer, non abilitato per eliminare sensori |
-| Post condition |                         Nessun sensore viene eliminato                          |
-|     Step#      |                                  Description                                       |
-|       1        | Utente: Autenticato come Viewer tenta di inviare una richiesta DELETE per un sensore  |
-|       2        | Sistema: Verifica il token e il ruolo dell’utente e rileva permessi insufficienti      |
-|       3        | Sistema: Restituisce `403 InsufficientRightsError`                                  |
-
-#### Scenario 22.4
 
 | Scenario 22.4  |             Network/Gateway/Sensor non trovato `(404 NotFoundError)`              |
 | :------------: | :---------------------------------------------------------------------------------: |
@@ -1262,7 +939,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | Il sistema restituisce i dettagli del sensore richiesto |
 | Nominal Scenario |               Scenario 23.1              |
 |     Variants     |                  None                  |
-|    Exceptions    | Scenario 23.2, Scenario 23.3, UCE500 |
+|    Exceptions    |  Scenario 23.2, UCE401, UCE500 |
 
 #### Scenario 23.1
 
@@ -1276,17 +953,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       3        | Sistema: Recupera i dettagli del sensore e restituisce il sensore richiesto con codice `200 OK`. |
 
 #### Scenario 23.2
-
-| Scenario 23.2  |           Token assente o non valido `(401 UnauthorizedError)`          |
-| :------------: | :------------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
-| Post condition |                        Nessun sensore viene restituito                   |
-|     Step#      |                                  Description                                  |
-|       1        | Utente: Invia la richiesta GET senza il header `Authorization` valido. |
-|       2        | Sistema: Verifica il token e lo considera non valido.                  |
-|       3        | Sistema: Restituisce `401 UnauthorizedError`.                         |
-
-#### Scenario 23.3
 
 | Scenario 23.3  |         Network/Gateway/Sensor non trovato `(404 NotFoundError)`         |
 | :------------: | :-------------------------------------------------------------------------: |
@@ -1304,7 +970,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | Il sistema restituisce la lista dei sensori associati al gateway richiesto |
 | Nominal Scenario |           Scenario 24.1               |
 |     Variants     |                None                  |
-|    Exceptions    | Scenario 24.2, Scenario 24.3, UCE500 |
+|    Exceptions    |  Scenario 24.2, UCE401, UCE500 |
 
 #### Scenario 24.1
 
@@ -1319,17 +985,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        | Sistema: Recupera la lista dei sensori associati al gateway e la restituisce con codice `200 OK`. |
 
 #### Scenario 24.2
-
-| Scenario 24.2  |         Token assente o non valido `(401 UnauthorizedError)`          |
-| :------------: | :---------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login o il token è assente, scaduto o malformato |
-| Post condition |                Nessuna lista di sensori viene restituita               |
-|     Step#      |                                Description                                   |
-|       1        | Utente: Invia la richiesta GET senza header `Authorization` valido.     |
-|       2        | Sistema: Verifica il token e rileva l’assenza o il formato non valido.      |
-|       3        | Sistema: Restituisce `401 UnauthorizedError`.                          |
-
-#### Scenario 24.3
 
 | Scenario 24.3  |         Network/Gateway non trovato `(404 NotFoundError)`         |
 | :------------: | :-----------------------------------------------------------------: |
