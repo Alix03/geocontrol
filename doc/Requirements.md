@@ -179,13 +179,11 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | NFR8 |           Manutenibilità           | Il sistema deve essere modulare e facilmente estendibile, consentendo interventi di aggiornamento o correzione senza compromettere il funzionamento globale. |   Tutti   |
 | NFR9 |            Portabilità             |                           Il sistema deve poter convertire e memorizzare tutti i timestamp in formato ISO 8601 con fuso orario UTC                           | FR2, FR3  |
 
-# Use case diagram and use case5
+# Use case diagram and use cases
 
 ## Use case diagram
 
-\<define here UML Use case diagram UCD summarizing all use cases, and their relationships>
-
-\<next describe here each use case in the UCD>
+![Use case diagram](./images/Use_case_diagram.png)
 
 ### Use Case 1, Login (FR1.1)
 
