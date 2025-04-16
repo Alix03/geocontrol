@@ -1257,30 +1257,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |        2        | Sistema: La richiesta fallisce per un errore interno |
 |        4        |   Sistema: Restituisce il messaggio di errore 500.   |
 
-### Scenario E404
-
-| Scenario E404  |                 Risorsa non trovata                 |
-| :------------: | :-------------------------------------------------: |
-|  Precondition  | L’utente effettua una richiesta verso una risorsa X |
-| Post condition |         Il sistema restituisce l'errore 404         |
-|     Step#      |                     Descrizione                     |
-|       1        |   Utente: Effettua una richiesta per la risorsa X   |
-|       2        | Sistema: Riceve la richiesta e ricerca la risorsa X |
-|       3        |       Sistema: Non trova la risorsa richiesta       |
-|       4        |  Sistema: Restituisce il messaggio di errore 404.   |
-
-### Scenario E409
-
-| Scenario E409  |                                  Risorsa già in uso                                   |
-| :------------: | :-----------------------------------------------------------------------------------: |
-|  Precondition  | L’utente tenta di creare/modificare una risorsa X con un identificativo già esistente |
-| Post condition |                          Il sistema restituisce l'errore 409                          |
-|     Step#      |                                      Descrizione                                      |
-|       1        |         Utente: Effettua una richiesta di creazione/modifica per la risorsa X         |
-|       2        |              Sistema: riceve i dati e verifica l'esistenza della risorsa              |
-|       3        |        Sistema:Trova la risorsa nel sistema e ne blocca la creazione/modifica         |
-|       4        |                   Sistema: Restituisce il messaggio di errore 409.                    |
-
 # Glossary
 
 \<use UML class diagram to define important terms, or concepts in the domain of the application, and their relationships>
