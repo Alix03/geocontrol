@@ -263,19 +263,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       3        |                        Sistema:Trova la risorsa nel sistema e ne blocca la creazione                             |
 |       4        |                                         Sistema:  Restituisce il messaggio di errore 409.                        |
 
-### Use Case 4, Rimozione Account (FR1.3)
+### Use Case 3, Rimozione Account (FR1.3)
 
 | Actors Involved  |                Admin                         |
 | :--------------: | :----------------------------------:         |
 |   Precondition   |  Almeno un utente è registrato nel sistema   |
 |  Post condition  | L'acount utente eliminato                    |
-| Nominal Scenario |             Scenario 4.1                     |
+| Nominal Scenario |             Scenario 3.1                     |
 |     Variants     |               Nessuna                        |
-|    Exceptions    | Scenario 4.2, UCE401, UCE403, UCE500         |
+|    Exceptions    | Scenario 3.2, UCE401, UCE403, UCE500         |
 
-#### Scenario 4.1
+#### Scenario 3.1
 
-|  Scenario 4.1  |                       Eliminazione Utente `(Code 204)`                        |
+|  Scenario 3.1  |                       Eliminazione Utente `(Code 204)`                        |
 | :------------: | :---------------------------------------------------------------------------: |
 |  Precondition  |              Almeno un utente è registrato nel sistema                        |
 | Post condition |                           Account utente eliminato                            |
@@ -290,9 +290,9 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       8        |                          Sistema: Elimina l'account                           |
 |       9        |              Sistema: mostra a schermo un messaggio di successo               |
 
-### Scenario 4.2
+### Scenario 3.2
 
-| Scenario 4.2   |                         L'utente non è registrato `(Code 404)`                                       |
+| Scenario 3.2   |                         L'utente non è registrato `(Code 404)`                                       |
 | -------------- | :-------------------------------------------------------------------------------------:              |  
 | Precondition   |     L’utente da eliminare non è presente nel sistema                                                 |
 | Post condition |    Nessun account eliminato,  Il sistema restituisce l'errore 404                                    |
@@ -307,19 +307,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | 8              |                  Sistema: Restituisce il messaggio di errore 404                                      |
 
 
-### Use Case 5, Visualizzazione Elenco Account (FR1.4)
+### Use Case 4, Visualizzazione Elenco Account (FR1.4)
 
 | Actors Involved  |                                   Admin                                   |
 | :--------------: | :-----------------------------------------------------------------------: |
 |   Precondition   |                L’admin è loggato e ha i permessi necessari                |
 |  Post condition  | L’admin visualizza la lista completa degli account registrati nel sistema |
-| Nominal Scenario |                               Scenario 5.1                                |
+| Nominal Scenario |                               Scenario 4.1                                |
 |     Variants     |                                    Nessuna                                |
-|    Exceptions    |        Scenario 5.2, UCE401, UCE403, UCE500                               |
+|    Exceptions    |        Scenario 4.2, UCE401, UCE403, UCE500                               |
 
-#### Scenario 5.1
+#### Scenario 4.1
 
-|  Scenario 5.1  |                Visualizzazione elenco account `(Code 200)`                |
+|  Scenario 4.1  |                Visualizzazione elenco account `(Code 200)`                |
 | :------------: | :-----------------------------------------------------------------------: |
 |  Precondition  |                L’admin è loggato e ha i permessi necessari                |
 | Post condition | L’admin visualizza la lista completa degli account registrati nel sistema |
@@ -330,19 +330,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |  Sistema:  Recupera dal database la lista completa degli account registrati  |
 |       6        |          Sistema: mostra a schermo l'elenco degli utenti trovati          |
 
-### Use Case 6, Visualizzazione Specifico Account (FFR1.5)
+### Use Case 5, Visualizzazione Specifico Account (FFR1.5)
 
 | Actors Involved  |                                   Admin                                   |
 | :--------------: | :-----------------------------------------------------------------------: |
 |   Precondition   |                                          L’admin è loggato                |
 |  Post condition  |                L’admin visualizza uno specifico account Utente            |
-| Nominal Scenario |                               Scenario 6.1                                |
+| Nominal Scenario |                               Scenario 5.1                                |
 |     Variants     |                                    Nessuna                                |
-|    Exceptions    |        Scenario 6.2, UCE401, UCE403, UCE500                               |
+|    Exceptions    |        Scenario 5.2, UCE401, UCE403, UCE500                               |
 
-#### Scenario 6.1
+#### Scenario 5.1
 
-|  Scenario 6.1  |                Visualizzazione specifico account `(Code 200)`             |
+|  Scenario 5.1  |                Visualizzazione specifico account `(Code 200)`             |
 | :------------: | :-----------------------------------------------------------------------: |
 |  Precondition  |                L’admin è loggato                                          |
 | Post condition |                 L’admin visualizza uno specifico account Utente           |
