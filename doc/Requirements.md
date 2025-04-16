@@ -311,7 +311,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 | Actors Involved  |                                   Admin                                   |
 | :--------------: | :-----------------------------------------------------------------------: |
-|   Precondition   |                L’admin è loggato e ha i permessi necessari                |
+|   Precondition   |                                       L’admin è loggato                   |
 |  Post condition  | L’admin visualizza la lista completa degli account registrati nel sistema |
 | Nominal Scenario |                               Scenario 4.1                                |
 |     Variants     |                                    Nessuna                                |
@@ -321,7 +321,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |  Scenario 4.1  |                Visualizzazione elenco account `(Code 200)`                |
 | :------------: | :-----------------------------------------------------------------------: |
-|  Precondition  |                L’admin è loggato e ha i permessi necessari                |
+|  Precondition  |                                           L’admin è loggato               |
 | Post condition | L’admin visualizza la lista completa degli account registrati nel sistema |
 |     Step#      |                                Descrizione                                |
 |       1        |              Admin: Clicca il pulsante di Visualizza Account              |
