@@ -986,7 +986,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |               Sistema: Non trova una delle entità richieste (network, gateway, sensore)                |
 |       5        |                            Sistema: Restituisce il messaggio di errore 404.                            |
 
-### Use Case A, Visualizzazione Statistiche (FR 4.5.1, FR 4.5.2)
+### Use Case A, Visualizzazione Statistiche per un dato Network (FR 4.5.1)
 
 | Actors Involved  |                     User                     |
 | :--------------: | :------------------------------------------: |
@@ -1016,36 +1016,87 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario A.2
 
-|  Scenario A.2  |                          Visualizzazione statistiche per un dato Network con filtri `(Code 200)`                          |
-| :------------: | :-----------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                  L'utente è autenticato.                                                  |
-| Post condition |                                       L'utente visualizza le statistiche richieste                                        |
-|     Step#      |                                                        Descrizione                                                        |
-|       1        | Sistema: Chiede il codice del network `networkCode` e i possibili campi di filtro [ `sensorMAC`, startDate`, `endDate` ]. |
-|       2        |                                   User: Inserisce `networkCode` e i filtri desiderati.                                    |
-|       3        |                 Sistema: Verifica la presenza di un token valido nella richiesta. Il token risulta valido                 |
-|       4        |                                              Sistema: Legge i dati forniti.                                               |
-|       5        |                  Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.                  |
-|       6        |                      Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                      |
-|       7        |         Sistema: Recupera le misurazioni del network con codice `networkCode` e che rispettano i filtri applicati         |
-|       8        |                                    Sistema: calcola media e varianza delle misurazioni                                    |
-|       9        |                                Sistema: calcola la soglia superiore e la soglia inferiore                                 |
-|       10       |                                         Sistema: invia le statistiche all'utente                                          |
-|       11       |                                          Utente: legge le statistiche richieste                                           |
+|  Scenario A.2  |                               Visualizzazione statistiche per un dato Network con filtri `(Code 200)`                               |
+| :------------: | :---------------------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                       L'utente è autenticato.                                                       |
+| Post condition |                                            L'utente visualizza le statistiche richieste                                             |
+|     Step#      |                                                             Descrizione                                                             |
+|       1        | Sistema: Chiede il codice del network `networkCode` e i possibili campi di filtro [ lista dis `sensorMAC`, startDate`, `endDate` ]. |
+|       2        |                                        User: Inserisce `networkCode` e i filtri desiderati.                                         |
+|       3        |                      Sistema: Verifica la presenza di un token valido nella richiesta. Il token risulta valido                      |
+|       4        |                                                   Sistema: Legge i dati forniti.                                                    |
+|       5        |                       Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.                       |
+|       6        |                           Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                           |
+|       7        |              Sistema: Recupera le misurazioni del network con codice `networkCode` e che rispettano i filtri applicati              |
+|       8        |                                         Sistema: calcola media e varianza delle misurazioni                                         |
+|       9        |                                     Sistema: calcola la soglia superiore e la soglia inferiore                                      |
+|       10       |                                              Sistema: invia le statistiche all'utente                                               |
+|       11       |                                               Utente: legge le statistiche richieste                                                |
 
-### Use Case B, Visualizzazione Outliers (FR 4.5.3, FR 4.5.4 )
+### Use Case B, Visualizzazione Statistiche per un dato Sensore (FR 4.5.2)
+
+| Actors Involved  |                     User                     |
+| :--------------: | :------------------------------------------: |
+|   Precondition   |     L'utente è autenticato correttamente     |
+|  Post condition  | L'utente visualizza le statistiche richieste |
+| Nominal Scenario |                 Scenario B.1                 |
+|     Variants     |                 Scenario B.2                 |
+|    Exceptions    |        Scenario E401.1, E404, E500.1         |
+
+#### Scenario B.1
+
+|  Scenario B.1  |                            Visualizzazione statistiche per un dato Sensore `(Code 200)`                            |
+| :------------: | :----------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                              L'utente è autenticato.                                               |
+| Post condition |                                    L'utente visualizza le statistiche richieste                                    |
+|     Step#      |                                                    Descrizione                                                     |
+|       1        | Sistema: Chiede il codice del network, il mac del gateway e del sensore (`networkCode`, `gatewayMac`, `sensorMac`) |
+|       2        |                             User: Inserisce `networkCode`, `gatewayMac`, `sensorMac`.                              |
+|       3        |             Sistema: Verifica la presenza di un token valido nella richiesta. Il token risulta valido              |
+|       4        |                                           Sistema: Legge i dati forniti.                                           |
+|       5        |              Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.               |
+|       6        |      Sistema: Ricerca il gateway con il mac fornito all'interno del network. L'indirizzo mac risulta valido.       |
+|       7        |  Sistema: Ricerca il sensore con il mac fornito tra quelli associati al gateway. L'indirizzo mac risulta valido.   |
+|       8        |                      Sistema: Recupera le misurazioni del sensore con indirizzo `sensorMac`.                       |
+|       9        |                                Sistema: calcola media e varianza delle misurazioni                                 |
+|       10       |                             Sistema: calcola la soglia superiore e la soglia inferiore                             |
+|       11       |                                      Sistema: invia le statistiche all'utente                                      |
+|       12       |                                       Utente: legge le statistiche richieste                                       |
+
+#### Scenario B.2
+
+|  Scenario B.2  |                                      Visualizzazione statistiche per un dato Sensore con filtri `(Code 200)`                                      |
+| :------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                              L'utente è autenticato.                                                              |
+| Post condition |                                                   L'utente visualizza le statistiche richieste                                                    |
+|     Step#      |                                                                    Descrizione                                                                    |
+|       1        | Sistema: Chiede l'id del network, del gateway e del sensore (`networkCode`,`gatewayMac`,`sensorMac`) e i possibili filtri (startDate`,`endDate`). |
+|       2        |                                  User: Inserisce `networkCode`, `gatewayMac`, `sensorMac` e i filtri desiderati.                                  |
+|       3        |                             Sistema: Verifica la presenza di un token valido nella richiesta. Il token risulta valido                             |
+|       4        |                                                          Sistema: Legge i dati forniti.                                                           |
+|       5        |                              Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.                              |
+|       6        |                      Sistema: Ricerca il gateway con il mac fornito all'interno del network. L'indirizzo mac risulta valido.                      |
+|       7        |                  Sistema: Ricerca il sensore con il mac fornito tra quelli associati al gateway. L'indirizzo mac risulta valido.                  |
+|       8        |                                  Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                                  |
+|       9        |                      Sistema: Recupera le misurazioni del sensore con codice `sensorMac` e che rispettano i filtri applicati                      |
+|       10       |                                                Sistema: calcola media e varianza delle misurazioni                                                |
+|       11       |                                            Sistema: calcola la soglia superiore e la soglia inferiore                                             |
+|       12       |                                                     Sistema: invia le statistiche all'utente                                                      |
+|       13       |                                                      Utente: legge le statistiche richieste                                                       |
+
+### Use Case C, Visualizzazione Outliers per un dato Network (FR 4.5.3)
 
 | Actors Involved  |                           User                            |
 | :--------------: | :-------------------------------------------------------: |
 |   Precondition   |           L'utente è autenticato correttamente            |
 |  Post condition  | L'utente visualizza le misurazioni outliers di un network |
-| Nominal Scenario |                       Scenario B.1                        |
-|     Variants     |                       Scenario B.2                        |
+| Nominal Scenario |                       Scenario C.1                        |
+|     Variants     |                       Scenario C.2                        |
 |    Exceptions    |               Scenario E401.1, E404, E500.1               |
 
-#### Scenario B.1
+#### Scenario C.1
 
-|  Scenario B.1  |                        Visualizzazione outliers per un Network specifico `(Code 200)`                         |
+|  Scenario C.1  |                        Visualizzazione outliers per un Network specifico `(Code 200)`                         |
 | :------------: | :-----------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                            L'utente è autenticato.                                            |
 | Post condition |                                       L'utente visualizza gli outliers                                        |
@@ -1063,27 +1114,83 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       11       |                            Sistema: invia le statistiche e gli outliers all'utente                            |
 |       12       |                                  Utente: legge le statistiche e gli outliers                                  |
 
-#### Scenario B.2
+#### Scenario C.2
 
-|  Scenario B.2  |                          Visualizzazione outliers per un Network specifico e filtri`(Code 200)`                           |
-| :------------: | :-----------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                  L'utente è autenticato.                                                  |
-| Post condition |                                             L'utente visualizza gli outliers                                              |
-|     Step#      |                                                        Descrizione                                                        |
-|       1        | Sistema: Chiede il codice del network `networkCode` e i possibili campi di filtro [ `sensorMAC`, startDate`, `endDate` ]. |
-|       2        |                                   User: Inserisce `networkCode` e i filtri desiderati.                                    |
-|       3        |                 Sistema: Verifica la presenza di un token valido nella richiesta. Il token risulta valido                 |
-|       4        |                                              Sistema: Legge i dati forniti.                                               |
-|       5        |                  Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.                  |
-|       6        |                      Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                      |
-|       7        |         Sistema: Recupera le misurazioni del network con codice `networkCode` e che rispettano i filtri applicati         |
-|       8        |                                    Sistema: calcola media e varianza delle misurazioni                                    |
-|       9        |                                Sistema: calcola la soglia superiore e la soglia inferiore                                 |
-|       10       |                            Sistema: per ogni misurazione confronta il suo valore con le soglie                            |
-|       11       |       Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie       |
-|       12       |                           Sistema: converte la data della misurazione da UTF-0 a localTimezone                            |
-|       13       |                                  Sistema: invia le statistiche e gli outliers all'utente                                  |
-|       14       |                                        Utente: legge le statistiche e gli outliers                                        |
+|  Scenario C.2  |                               Visualizzazione outliers per un Network specifico e filtri`(Code 200)`                               |
+| :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                      L'utente è autenticato.                                                       |
+| Post condition |                                                  L'utente visualizza gli outliers                                                  |
+|     Step#      |                                                            Descrizione                                                             |
+|       1        | Sistema: Chiede il codice del network `networkCode` e i possibili campi di filtro [ lista di `sensorMAC`, startDate`, `endDate` ]. |
+|       2        |                                        User: Inserisce `networkCode` e i filtri desiderati.                                        |
+|       3        |                     Sistema: Verifica la presenza di un token valido nella richiesta. Il token risulta valido                      |
+|       4        |                                                   Sistema: Legge i dati forniti.                                                   |
+|       5        |                      Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.                       |
+|       6        |                          Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                           |
+|       7        |             Sistema: Recupera le misurazioni del network con codice `networkCode` e che rispettano i filtri applicati              |
+|       8        |                                        Sistema: calcola media e varianza delle misurazioni                                         |
+|       9        |                                     Sistema: calcola la soglia superiore e la soglia inferiore                                     |
+|       10       |                                Sistema: per ogni misurazione confronta il suo valore con le soglie                                 |
+|       11       |           Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie            |
+|       12       |                                Sistema: converte la data della misurazione da UTF-0 a localTimezone                                |
+|       13       |                                      Sistema: invia le statistiche e gli outliers all'utente                                       |
+|       14       |                                            Utente: legge le statistiche e gli outliers                                             |
+
+### Use Case D, Visualizzazione Outliers per un dato Sensore (FR 4.5.4)
+
+| Actors Involved  |                           User                            |
+| :--------------: | :-------------------------------------------------------: |
+|   Precondition   |           L'utente è autenticato correttamente            |
+|  Post condition  | L'utente visualizza le misurazioni outliers di un network |
+| Nominal Scenario |                       Scenario D.1                        |
+|     Variants     |                       Scenario D.2                        |
+|    Exceptions    |               Scenario E401.1, E404, E500.1               |
+
+#### Scenario D.1
+
+|  Scenario D.1  |                           Visualizzazione outliers per un Sensore specifico `(Code 200)`                           |
+| :------------: | :----------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                              L'utente è autenticato.                                               |
+| Post condition |                                          L'utente visualizza gli outliers                                          |
+|     Step#      |                                                    Descrizione                                                     |
+|       1        | Sistema: Chiede il codice del network, il mac del gateway e del sensore (`networkCode`, `gatewayMac`, `sensorMac`) |
+|       2        |                             User: Inserisce `networkCode`, `gatewayMac`, `sensorMac`.                              |
+|       3        |             Sistema: Verifica la presenza di un token valido nella richiesta. Il token risulta valido              |
+|       4        |                                           Sistema: Legge i dati forniti.                                           |
+|       5        |              Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.               |
+|       6        |      Sistema: Ricerca il gateway con il mac fornito all'interno del network. L'indirizzo mac risulta valido.       |
+|       7        |  Sistema: Ricerca il sensore con il mac fornito tra quelli associati al gateway. L'indirizzo mac risulta valido.   |
+|       8        |                      Sistema: Recupera le misurazioni del sensore con indirizzo `sensorMac`.                       |
+|       9        |                                Sistema: calcola media e varianza delle misurazioni                                 |
+|       10       |                             Sistema: calcola la soglia superiore e la soglia inferiore                             |
+|       11       |                        Sistema: per ogni misurazione confronta il suo valore con le soglie                         |
+|       12       |   Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie    |
+|       13       |                              Sistema: invia le statistiche e gli outliers all'utente                               |
+|       14       |                                    Utente: legge le statistiche e gli outliers                                     |
+
+#### Scenario D.2
+
+|  Scenario D.2  |                                      Visualizzazione outliers per un Network specifico e filtri`(Code 200)`                                      |
+| :------------: | :----------------------------------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                                             L'utente è autenticato.                                                              |
+| Post condition |                                                         L'utente visualizza gli outliers                                                         |
+|     Step#      |                                                                   Descrizione                                                                    |
+|       1        | Sistema: Chiede l'id del network,del gateway e del sensore (`networkCode`,`gatewayMac`,`sensorMac`) e i possibili filtri (startDate`,`endDate`). |
+|       2        |                                 User: Inserisce `networkCode`, `gatewayMac`, `sensorMac` e i filtri desiderati.                                  |
+|       3        |                            Sistema: Verifica la presenza di un token valido nella richiesta. Il token risulta valido                             |
+|       4        |                                                          Sistema: Legge i dati forniti.                                                          |
+|       5        |                             Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.                              |
+|       6        |                     Sistema: Ricerca il gateway con il mac fornito all'interno del network. L'indirizzo mac risulta valido.                      |
+|       7        |                 Sistema: Ricerca il sensore con il mac fornito tra quelli associati al gateway. L'indirizzo mac risulta valido.                  |
+|       8        |                                 Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                                  |
+|       9        |                     Sistema: Recupera le misurazioni del sensore con codice `sensorMac` e che rispettano i filtri applicati                      |
+|       8        |                                               Sistema: calcola media e varianza delle misurazioni                                                |
+|       9        |                                            Sistema: calcola la soglia superiore e la soglia inferiore                                            |
+|       10       |                                       Sistema: per ogni misurazione confronta il suo valore con le soglie                                        |
+|       11       |                  Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie                   |
+|       12       |                                       Sistema: converte la data della misurazione da UTF-0 a localTimezone                                       |
+|       13       |                                             Sistema: invia le statistiche e gli outliers all'utente                                              |
+|       14       |                                                   Utente: legge le statistiche e gli outliers                                                    |
 
 ### Use Case E400, Dati in input malformati (FR5.1)
 
