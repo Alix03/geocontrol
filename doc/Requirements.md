@@ -105,64 +105,68 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ## Functional Requirements
 
-|    ID     | Description                                                                             |
-| :-------: | --------------------------------------------------------------------------------------- |
-|  **FR1**  | **Autenticazione e gestione utenti**                                                    |
-|   FR1.1   | Login                                                                                   |
-|   FR1.2   | Creazione Account                                                                       |
-|   FR1.3   | Rimozione Account                                                                       |
-|   FR1.4   | Visualizzazione Elenco Account                                                          |
-|  FR1.4.1  | Visualizza Specifico Account                                                            |
-|  **FR2**  | **Gestione Topologia**                                                                  |
-|   FR2.1   | Gestione Network                                                                        |
-|  FR2.1.1  | Creazione Network                                                                       |
-|  FR2.1.2  | Modifica Network                                                                        |
-|  FR2.1.3  | Eliminazione Network                                                                    |
-|  FR2.1.4  | Visualizzazione di tutti i Network                                                      |
-| FR2.1.4.1 | Visualizzazione di un Network specifico                                                 |
-|   FR2.2   | Gestione Gateway                                                                        |
-|  FR2.2.1  | Creazione Gateway                                                                       |
-|  FR2.2.2  | Modifica Gateway                                                                        |
-|  FR2.2.3  | Eliminazione Gateway                                                                    |
-|  FR2.2.4  | Visualizzazione di un Gateway specifico                                                 |
-| FR2.2.4.1 | Visualizzazione di tutti i Gateway associati a un Network specifico                     |
-|   FR2.3   | Gestione Sensore                                                                        |
-|  FR2.3.1  | Creazione Sensore                                                                       |
-|  FR2.3.2  | Modifica Sensore                                                                        |
-|  FR2.3.3  | Eliminazione Sensore                                                                    |
-|  FR2.3.4  | Visualizzazione Sensore specifico                                                       |
-| FR2.3.4.1 | Visualizzazione di tutti i Sensori associati a un Gateway specifico                     |
-|   FR2.4   | Associazioni                                                                            |
-|  FR2.4.1  | Aggiunta del Gateway a Network                                                          |
-|  FR2.4.2  | Rimozione del Gateway da Network                                                        |
-|  FR2.4.3  | Aggiunta sensore al Gateway                                                             |
-|  FR2.4.4  | Rimozione sensore dal Gateway                                                           |
-|  **FR3**  | **Gestione Misurazioni**                                                                |
-|   FR3.2   | Visualizzazione misurazioni                                                             |
-|  FR3.2.1  | Visualizzazione misurazioni di un network                                               |
-|  FR3.2.2  | Visualizzazione filtrata misurazioni di un network                                      |
-|  FR3.2.3  | Visualizzazione misurazioni di un network con fuso orario locale                        |
-|  FR3.2.4  | Visualizzazione misurazioni di uno specifico sensore                                    |
-|  FR3.2.5  | Visualizzazione filtrata misurazioni di uno specifico sensore                           |
-|  FR3.2.6  | Visualizzazione misurazioni di uno specifico sensore con fuso orario locale             |
-|   FR3.3   | Inserimento misurazioni                                                                 |
-|  **FR4**  | **Analisi dei dati e rilevamento anomalie**                                             |
-|   FR4.1   | Calcolo della media delle misurazioni in un dato intervallo temporale                   |
-|   FR4.2   | Calcolo della varianza delle misurazioni in un dato intervallo temporale                |
-|   FR4.3   | Calcolo delle soglie (superiore e inferiore) per identificare potenziali valori anomali |
-|  FR4.3.1  | Calcolo sogliaSuperiore = μ + 2σ                                                        |
-|  FR4.3.2  | Calcolo sogliaInferiore = μ - 2σ                                                        |
-|   FR4.4   | Identificazione outlier                                                                 |
-|   FR4.5   | Visualizzazione statistiche                                                             |
-|  FR4.5.1  | Visualizzazione statistiche per un insieme di Sensori di un Network specifico           |
-|  FR4.5.2  | Visualizzazione statistiche per uno specifico sensore                                   |
-|  FR4.5.3  | Visualizzazione outliers per un insieme di Sensori di un Network specifico              |
-|  FR4.5.4  | Visualizzazione outliers per uno specifico sensore                                      |
-|  **FR5**  | **Gestione Errori**                                                                     |
-|   FR5.1   | E400- Dati in input malformati                                                          |
-|   FR5.2   | E401- Non Autorizzato                                                                   |
-|   FR5.3   | E403- Diritti Insufficienti                                                             |
-|   FR5.4   | E500- Errore interno del server                                                         |
+|    ID     | Description                                                                            |
+| :-------: | -------------------------------------------------------------------------------------- |
+|  **FR1**  | **Autenticazione e gestione utenti**                                                   |
+|   FR1.1   | Login                                                                                  |
+|   FR1.2   | Creazione Account                                                                      |
+|   FR1.3   | Rimozione Account                                                                      |
+|   FR1.4   | Visualizzazione Elenco Account                                                         |
+|  FR1.4.1  | Visualizza Specifico Account                                                           |
+|  **FR2**  | **Gestione Topologia**                                                                 |
+|   FR2.1   | Gestione Network                                                                       |
+|  FR2.1.1  | Creazione Network                                                                      |
+|  FR2.1.2  | Modifica Network                                                                       |
+|  FR2.1.3  | Eliminazione Network                                                                   |
+|  FR2.1.4  | Visualizzazione di tutti i Network                                                     |
+| FR2.1.4.1 | Visualizzazione di un Network specifico                                                |
+|   FR2.2   | Gestione Gateway                                                                       |
+|  FR2.2.1  | Creazione Gateway                                                                      |
+|  FR2.2.2  | Modifica Gateway                                                                       |
+|  FR2.2.3  | Eliminazione Gateway                                                                   |
+|  FR2.2.4  | Visualizzazione di un Gateway specifico                                                |
+| FR2.2.4.1 | Visualizzazione di tutti i Gateway associati a un Network specifico                    |
+|   FR2.3   | Gestione Sensore                                                                       |
+|  FR2.3.1  | Creazione Sensore                                                                      |
+|  FR2.3.2  | Modifica Sensore                                                                       |
+|  FR2.3.3  | Eliminazione Sensore                                                                   |
+|  FR2.3.4  | Visualizzazione Sensore specifico                                                      |
+| FR2.3.4.1 | Visualizzazione di tutti i Sensori associati a un Gateway specifico                    |
+|   FR2.4   | Associazioni                                                                           |
+|  FR2.4.1  | Aggiunta del Gateway a Network                                                         |
+|  FR2.4.2  | Rimozione del Gateway da Network                                                       |
+|  FR2.4.3  | Aggiunta sensore al Gateway                                                            |
+|  FR2.4.4  | Rimozione sensore dal Gateway                                                          |
+|  **FR3**  | **Gestione Misurazioni**                                                               |
+|   FR3.2   | Visualizzazione misurazioni                                                            |
+|  FR3.2.1  | Visualizzazione misurazioni di un network                                              |
+|  FR3.2.2  | Visualizzazione filtrata misurazioni di un network                                     |
+|  FR3.2.3  | Visualizzazione misurazioni di un network con fuso orario locale                       |
+|  FR3.2.4  | Visualizzazione misurazioni di uno specifico sensore                                   |
+|  FR3.2.5  | Visualizzazione filtrata misurazioni di uno specifico sensore                          |
+|  FR3.2.6  | Visualizzazione misurazioni di uno specifico sensore con fuso orario locale            |
+|   FR3.3   | Inserimento misurazioni                                                                |
+|  **FR4**  | **Analisi dei dati e rilevamento anomalie**                                            |
+|   FR4.1   | Calcolo della media delle misurazioni in un dato intervallo temporale                  |
+|  FR4.1.1  | Calcolo della media delle misurazioni in un dato intervallo temporale                  |
+|  FR4.1.2  | Calcolo della varianza delle misurazioni in un dato intervallo temporale               |
+|  FR4.1.3  | Calcolo sogliaSuperiore = μ + 2σ                                                       |
+|  FR4.1.4  | Calcolo sogliaInferiore = μ - 2σ                                                       |
+|   FR4.2   | Visualizzazione statistiche                                                            |
+|  FR4.2.1  | Visualizzazione statistiche per un Network specifico                                   |
+|  FR4.2.2  | Visualizzazione filtrata statistiche per un insieme di Sensori di un Network specifico |
+|  FR4.2.3  | Visualizzazione statistiche per un Sensore specifico                                   |
+|  FR4.2.4  | Visualizzazione filtrata statistiche per Sensore specifico                             |
+|   FR4.3   | Visualizzazione Outliers                                                               |
+|  FR4.3.1  | Visualizzazione outliers per Network specifico                                         |
+|  FR4.3.2  | Visualizzazione filtrata outliers per un insieme di Sensori di un Network specifico    |
+|  FR4.3.3  | Visualizzazione outliers per un Sensore specifico                                      |
+|  FR4.3.4  | Visualizzazione filtrata outliers per Sensore specifico                                |
+|  **FR5**  | **Gestione Errori**                                                                    |
+|   FR5.1   | E400- Dati in input malformati                                                         |
+|   FR5.2   | E401- Non Autorizzato                                                                  |
+|   FR5.3   | E403- Diritti Insufficienti                                                            |
+|   FR5.4   | E500- Errore interno del server                                                        |
 
 ## Non Functional Requirements
 
@@ -986,21 +990,42 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |               Sistema: Non trova una delle entità richieste (network, gateway, sensore)                |
 |       5        |                            Sistema: Restituisce il messaggio di errore 404.                            |
 
-### Use Case A, Visualizzazione Statistiche per un dato Network (FR 4.5.1)
+### Use Case E, Calcolo Statistiche (FR4.1)
 
-| Actors Involved  |                     User                     |
-| :--------------: | :------------------------------------------: |
-|   Precondition   |     L'utente è autenticato correttamente     |
-|  Post condition  | L'utente visualizza le statistiche richieste |
-| Nominal Scenario |                 Scenario A.1                 |
-|     Variants     |                 Scenario A.2                 |
-|    Exceptions    |        Scenario E401.1, E404, E500.1         |
+| Actors Involved  |                                                           /                                                            |
+| :--------------: | :--------------------------------------------------------------------------------------------------------------------: |
+|   Precondition   | L'utente ha richiesto una risorsa che necessita il calcolo delle statistiche. Il sistema ha recuperato le misurazioni. |
+|  Post condition  |                                           Le statistiche vengono calcolate.                                            |
+| Nominal Scenario |                                                      Scenario E.1                                                      |
+|     Variants     |                                                           -                                                            |
+|    Exceptions    |                                                    Scenario E500.1                                                     |
 
-#### Scenario A.1
+#### Scenario E.1
+
+|  Scenario E.1  |              Calcolo Statistiche`(Code 200)`               |
+| :------------: | :--------------------------------------------------------: |
+|  Precondition  |                  L'utente è autenticato.                   |
+| Post condition |              L'utente visualizza gli outliers              |
+|     Step#      |                        Descrizione                         |
+|       1        |        Sistema: calcola la media delle misurazioni         |
+|       2        |       Sistema: calcola la varianza delle misurazioni       |
+|       3        | Sistema: calcola la soglia superiore e la soglia inferiore |
+
+### Use Case A, Visualizzazione Statistiche per un dato Network (FR 4.2.1, FR 4.2.2)
+
+| Actors Involved  |                                 User                                 |
+| :--------------: | :------------------------------------------------------------------: |
+|   Precondition   | L'utente richiede la visualizzazione delle statistiche di un network |
+|  Post condition  |             L'utente visualizza le statistiche richieste             |
+| Nominal Scenario |                             Scenario A.1                             |
+|     Variants     |                             Scenario A.2                             |
+|    Exceptions    |                    Scenario E401.1, E404, E500.1                     |
+
+#### Scenario A.1 ()
 
 |  Scenario A.1  |               Visualizzazione statistiche per un dato Network `(Code 200)`                |
 | :------------: | :---------------------------------------------------------------------------------------: |
-|  Precondition  |                                  L'utente è autenticato.                                  |
+|  Precondition  |           L'utente richiede la visualizzazione delle statistiche di un network            |
 | Post condition |                       L'utente visualizza le statistiche richieste                        |
 |     Step#      |                                        Descrizione                                        |
 |       1        |                    Sistema: Chiede il codice del network `networkCode`                    |
@@ -1009,45 +1034,43 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |                              Sistema: Legge i dati forniti.                               |
 |       5        |  Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.  |
 |       6        |          Sistema: Recupera le misurazioni del network con codice `networkCode`.           |
-|       7        |                    Sistema: calcola media e varianza delle misurazioni                    |
-|       8        |                Sistema: calcola la soglia superiore e la soglia inferiore                 |
-|       9        |                         Sistema: invia le statistiche all'utente                          |
-|       10       |                          Utente: legge le statistiche richieste                           |
+|       7        |                            INCLUDE Calcolo statistiche (UC E)                             |
+|       8        |                         Sistema: invia le statistiche all'utente                          |
+|       9        |                          Utente: legge le statistiche richieste                           |
 
 #### Scenario A.2
 
-|  Scenario A.2  |                               Visualizzazione statistiche per un dato Network con filtri `(Code 200)`                               |
-| :------------: | :---------------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                       L'utente è autenticato.                                                       |
-| Post condition |                                            L'utente visualizza le statistiche richieste                                             |
-|     Step#      |                                                             Descrizione                                                             |
-|       1        | Sistema: Chiede il codice del network `networkCode` e i possibili campi di filtro [ lista dis `sensorMAC`, startDate`, `endDate` ]. |
-|       2        |                                        User: Inserisce `networkCode` e i filtri desiderati.                                         |
-|       3        |                      Sistema: Verifica la presenza di un token valido nella richiesta. Il token risulta valido                      |
-|       4        |                                                   Sistema: Legge i dati forniti.                                                    |
-|       5        |                       Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.                       |
-|       6        |                           Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                           |
-|       7        |              Sistema: Recupera le misurazioni del network con codice `networkCode` e che rispettano i filtri applicati              |
-|       8        |                                         Sistema: calcola media e varianza delle misurazioni                                         |
-|       9        |                                     Sistema: calcola la soglia superiore e la soglia inferiore                                      |
-|       10       |                                              Sistema: invia le statistiche all'utente                                               |
-|       11       |                                               Utente: legge le statistiche richieste                                                |
+|  Scenario A.2  |                              Visualizzazione statistiche per un dato Network con filtri `(Code 200)`                               |
+| :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                L'utente richiede la visualizzazione delle statistiche di un network                                |
+| Post condition |                                            L'utente visualizza le statistiche richieste                                            |
+|     Step#      |                                                            Descrizione                                                             |
+|       1        | Sistema: Chiede il codice del network `networkCode` e i possibili campi di filtro [ lista di `sensorMAC`, startDate`, `endDate` ]. |
+|       2        |                                        User: Inserisce `networkCode` e i filtri desiderati.                                        |
+|       3        |                     Sistema: Verifica la presenza di un token valido nella richiesta. Il token risulta valido                      |
+|       4        |                                                   Sistema: Legge i dati forniti.                                                   |
+|       5        |                      Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.                       |
+|       6        |                          Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                           |
+|       7        |             Sistema: Recupera le misurazioni del network con codice `networkCode` e che rispettano i filtri applicati              |
+|       8        |                                                 INCLUDE Calcolo statistiche (UC E)                                                 |
+|       9        |                                              Sistema: invia le statistiche all'utente                                              |
+|       10       |                                               Utente: legge le statistiche richieste                                               |
 
-### Use Case B, Visualizzazione Statistiche per un dato Sensore (FR 4.5.2)
+### Use Case B, Visualizzazione Statistiche per un dato Sensore (FR 4.2.3, FR 4.2.4)
 
-| Actors Involved  |                     User                     |
-| :--------------: | :------------------------------------------: |
-|   Precondition   |     L'utente è autenticato correttamente     |
-|  Post condition  | L'utente visualizza le statistiche richieste |
-| Nominal Scenario |                 Scenario B.1                 |
-|     Variants     |                 Scenario B.2                 |
-|    Exceptions    |        Scenario E401.1, E404, E500.1         |
+| Actors Involved  |                                 User                                 |
+| :--------------: | :------------------------------------------------------------------: |
+|   Precondition   | L'utente richiede la visualizzazione delle statistiche di un sensore |
+|  Post condition  |             L'utente visualizza le statistiche richieste             |
+| Nominal Scenario |                             Scenario B.1                             |
+|     Variants     |                             Scenario B.2                             |
+|    Exceptions    |                    Scenario E401.1, E404, E500.1                     |
 
 #### Scenario B.1
 
 |  Scenario B.1  |                            Visualizzazione statistiche per un dato Sensore `(Code 200)`                            |
 | :------------: | :----------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                              L'utente è autenticato.                                               |
+|  Precondition  |                        L'utente richiede la visualizzazione delle statistiche di un sensore                        |
 | Post condition |                                    L'utente visualizza le statistiche richieste                                    |
 |     Step#      |                                                    Descrizione                                                     |
 |       1        | Sistema: Chiede il codice del network, il mac del gateway e del sensore (`networkCode`, `gatewayMac`, `sensorMac`) |
@@ -1058,16 +1081,15 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       6        |      Sistema: Ricerca il gateway con il mac fornito all'interno del network. L'indirizzo mac risulta valido.       |
 |       7        |  Sistema: Ricerca il sensore con il mac fornito tra quelli associati al gateway. L'indirizzo mac risulta valido.   |
 |       8        |                      Sistema: Recupera le misurazioni del sensore con indirizzo `sensorMac`.                       |
-|       9        |                                Sistema: calcola media e varianza delle misurazioni                                 |
-|       10       |                             Sistema: calcola la soglia superiore e la soglia inferiore                             |
-|       11       |                                      Sistema: invia le statistiche all'utente                                      |
-|       12       |                                       Utente: legge le statistiche richieste                                       |
+|       9        |                                         INCLUDE Calcolo statistiche (UC E)                                         |
+|       10       |                                      Sistema: invia le statistiche all'utente                                      |
+|       11       |                                       Utente: legge le statistiche richieste                                       |
 
 #### Scenario B.2
 
 |  Scenario B.2  |                                      Visualizzazione statistiche per un dato Sensore con filtri `(Code 200)`                                      |
 | :------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                              L'utente è autenticato.                                                              |
+|  Precondition  |                                       L'utente richiede la visualizzazione delle statistiche di un sensore                                        |
 | Post condition |                                                   L'utente visualizza le statistiche richieste                                                    |
 |     Step#      |                                                                    Descrizione                                                                    |
 |       1        | Sistema: Chiede l'id del network, del gateway e del sensore (`networkCode`,`gatewayMac`,`sensorMac`) e i possibili filtri (startDate`,`endDate`). |
@@ -1079,26 +1101,25 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       7        |                  Sistema: Ricerca il sensore con il mac fornito tra quelli associati al gateway. L'indirizzo mac risulta valido.                  |
 |       8        |                                  Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                                  |
 |       9        |                      Sistema: Recupera le misurazioni del sensore con codice `sensorMac` e che rispettano i filtri applicati                      |
-|       10       |                                                Sistema: calcola media e varianza delle misurazioni                                                |
-|       11       |                                            Sistema: calcola la soglia superiore e la soglia inferiore                                             |
-|       12       |                                                     Sistema: invia le statistiche all'utente                                                      |
-|       13       |                                                      Utente: legge le statistiche richieste                                                       |
+|       10       |                                                        INCLUDE Calcolo statistiche (UC E)                                                         |
+|       11       |                                                     Sistema: invia le statistiche all'utente                                                      |
+|       12       |                                                      Utente: legge le statistiche richieste                                                       |
 
-### Use Case C, Visualizzazione Outliers per un dato Network (FR 4.5.3)
+### Use Case C, Visualizzazione Outliers per un dato Network (FR 4.3.1, FR 4.3.2)
 
-| Actors Involved  |                           User                            |
-| :--------------: | :-------------------------------------------------------: |
-|   Precondition   |           L'utente è autenticato correttamente            |
-|  Post condition  | L'utente visualizza le misurazioni outliers di un network |
-| Nominal Scenario |                       Scenario C.1                        |
-|     Variants     |                       Scenario C.2                        |
-|    Exceptions    |               Scenario E401.1, E404, E500.1               |
+| Actors Involved  |                               User                                |
+| :--------------: | :---------------------------------------------------------------: |
+|   Precondition   | L'utente richiede la visualizzazione degli outliers di un network |
+|  Post condition  |     L'utente visualizza le misurazioni outliers di un network     |
+| Nominal Scenario |                           Scenario C.1                            |
+|     Variants     |                           Scenario C.2                            |
+|    Exceptions    |                   Scenario E401.1, E404, E500.1                   |
 
 #### Scenario C.1
 
 |  Scenario C.1  |                        Visualizzazione outliers per un Network specifico `(Code 200)`                         |
 | :------------: | :-----------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                            L'utente è autenticato.                                            |
+|  Precondition  |                       L'utente richiede la visualizzazione degli outliers di un network                       |
 | Post condition |                                       L'utente visualizza gli outliers                                        |
 |     Step#      |                                                  Descrizione                                                  |
 |       1        |                             Sistema: Chiede il codice del network `networkCode`.                              |
@@ -1107,10 +1128,10 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |                                        Sistema: Legge i dati forniti.                                         |
 |       5        |            Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.            |
 |       6        |                    Sistema: Recupera le misurazioni del network con codice `networkCode`.                     |
-|       7        |                              Sistema: calcola media e varianza delle misurazioni                              |
-|       8        |                          Sistema: calcola la soglia superiore e la soglia inferiore                           |
-|       9        |                      Sistema: per ogni misurazione confronta il suo valore con le soglie                      |
-|       10       | Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie |
+|       7        |                                      INCLUDE Calcolo statistiche (UC E)                                       |
+|       8        |                      Sistema: per ogni misurazione confronta il suo valore con le soglie                      |
+|       9        | Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie |
+|       10       |                      Sistema: converte la data di ogni outlier da UTC+0 a localTimezone                       |
 |       11       |                            Sistema: invia le statistiche e gli outliers all'utente                            |
 |       12       |                                  Utente: legge le statistiche e gli outliers                                  |
 
@@ -1118,7 +1139,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |  Scenario C.2  |                               Visualizzazione outliers per un Network specifico e filtri`(Code 200)`                               |
 | :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                      L'utente è autenticato.                                                       |
+|  Precondition  |                                 L'utente richiede la visualizzazione degli outliers di un network                                  |
 | Post condition |                                                  L'utente visualizza gli outliers                                                  |
 |     Step#      |                                                            Descrizione                                                             |
 |       1        | Sistema: Chiede il codice del network `networkCode` e i possibili campi di filtro [ lista di `sensorMAC`, startDate`, `endDate` ]. |
@@ -1128,29 +1149,28 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       5        |                      Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.                       |
 |       6        |                          Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                           |
 |       7        |             Sistema: Recupera le misurazioni del network con codice `networkCode` e che rispettano i filtri applicati              |
-|       8        |                                        Sistema: calcola media e varianza delle misurazioni                                         |
-|       9        |                                     Sistema: calcola la soglia superiore e la soglia inferiore                                     |
-|       10       |                                Sistema: per ogni misurazione confronta il suo valore con le soglie                                 |
-|       11       |           Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie            |
-|       12       |                                Sistema: converte la data della misurazione da UTF-0 a localTimezone                                |
-|       13       |                                      Sistema: invia le statistiche e gli outliers all'utente                                       |
-|       14       |                                            Utente: legge le statistiche e gli outliers                                             |
+|       8        |                                                 INCLUDE Calcolo statistiche (UC E)                                                 |
+|       9        |                                Sistema: per ogni misurazione confronta il suo valore con le soglie                                 |
+|       10       |           Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie            |
+|       11       |                                Sistema: converte la data della misurazione da UTC+0 a localTimezone                                |
+|       12       |                                      Sistema: invia le statistiche e gli outliers all'utente                                       |
+|       13       |                                            Utente: legge le statistiche e gli outliers                                             |
 
-### Use Case D, Visualizzazione Outliers per un dato Sensore (FR 4.5.4)
+### Use Case D, Visualizzazione Outliers per un dato Sensore (FR 4.3.3, FR 4.3.4)
 
-| Actors Involved  |                           User                            |
-| :--------------: | :-------------------------------------------------------: |
-|   Precondition   |           L'utente è autenticato correttamente            |
-|  Post condition  | L'utente visualizza le misurazioni outliers di un network |
-| Nominal Scenario |                       Scenario D.1                        |
-|     Variants     |                       Scenario D.2                        |
-|    Exceptions    |               Scenario E401.1, E404, E500.1               |
+| Actors Involved  |                               User                                |
+| :--------------: | :---------------------------------------------------------------: |
+|   Precondition   | L'utente richiede la visualizzazione degli outliers di un sensore |
+|  Post condition  |     L'utente visualizza le misurazioni outliers di un network     |
+| Nominal Scenario |                           Scenario D.1                            |
+|     Variants     |                           Scenario D.2                            |
+|    Exceptions    |                   Scenario E401.1, E404, E500.1                   |
 
 #### Scenario D.1
 
 |  Scenario D.1  |                           Visualizzazione outliers per un Sensore specifico `(Code 200)`                           |
 | :------------: | :----------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                              L'utente è autenticato.                                               |
+|  Precondition  |                         L'utente richiede la visualizzazione degli outliers di un sensore                          |
 | Post condition |                                          L'utente visualizza gli outliers                                          |
 |     Step#      |                                                    Descrizione                                                     |
 |       1        | Sistema: Chiede il codice del network, il mac del gateway e del sensore (`networkCode`, `gatewayMac`, `sensorMac`) |
@@ -1161,10 +1181,10 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       6        |      Sistema: Ricerca il gateway con il mac fornito all'interno del network. L'indirizzo mac risulta valido.       |
 |       7        |  Sistema: Ricerca il sensore con il mac fornito tra quelli associati al gateway. L'indirizzo mac risulta valido.   |
 |       8        |                      Sistema: Recupera le misurazioni del sensore con indirizzo `sensorMac`.                       |
-|       9        |                                Sistema: calcola media e varianza delle misurazioni                                 |
-|       10       |                             Sistema: calcola la soglia superiore e la soglia inferiore                             |
-|       11       |                        Sistema: per ogni misurazione confronta il suo valore con le soglie                         |
-|       12       |   Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie    |
+|       9        |                                         INCLUDE Calcolo statistiche (UC E)                                         |
+|       10       |                        Sistema: per ogni misurazione confronta il suo valore con le soglie                         |
+|       11       |   Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie    |
+|       12       |                        Sistema: converte la data della misurazione da UTC+0 a localTimezone                        |
 |       13       |                              Sistema: invia le statistiche e gli outliers all'utente                               |
 |       14       |                                    Utente: legge le statistiche e gli outliers                                     |
 
@@ -1172,7 +1192,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |  Scenario D.2  |                                      Visualizzazione outliers per un Network specifico e filtri`(Code 200)`                                      |
 | :------------: | :----------------------------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                             L'utente è autenticato.                                                              |
+|  Precondition  |                                        L'utente richiede la visualizzazione degli outliers di un sensore                                         |
 | Post condition |                                                         L'utente visualizza gli outliers                                                         |
 |     Step#      |                                                                   Descrizione                                                                    |
 |       1        | Sistema: Chiede l'id del network,del gateway e del sensore (`networkCode`,`gatewayMac`,`sensorMac`) e i possibili filtri (startDate`,`endDate`). |
@@ -1184,13 +1204,12 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       7        |                 Sistema: Ricerca il sensore con il mac fornito tra quelli associati al gateway. L'indirizzo mac risulta valido.                  |
 |       8        |                                 Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                                  |
 |       9        |                     Sistema: Recupera le misurazioni del sensore con codice `sensorMac` e che rispettano i filtri applicati                      |
-|       8        |                                               Sistema: calcola media e varianza delle misurazioni                                                |
-|       9        |                                            Sistema: calcola la soglia superiore e la soglia inferiore                                            |
-|       10       |                                       Sistema: per ogni misurazione confronta il suo valore con le soglie                                        |
-|       11       |                  Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie                   |
-|       12       |                                       Sistema: converte la data della misurazione da UTF-0 a localTimezone                                       |
-|       13       |                                             Sistema: invia le statistiche e gli outliers all'utente                                              |
-|       14       |                                                   Utente: legge le statistiche e gli outliers                                                    |
+|       10       |                                                        INCLUDE Calcolo statistiche (UC E)                                                        |
+|       11       |                                       Sistema: per ogni misurazione confronta il suo valore con le soglie                                        |
+|       12       |                  Sistema: la misurazione viene settata come outlier se è al di fuori dall'intervallo definito dalle due soglie                   |
+|       13       |                                       Sistema: converte la data della misurazione da UTC+0 a localTimezone                                       |
+|       14       |                                             Sistema: invia le statistiche e gli outliers all'utente                                              |
+|       15       |                                                   Utente: legge le statistiche e gli outliers                                                    |
 
 ### Use Case E400, Dati in input malformati (FR5.1)
 
@@ -1308,3 +1327,5 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 # Deployment Diagram
 
 \<describe here deployment diagram >
+
+![Diagramma di Gantt](./images/Deployment%20Diagram.png)
