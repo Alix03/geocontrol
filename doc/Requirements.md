@@ -101,20 +101,20 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ## Functional Requirements
 
-|   ID    | Description                                                                             |
-| :-----: | --------------------------------------------------------------------------------------- |
-| **FR1** | **Autenticazione e gestione utenti**                                                    |
-|  FR1.1  | Login                                                                                   |
-|  FR1.2  | Creazione Account                                                                       |
-|  FR1.3  | Rimozione Account                                                                       |
-|  FR1.4  | Visualizzazione Elenco Account                                                          |
-|  FR1.5  | Visualizza Specifico Account                                                            | 
-| **FR2** | **Gestione Topologia**                                                                  |
-|  FR2.1  | Gestione Network                                                                        |
-| FR2.1.1 | Creazione Network                                                                       |
-| FR2.1.2 | Modifica Network                                                                        |
-| FR2.1.3 | Eliminazione Network                                                                    |
-| FR2.1.4 | Visualizzazione di tutti i Network                                                      |
+|    ID     | Description                                                                             |
+| :-------: | --------------------------------------------------------------------------------------- |
+|  **FR1**  | **Autenticazione e gestione utenti**                                                    |
+|   FR1.1   | Login                                                                                   |
+|   FR1.2   | Creazione Account                                                                       |
+|   FR1.3   | Rimozione Account                                                                       |
+|   FR1.4   | Visualizzazione Elenco Account                                                          |
+|   FR1.5   | Visualizza Specifico Account                                                            |
+|  **FR2**  | **Gestione Topologia**                                                                  |
+|   FR2.1   | Gestione Network                                                                        |
+|  FR2.1.1  | Creazione Network                                                                       |
+|  FR2.1.2  | Modifica Network                                                                        |
+|  FR2.1.3  | Eliminazione Network                                                                    |
+|  FR2.1.4  | Visualizzazione di tutti i Network                                                      |
 | FR2.1.4.1 | Visualizzazione di un Network specifico                                                 |
 |   FR2.2   | Gestione Gateway                                                                        |
 |  FR2.2.1  | Creazione Gateway                                                                       |
@@ -183,23 +183,23 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ### Use Case 1, Login (FR1.1)
 
-| Actors Involved  |           utente                       |
-| :--------------: | :----------------------:               |
-|   Precondition   | L'utente non è loggato                 |
-|  Post condition  |   L'utente è loggato                   |
-| Nominal Scenario |       Scenario 1.1                     |
-|     Variants     |         Nessuna                        |
-|    Exceptions    |  Scenario 1.2, UCE400, UCE401, UCE500  |
+| Actors Involved  |                utente                |
+| :--------------: | :----------------------------------: |
+|   Precondition   |        L'utente non è loggato        |
+|  Post condition  |          L'utente è loggato          |
+| Nominal Scenario |             Scenario 1.1             |
+|     Variants     |               Nessuna                |
+|    Exceptions    | Scenario 1.2, UCE400, UCE401, UCE500 |
 
 #### Scenario 1.1
 
 |  Scenario 1.1  |                                        Login riuscito `(Code 200)`                                        |
 | :------------: | :-------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                              L'utente è registrato                                               |
-| Post condition |                                                L'utente è loggato                                                |
+|  Precondition  |                                           L'utente è registrato                                           |
+| Post condition |                                            L'utente è loggato                                             |
 |     Step#      |                                                Descrizione                                                |
 |       1        |                                  Sistema: Chiede `username`, `password`.                                  |
-|       2        |                                  utente: Inserisce `username`, `password`.                                  |
+|       2        |                                 utente: Inserisce `username`, `password`.                                 |
 |       3        |                                      Sistema: Legge i dati inseriti.                                      |
 |       4        |                               Sistema: Dato il nome utente, cerca l’utente.                               |
 |       5        | Sistema: Recupera la password, la confronta con quella fornita. I dati coincidono, l’utente è autorizzato |
@@ -209,8 +209,8 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 | Scenario 1.3   |                         L'utente non è registrato `(Code 404)`                          |
 | -------------- | :-------------------------------------------------------------------------------------: |
-| Precondition   |                                   L'utente non è registrato                                    |
-| Post condition |                                     L'utente non è loggato                                     |
+| Precondition   |                                L'utente non è registrato                                |
+| Post condition |                                 L'utente non è loggato                                  |
 | Step#          |                                       Descrizione                                       |
 | 1              |                         Sistema: Chiede `username`, `password`.                         |
 | 2              |                         User: Inserisce `username`, `password`.                         |
@@ -220,20 +220,20 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ### Use Case 2, Creazione Account (FR1.2)
 
-| Actors Involved  |            Admin                                 |
-| :--------------: | :--------------------------:                     |
-|   Precondition   | L'utente non ha un account                       |
-|  Post condition  |       Utente registrato                          |
-| Nominal Scenario |         Scenario 2.1                             |
-|     Variants     |           Nessuna                                |
-|    Exceptions    | Scenario 2.2, UCE400, UCE401, UCE403, UCE500     |
+| Actors Involved  |                    Admin                     |
+| :--------------: | :------------------------------------------: |
+|   Precondition   |          L'utente non ha un account          |
+|  Post condition  |              Utente registrato               |
+| Nominal Scenario |                 Scenario 2.1                 |
+|     Variants     |                   Nessuna                    |
+|    Exceptions    | Scenario 2.2, UCE400, UCE401, UCE403, UCE500 |
 
 #### Scenario 2.1
 
 |  Scenario 2.1  |                                                     Registrazione `(Code 201)`                                                     |
 | :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                                                        L'utente non ha un account                                                  |
-| Post condition |                                                            Utente registrato                                                       |
+|  Precondition  |                                                     L'utente non ha un account                                                     |
+| Post condition |                                                         Utente registrato                                                          |
 |     Step#      |                                                            Descrizione                                                             |
 |       1        |                                             Admin: Clicca il pulsante di registrazione                                             |
 |       2        |                                  Sistema: Verifica la presenza di un token valido nella richiesta                                  |
@@ -247,31 +247,31 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 2.2
 
-|  Scenario 2.2  |                                             username già in uso  `(Code 409)`                                    |
-| :------------: | :-------------------------------------------------------------------------------------------------------------:  |
-|  Precondition  |             L’utente tenta di creare un account utente con un identificativo già esistente                       |
-| Post condition |                                     Il sistema restituisce l'errore 409                                          |
-|     Step#      |                                                   Descrizione                                                    |
-|       1        |                        Utente: Effettua una richiesta di creazione account, inserendo i dati nel sistema         |
-|       2        |                        Sistema: riceve i dati e verifica l'esistenza della risorsa                               |
-|       3        |                        Sistema:Trova la risorsa nel sistema e ne blocca la creazione                             |
-|       4        |                                         Sistema:  Restituisce il messaggio di errore 409.                        |
+|  Scenario 2.2  |                         username già in uso `(Code 409)`                          |
+| :------------: | :-------------------------------------------------------------------------------: |
+|  Precondition  |  L’utente tenta di creare un account utente con un identificativo già esistente   |
+| Post condition |                        Il sistema restituisce l'errore 409                        |
+|     Step#      |                                    Descrizione                                    |
+|       1        | Utente: Effettua una richiesta di creazione account, inserendo i dati nel sistema |
+|       2        |            Sistema: riceve i dati e verifica l'esistenza della risorsa            |
+|       3        |           Sistema:Trova la risorsa nel sistema e ne blocca la creazione           |
+|       4        |                 Sistema: Restituisce il messaggio di errore 409.                  |
 
 ### Use Case 3, Rimozione Account (FR1.3)
 
-| Actors Involved  |                Admin                         |
-| :--------------: | :----------------------------------:         |
-|   Precondition   |  Almeno un utente è registrato nel sistema   |
-|  Post condition  | L'acount utente eliminato                    |
-| Nominal Scenario |             Scenario 3.1                     |
-|     Variants     |               Nessuna                        |
-|    Exceptions    | Scenario 3.2, UCE401, UCE403, UCE500         |
+| Actors Involved  |                   Admin                   |
+| :--------------: | :---------------------------------------: |
+|   Precondition   | Almeno un utente è registrato nel sistema |
+|  Post condition  |         L'acount utente eliminato         |
+| Nominal Scenario |               Scenario 3.1                |
+|     Variants     |                  Nessuna                  |
+|    Exceptions    |   Scenario 3.2, UCE401, UCE403, UCE500    |
 
 #### Scenario 3.1
 
 |  Scenario 3.1  |                       Eliminazione Utente `(Code 204)`                        |
 | :------------: | :---------------------------------------------------------------------------: |
-|  Precondition  |              Almeno un utente è registrato nel sistema                        |
+|  Precondition  |                   Almeno un utente è registrato nel sistema                   |
 | Post condition |                           Account utente eliminato                            |
 |     Step#      |                                  Descrizione                                  |
 |       1        |               Admin: Clicca il pulsante di eliminazione account               |
@@ -286,67 +286,66 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ### Scenario 3.2
 
-| Scenario 3.2   |                         L'utente non è registrato `(Code 404)`                                       |
-| -------------- | :-------------------------------------------------------------------------------------:              |  
-| Precondition   |     L’utente da eliminare non è presente nel sistema                                                 |
-| Post condition |    Nessun account eliminato,  Il sistema restituisce l'errore 404                                    |
-| Step#          |                                       Descrizione                                                    |
-| 1              |                         Admin: Clicca il pulsante di eliminazione account                            |
-| 2              |                        Sistema: Verifica la presenza di un token valido nella richiesta              |
-| 3              |                           Sistema: Rileva che il token è valido                                      |
-| 4              |                           Sistema: Chiede `username`                                                 |
-| 5              |                   Admin: Inserisce `username`                                                        |
-| 6              |                   Sistema: Legge i dati immessi                                                      |
-| 7              |                  Sistema: Cerca l’utente con lo `username` specificato, ma non trova alcun account   |
-| 8              |                  Sistema: Restituisce il messaggio di errore 404                                      |
-
+| Scenario 3.2   |                      L'utente non è registrato `(Code 404)`                       |
+| -------------- | :-------------------------------------------------------------------------------: |
+| Precondition   |                 L’utente da eliminare non è presente nel sistema                  |
+| Post condition |           Nessun account eliminato, Il sistema restituisce l'errore 404           |
+| Step#          |                                    Descrizione                                    |
+| 1              |                 Admin: Clicca il pulsante di eliminazione account                 |
+| 2              |         Sistema: Verifica la presenza di un token valido nella richiesta          |
+| 3              |                       Sistema: Rileva che il token è valido                       |
+| 4              |                            Sistema: Chiede `username`                             |
+| 5              |                            Admin: Inserisce `username`                            |
+| 6              |                           Sistema: Legge i dati immessi                           |
+| 7              | Sistema: Cerca l’utente con lo `username` specificato, ma non trova alcun account |
+| 8              |                  Sistema: Restituisce il messaggio di errore 404                  |
 
 ### Use Case 4, Visualizzazione Elenco Account (FR1.4)
 
 | Actors Involved  |                                   Admin                                   |
 | :--------------: | :-----------------------------------------------------------------------: |
-|   Precondition   |                                       L’admin è loggato                   |
+|   Precondition   |                             L’admin è loggato                             |
 |  Post condition  | L’admin visualizza la lista completa degli account registrati nel sistema |
 | Nominal Scenario |                               Scenario 4.1                                |
-|     Variants     |                                    Nessuna                                |
-|    Exceptions    |        Scenario 4.2, UCE401, UCE403, UCE500                               |
+|     Variants     |                                  Nessuna                                  |
+|    Exceptions    |                   Scenario 4.2, UCE401, UCE403, UCE500                    |
 
 #### Scenario 4.1
 
 |  Scenario 4.1  |                Visualizzazione elenco account `(Code 200)`                |
 | :------------: | :-----------------------------------------------------------------------: |
-|  Precondition  |                                           L’admin è loggato               |
+|  Precondition  |                             L’admin è loggato                             |
 | Post condition | L’admin visualizza la lista completa degli account registrati nel sistema |
 |     Step#      |                                Descrizione                                |
 |       1        |              Admin: Clicca il pulsante di Visualizza Account              |
 |       2        |     Sistema: Verifica la presenza di un token valido nella richiesta      |
 |       3        |                   Sistema: Rileva che il token è valido                   |
-|       4        |  Sistema:  Recupera dal database la lista completa degli account registrati  |
+|       4        | Sistema: Recupera dal database la lista completa degli account registrati |
 |       6        |          Sistema: mostra a schermo l'elenco degli utenti trovati          |
 
 ### Use Case 5, Visualizzazione Specifico Account (FFR1.5)
 
-| Actors Involved  |                                   Admin                                   |
-| :--------------: | :-----------------------------------------------------------------------: |
-|   Precondition   |                                          L’admin è loggato                |
-|  Post condition  |                L’admin visualizza uno specifico account Utente            |
-| Nominal Scenario |                               Scenario 5.1                                |
-|     Variants     |                                    Nessuna                                |
-|    Exceptions    |        Scenario 5.2, UCE401, UCE403, UCE500                               |
+| Actors Involved  |                      Admin                      |
+| :--------------: | :---------------------------------------------: |
+|   Precondition   |                L’admin è loggato                |
+|  Post condition  | L’admin visualizza uno specifico account Utente |
+| Nominal Scenario |                  Scenario 5.1                   |
+|     Variants     |                     Nessuna                     |
+|    Exceptions    |      Scenario 5.2, UCE401, UCE403, UCE500       |
 
 #### Scenario 5.1
 
-|  Scenario 5.1  |                Visualizzazione specifico account `(Code 200)`             |
-| :------------: | :-----------------------------------------------------------------------: |
-|  Precondition  |                L’admin è loggato                                          |
-| Post condition |                 L’admin visualizza uno specifico account Utente           |
-|     Step#      |                                Descrizione                                |
-|       1        |              Admin: Accede alla sezione di  Visualizza Account            |
-|       2        |              Admin: Inserisce lo username dell’utente da visualizzare     |
-|       3        |     Sistema: Verifica la presenza di un token valido nella richiesta      |
-|       4        |                   Sistema: Rileva che il token è valido                   |
-|       5        |  Sistema:  Recupera dal database l'account utente richiesto               |
-|       6        |          Sistema: mostra a schermo l'account utente richiesto              |
+|  Scenario 5.1  |          Visualizzazione specifico account `(Code 200)`          |
+| :------------: | :--------------------------------------------------------------: |
+|  Precondition  |                        L’admin è loggato                         |
+| Post condition |         L’admin visualizza uno specifico account Utente          |
+|     Step#      |                           Descrizione                            |
+|       1        |         Admin: Accede alla sezione di Visualizza Account         |
+|       2        |     Admin: Inserisce lo username dell’utente da visualizzare     |
+|       3        | Sistema: Verifica la presenza di un token valido nella richiesta |
+|       4        |              Sistema: Rileva che il token è valido               |
+|       5        |    Sistema: Recupera dal database l'account utente richiesto     |
+|       6        |       Sistema: mostra a schermo l'account utente richiesto       |
 
 ### Use Case 10, Creazione Network (UC10)
 
@@ -355,7 +354,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |   Precondition   |          L'utente è autenticato con token come Admin o Operator           |
 |  Post condition  |                       La rete è creata nel sistema                        |
 | Nominal Scenario |                               Scenario 10.1                               |
-|     Variants     |                                   Nessuna                                   |
+|     Variants     |                                  Nessuna                                  |
 |    Exceptions    | Scenario 10.2, Scenario 10.3, Scenario 10.4, Scenario 10.5, Scenario 10.6 |
 
 #### Scenario 10.1
@@ -700,9 +699,10 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        |           Utente: Accede alla sezione di visualizzazione delle misurazioni            |
 |       2        |                             Utente: Seleziona un network                              |
 |       3        |            Sistema: Riceve la richiesta e verifica l'esistenza del network            |
-|       4        |                          INCLUDE Calcolo statistiche (UC...)                          |
-|       5        |        Sistema: Recupera le misurazioni dei sensori appartenenenti al network         |
-|       6        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network |
+|       4        |        Sistema: Recupera le misurazioni dei sensori appartenenenti al network         |
+|       5        |                          INCLUDE Calcolo statistiche (UC...)                          |
+|       6        |                      Sistema: identifica le misurazioni outlier                       |
+|       7        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network |
 
 #### Scenario 25.2
 
@@ -712,15 +712,18 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Post condition |                                         Le misurazioni vengono mostrate                                         |
 |     Step#      |                                                   Descrizione                                                   |
 |       1        |                        Utente: Accede alla sezione di visualizzazione delle misurazioni                         |
+|       2        |                                          Utente: Seleziona un network                                           |
 |       3        |                         Sistema: Riceve la richiesta e verifica l'esistenza del network                         |
-|       4        |                                       INCLUDE Calcolo statistiche (UC...)                                       |
-|       5        |                     Sistema: Recupera le misurazioni dei sensori appartenenenti al network                      |
-|       6        |              Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network              |
-|       2        |                     Utente: Seleziona i filtri di interesse (sensori, intervallo di tempo)                      |
-|       3        |                   Sistema: Verifica l'esistenza dei sensori e il formato delle date di tempo                    |
+|       4        |                     Sistema: Recupera le misurazioni dei sensori appartenenenti al network                      |
 |       5        |                                       INCLUDE Calcolo statistiche (UC...)                                       |
-|       6        |                     Sistema: Recupera le misurazioni dei sensori appartenenenti al network                      |
-|       7        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network secondo i filtri indicati |
+|       6        |                                   Sistema: identifica le misurazioni outlier                                    |
+|       7        |              Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network              |
+|       8        |                     Utente: Seleziona i filtri di interesse (sensori, intervallo di tempo)                      |
+|       9        |                   Sistema: Verifica l'esistenza dei sensori e il formato delle date di tempo                    |
+|       10       |                     Sistema: Recupera le misurazioni dei sensori appartenenenti al network                      |
+|       11       |                                       INCLUDE Calcolo statistiche (UC...)                                       |
+|       12       |                                   Sistema: identifica le misurazioni outlier                                    |
+|       13       | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network secondo i filtri indicati |
 
 #### Scenario 25.3
 
@@ -730,10 +733,12 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Post condition |                                             Le misurazioni vengono mostrate                                              |
 |     Step#      |                                                       Descrizione                                                        |
 |       1        |                             Utente: Accede alla sezione di visualizzazione delle misurazioni                             |
+|       2        |                                               Utente: Seleziona un network                                               |
 |       3        |                             Sistema: Riceve la richiesta e verifica l'esistenza del network                              |
-|       4        |                                           INCLUDE Calcolo statistiche (UC...)                                            |
-|       5        |                          Sistema: Recupera le misurazioni dei sensori appartenenenti al network                          |
-|       6        |                  Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network                   |
+|       4        |                          Sistema: Recupera le misurazioni dei sensori appartenenenti al network                          |
+|       5        |                                           INCLUDE Calcolo statistiche (UC...)                                            |
+|       6        |                                        Sistema: identifica le misurazioni outlier                                        |
+|       7        |                  Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network                   |
 |       8        |                         Utente: Richiede la visualizzazione dei timestamp con fuso orario locale                         |
 |       9        |                    Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente                     |
 |       10       | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network con fuso orario locale dell'utente |
@@ -771,31 +776,34 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        |           Utente: Accede alla sezione di visualizzazione delle misurazioni            |
 |       2        |                 Utente: Seleziona un network, un gateway e un sensore                 |
 |       3        |                Sistema: Verifica l'esistenza delle entità selezionate                 |
-|       4        |                          INCLUDE Calcolo statistiche (UC...)                          |
-|       5        |                     Sistema: Recupera le misurazioni del sensore                      |
-|       6        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network |
+|       4        |                     Sistema: Recupera le misurazioni del sensore                      |
+|       5        |                          INCLUDE Calcolo statistiche (UC...)                          |
+|       6        |                      Sistema: identifica le misurazioni outlier                       |
+|       7        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network |
 
 #### Scenario 26.2
 
-| Scenario 26.2  |              Visualizzazione filtrata misurazioni di uno specifico sensore `(Code 200)`              |
-| :------------: | :--------------------------------------------------------------------------------------------------: |
-|  Precondition  |                    L’utente ha accesso alla sezione "Visualizzazione Misurazioni"                    |
-| Post condition |                                   Le misurazioni vengono mostrate                                    |
-|     Step#      |                                             Descrizione                                              |
-|       1        |                   Utente: Accede alla sezione di visualizzazione delle misurazioni                   |
-|       2        |                        Utente: Seleziona un network, un gateway e un sensore                         |
-|       3        |                        Sistema: Verifica l'esistenza delle entità selezionate                        |
-|       4        |                                 INCLUDE Calcolo statistiche (UC...)                                  |
-|       5        |                             Sistema: Recupera le misurazioni del sensore                             |
-|       6        |        Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network         |
-|       2        |                    Utente: Seleziona i filtri di interesse (intervallo di tempo)                     |
-|       3        |                           Sistema: Verifica il formato delle date di tempo                           |
-|       5        |                                 INCLUDE Calcolo statistiche (UC...)                                  |
-|       6        |                             Sistema: Recupera le misurazioni del sensore                             |
-|       8        | Sistema: Restituisce le misurazioni e statistiche del sensore appartenente secondo i filtri indicati |
-|       8        |               Utente: Richiede la visualizzazione dei timestamp con fuso orario locale               |
-|       9        |          Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente           |
-|       10       |       Sistema: Restituisce le misurazioni e statistiche del sensore secondo i filtri indicati        |
+| Scenario 26.2  |       Visualizzazione filtrata misurazioni di uno specifico sensore `(Code 200)`        |
+| :------------: | :-------------------------------------------------------------------------------------: |
+|  Precondition  |             L’utente ha accesso alla sezione "Visualizzazione Misurazioni"              |
+| Post condition |                             Le misurazioni vengono mostrate                             |
+|     Step#      |                                       Descrizione                                       |
+|       1        |            Utente: Accede alla sezione di visualizzazione delle misurazioni             |
+|       2        |                  Utente: Seleziona un network, un gateway e un sensore                  |
+|       3        |                 Sistema: Verifica l'esistenza delle entità selezionate                  |
+|       4        |                      Sistema: Recupera le misurazioni del sensore                       |
+|       5        |                           INCLUDE Calcolo statistiche (UC...)                           |
+|       6        |                       Sistema: identifica le misurazioni outlier                        |
+|       7        |  Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network  |
+|       8        |              Utente: Seleziona i filtri di interesse (intervallo di tempo)              |
+|       9        |                    Sistema: Verifica il formato delle date di tempo                     |
+|       10       |                      Sistema: Recupera le misurazioni del sensore                       |
+|       11       |                           INCLUDE Calcolo statistiche (UC...)                           |
+|       12       |                       Sistema: identifica le misurazioni outlier                        |
+|       13       | Sistema: Restituisce le misurazioni e statistiche del sensore secondo i filtri indicati |
+|       14       |        Utente: Richiede la visualizzazione dei timestamp con fuso orario locale         |
+|       15       |    Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente    |
+|       16       | Sistema: Restituisce le misurazioni e statistiche del sensore secondo i filtri indicati |
 
 #### Scenario 26.3
 
@@ -807,9 +815,10 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        |                 Utente: Accede alla sezione di visualizzazione delle misurazioni                 |
 |       2        |                      Utente: Seleziona un network, un gateway e un sensore                       |
 |       3        |                      Sistema: Verifica l'esistenza delle entità selezionate                      |
-|       4        |                               INCLUDE Calcolo statistiche (UC...)                                |
-|       5        |                           Sistema: Recupera le misurazioni del sensore                           |
-|       6        |      Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network       |
+|       4        |                           Sistema: Recupera le misurazioni del sensore                           |
+|       5        |                               INCLUDE Calcolo statistiche (UC...)                                |
+|       6        |                            Sistema: identifica le misurazioni outlier                            |
+|       7        |                  Sistema: Restituisce le misurazioni e statistiche del sensore                   |
 |       8        |             Utente: Richiede la visualizzazione dei timestamp con fuso orario locale             |
 |       9        |        Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente         |
 |       10       | Sistema: Restituisce le misurazioni e statistiche del sensore con fuso orario locale dell'utente |
@@ -845,11 +854,11 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 | Post condition |                                                    Misurazione inserita                                                     |
 |     Step#      |                                                         Descrizione                                                         |
 |       1        |                                Utente: Accede alla sezione di inserimento della misurazione                                 |
-|       4        |                 Utente: Seleziona un network, un gateway e un sensore e inserisce i dati della misurazione                  |
-|       5        |           Sistema: Controlla che i dati immessi corrispondano a network, gateway e sensori esistenti e associati            |
-|       6        | Sistema: Controlla che il valore della misurazione rientri tra i valori del dominio e che il timestamp abbia formato valido |
-|       7        |                                              Sistema: Memorizza la misurazione                                              |
-|       8        |                                     Sistema: mostra a schermo un messaggio di successo                                      |
+|       2        |                 Utente: Seleziona un network, un gateway e un sensore e inserisce i dati della misurazione                  |
+|       3        |           Sistema: Controlla che i dati immessi corrispondano a network, gateway e sensori esistenti e associati            |
+|       4        | Sistema: Controlla che il valore della misurazione rientri tra i valori del dominio e che il timestamp abbia formato valido |
+|       5        |                                              Sistema: Memorizza la misurazione                                              |
+|       6        |                                     Sistema: mostra a schermo un messaggio di successo                                      |
 
 ### Scenario 27.2
 
