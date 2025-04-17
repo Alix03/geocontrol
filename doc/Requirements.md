@@ -40,7 +40,7 @@ GeoControl is a software system designed for monitoring physical and environment
 
 # Business Model
 
-Per rendere il sistema sostenibile e scalabile, la soluzione scelta è stata quella di combinare Public-Private Partnership (PPP), SaaS e Vendita Diretta.
+Per rendere il sistema sostenibile e scalabile, la soluzione scelta è stata quella di combinare Public-Private Partnership (PPP), SaaS(Software as a Service) e Vendita Diretta.
 In questo modo, si copre il finanziamento iniziale con fondi pubblici e si garantiscono entrate continue con il SaaS, lasciando ai clienti la scelta tra acquistare o noleggiare i sensori.
 
 1 Fase Iniziale: Finanziamento Pubblico (PPP)
@@ -72,12 +72,9 @@ I clienti pagano un abbonamento che include l’acquisizione dei sensori e gatew
 
 ![Context diagram](./images/Context.png)
 
-Admin e operator appartengono al Geocontrol Office.
-I viewer rappresentano i clienti che usufruiscono del servizio(UNCEM Piemonte, entità pubbliche e private)
+Admin e operator e viewer rappresentano i clienti che usufruiscono del servizio(UNCEM Piemonte, entità pubbliche e private) offerto dal software.
 
 ## Interfaces
-
-\<describe here each interface in the context diagram>
 
 |         Actor         |                Logical Interface                |                Physical Interface                 |
 | :-------------------: | :---------------------------------------------: | :-----------------------------------------------: |
