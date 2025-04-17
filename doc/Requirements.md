@@ -86,16 +86,15 @@ Admin e operator e viewer rappresentano i clienti che usufruiscono del servizio(
 
 # Stories and personas
 
-Persona1: lavoratore presso UNCEM, laureato in geologia, 35.
+Persona1: lavoratore presso UNCEM, laureato in geologia, 35.<br>
 Storia: Lavora presso UNCEM e utilizza GeoControl per monitorare il rischio idrogeologico nelle valli alpine. Necessita dati costantemente aggiornati per il monitoraggio dei corsi d'acqua.
 
-Persona2: storica d'arte, lavora presso una fondazione privata che si occupa della conservazione di edifici storici.
-Storia: Necessita di segnalazioni occasionali ma tempestive in caso di anomalie strutturali che superino dei valori di soglia.
+Persona2: storica d'arte, lavora presso una fondazione privata che si occupa della conservazione di edifici storici.<br>Storia: Necessita di segnalazioni occasionali ma tempestive in caso di anomalie strutturali che superino dei valori di soglia.
 
-Persona3: tecnico del Comune.
+Persona3: tecnico del Comune.<br>
 Storia: Usufruisce dei servizi per monitorare il funzionamento dell'illuminazione pubblica. Non ha esperienze pregresse riguardo l'utilizzo di apparati informatici; ha bisogno di un'interfaccia intuitiva e semplice da utilizzare.
 
-Persona4: lavoratore presso un'azienda agricola.
+Persona4: lavoratore presso un'azienda agricola.<br>
 Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, umidità e illuminazione per le serre. Uitlizza un server, che riceve i dati da GeoControl via API
 
 # Functional and non functional requirements
@@ -275,7 +274,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Precondition  |              Almeno un utente è registrato nel sistema                        |
 | Post condition |                           Account utente eliminato                            |
 |     Step#      |                                  Descrizione                                  |
-|       1        |               Admin: Clicca il pulsante di eliminazione accuont               |
+|       1        |               Admin: Clicca il pulsante di eliminazione account               |
 |       2        |       Sistema: Verifica la presenza di un token valido nella richiesta        |
 |       3        |                     Sistema: Rileva che il token è valido                     |
 |       4        |                          Sistema: Chiede `username`                           |
@@ -356,7 +355,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |   Precondition   |          L'utente è autenticato con token come Admin o Operator           |
 |  Post condition  |                       La rete è creata nel sistema                        |
 | Nominal Scenario |                               Scenario 10.1                               |
-|     Variants     |                                   None                                    |
+|     Variants     |                                   Nessuna                                   |
 |    Exceptions    | Scenario 10.2, Scenario 10.3, Scenario 10.4, Scenario 10.5, Scenario 10.6 |
 
 #### Scenario 10.1
