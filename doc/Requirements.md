@@ -162,8 +162,6 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 ## Non Functional Requirements
 
-\<Describe constraints on functional requirements>
-
 |  ID  | Type (efficiency, reliability, ..) |                                                                         Description                                                                          | Refers to |
 | :--: | :--------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------: |
 | NFR1 |            Affidabilità            |                                                     Non più di 6 misurazioni perse per sensore all’anno                                                      |    FR3    |
@@ -347,15 +345,15 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       5        |    Sistema: Recupera dal database l'account utente richiesto     |
 |       6        |       Sistema: mostra a schermo l'account utente richiesto       |
 
-### Use Case 10, Creazione Network (UC10)
+### Use Case 10, Creazione Network (FR2.1.2)
 
 | Actors Involved  |                              Admin, Operator                              |
 | :--------------: | :-----------------------------------------------------------------------: |
 |   Precondition   |          L'utente è autenticato con token come Admin o Operator           |
 |  Post condition  |                       La rete è creata nel sistema                        |
 | Nominal Scenario |                               Scenario 10.1                               |
-|     Variants     |                                  Nessuna                                  |
-|    Exceptions    | Scenario 10.2, Scenario 10.3, Scenario 10.4, Scenario 10.5, Scenario 10.6 |
+|     Variants     |                                   None                                    |
+|    Exceptions    |  Scenario 10.2, UCE400, UCE401, UCE403, UCE500        |
 
 #### Scenario 10.1
 
@@ -366,49 +364,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |     Step#      |                                                                             Description                                                                              |
 |       1        |                                                     Utente: Accede alla sezione "Gestione Reti" dell’interfaccia                                                     |
 |       2        |                                                                 Utente: Seleziona "Crea nuova rete"                                                                  |
-|       3        | Utente: Inserisce `code`, `name`, `description` nel modulo (es. NET01, Alp Monitor, ...). Eventuali campi annidati Gateway o Sensor, se presenti, verranno ignorati. |
+|       3        | Utente: Inserisce `code`, `name`, `description` nel modulo. Eventuali campi annidati Gateway o Sensor, se presenti, verranno ignorati. |
 |       4        |                                                                 Utente: invia il modulo di creazione                                                                 |
 |       5        |                                            Sistema: Valida i dati, registra la rete e restituisce il codice `201 Created`                                            |
 
 #### Scenario 10.2
 
-| Scenario 10.2  |                               Dati mancanti o input non valido `(400 BadRequest)`                                |
-| :------------: | :--------------------------------------------------------------------------------------------------------------: |
-|  Precondition  |                          L'utente è autenticato ma il modulo è incompleto o malformato                           |
-| Post condition |                                            Nessuna rete viene creata                                             |
-|     Step#      |                                                   Description                                                    |
-|       1        |          L’utente omette uno o più campi obbligatori (ad esempio `code`) o inserisce valori non validi           |
-|       2        |                                      L'utente invia il modulo di creazione                                       |
-|       3        | Il sistema valida i dati, rileva la mancanza del campo `code` e restituisce il codice di errore `400 BadRequest` |
-
-#### Scenario 10.3
-
-| Scenario 10.3  |                  Token assente o non valido `(401 UnauthorizedError)`                   |
-| :------------: | :-------------------------------------------------------------------------------------: |
-|  Precondition  |   L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato   |
-| Post condition |                                Nessuna rete viene creata                                |
-|     Step#      |                                       Description                                       |
-|       1        |               L'utente tenta di inviare una richiesta per creare una rete               |
-|       2        | La richiesta è priva di header `Authorization` oppure il token ha un formato non valido |
-|       3        |      Il sistema intercetta la richiesta, verifica il token e lo considera invalido      |
-|       4        |           Il sistema restituisce il codice di errore `401 UnauthorizedError`            |
-
-#### Scenario 10.4
-
-| Scenario 10.4  |              Ruolo non autorizzato `(403 InsufficientRightsError)`               |
-| :------------: | :------------------------------------------------------------------------------: |
-|  Precondition  |   L'utente è autenticato correttamente con un token valido, ma ha ruolo Viewer   |
-| Post condition |                            Nessuna rete viene creata                             |
-|     Step#      |                                   Description                                    |
-|       1        |  L'utente accede all’interfaccia come Viewer e apre il modulo “Crea nuova rete”  |
-|       2        | L'utente compila i campi e invia la richiesta per la creazione di una nuova rete |
-|       3        |                    Il sistema verifica che il token è valido                     |
-|       4        |      Il sistema controlla il ruolo utente e rileva i permessi insufficienti      |
-|       5        |    Il sistema restituisce il codice di errore `(403 InsufficientRightsError)`    |
-
-#### Scenario 10.5
-
-| Scenario 10.5  |                             Codice rete già esistente `(409 ConflictError)`                              |
+| Scenario 10.2  |                             Codice rete già esistente `(409 ConflictError)`                              |
 | :------------: | :------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                      L'utente è autenticato, ma il codice inserito è già registrato                      |
 | Post condition |                                        Nessuna rete viene creata                                         |
@@ -417,18 +379,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                                  L'utente invia il modulo di creazione                                   |
 |       3        | Il sistema valida i dati, rileva la duplicazione e restituisce il codice di errore `(409 ConflictError)` |
 
-#### Scenario 10.6
-
-| Scenario 10.6  |                Errore interno del server `(500 InternalServerError)`                |
-| :------------: | :---------------------------------------------------------------------------------: |
-|  Precondition  |        L’utente è autenticato, ma si verifica un errore inatteso lato server        |
-| Post condition |                              Nessuna rete viene creata                              |
-|     Step#      |                                     Description                                     |
-|       1        |            L'utente compila il modulo correttamente e invia la richiesta            |
-|       2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server |
-|       3        |       Il sistema restituisce il codice di errore `(500 InternalServerError)`        |
-
-### Use Case 11, Modifica Network (UC11)
+### Use Case 11, Modifica Network (FR2.1.2)
 
 | Actors Involved  |                                     Admin, Operator                                      |
 | :--------------: | :--------------------------------------------------------------------------------------: |
@@ -436,7 +387,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |                           La rete viene aggiornata nel sistema                           |
 | Nominal Scenario |                                      Scenario 11.1                                       |
 |     Variants     |                                           None                                           |
-|    Exceptions    | Scenario 11.2, Scenario 11.3, Scenario 11.4, Scenario 11.5, Scenario 11.6, Scenario 11.7 |
+|    Exceptions    |  Scenario 11.2, Scenario 11.3, UCE400, UCE401, UCE403, UCE500                            |
 
 #### Scenario 11.1
 
@@ -447,47 +398,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |     Step#      |                                                                  Description                                                                   |
 |       1        |                                         L'utente accede alla sezione "Gestione Reti" dell’interfaccia                                          |
 |       2        |                                                   L'utente seleziona una rete da modificare                                                    |
-|       3        | L'utente modifica i campi `code`, `name`, `description` nel modulo.Eventuali campi annidati Gateway o Sensor vengono ignorati e non aggiornati |
+|       3        | L'utente modifica i campi `code`, `name`, `description` nel modulo. Eventuali campi annidati Gateway o Sensor vengono ignorati e non aggiornati |
 |       4        |                                                L'utente invia il modulo di modifica della rete                                                 |
 |       5        |                              Il sistema valida i dati, aggiorna la rete e restituisce il codice `204 No Content`                               |
 
 #### Scenario 11.2
 
-| Scenario 11.2  |           Dati mancanti o input non valido `(400 BadRequest)`            |
-| :------------: | :----------------------------------------------------------------------: |
-|  Precondition  |      L'utente è autenticato ma il modulo è incompleto o malformato       |
-| Post condition |                     Nessuna modifica viene applicata                     |
-|     Step#      |                               Description                                |
-|       1        |               L'utente omette uno o più campi obbligatori                |
-|       2        |            L'utente invia la richiesta di modifica della rete            |
-|       3        | Il sistema valida i dati, rileva l’errore e restituisce `400 BadRequest` |
-
-#### Scenario 11.3
-
-| Scenario 11.3  |                 Token assente o non valido `(401 UnauthorizedError)`                 |
-| :------------: | :----------------------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato  |
-| Post condition |                           Nessuna modifica viene applicata                           |
-|     Step#      |                                     Description                                      |
-|       1        | L'utente tenta di inviare una richiesta di modifica della rete senza un token valido |
-|       2        |    Il sistema intercetta la richiesta, verifica il token e lo considera invalido     |
-|       3        |          Il sistema restituisce il codice di errore `401 UnauthorizedError`          |
-
-#### Scenario 11.4
-
-| Scenario 11.4  |          Ruolo non autorizzato `(403 InsufficientRightsError)`           |
-| :------------: | :----------------------------------------------------------------------: |
-|  Precondition  |       L'utente è autenticato con token valido, ma ha ruolo Viewer        |
-| Post condition |                     Nessuna modifica viene applicata                     |
-|     Step#      |                               Description                                |
-|       1        |              L'utente Viewer apre la sezione modifica rete               |
-|       2        |       L'utente compila e invia la richiesta di modifica della rete       |
-|       3        | Il sistema verifica il token e il ruolo, rileva i permessi insufficienti |
-|       4        | Il sistema restituisce il codice di errore `403 InsufficientRightsError` |
-
-#### Scenario 11.5
-
-| Scenario 11.5  |                Rete non trovata `(404 NotFoundError)`                 |
+| Scenario 11.2  |                Rete non trovata `(404 NotFoundError)`                 |
 | :------------: | :-------------------------------------------------------------------: |
 |  Precondition  |      L’utente inserisce un codice rete non esistente nel sistema      |
 | Post condition |                   Nessuna modifica viene applicata                    |
@@ -495,9 +412,9 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        |         L'utente seleziona o inserisce un codice rete errato          |
 |       2        | Il sistema non trova la rete e restituisce errore `404 NotFoundError` |
 
-#### Scenario 11.6
+#### Scenario 11.3
 
-| Scenario 11.6  |             Codice rete già esistente `(409 ConflictError)`              |
+| Scenario 11.3  |             Codice rete già esistente `(409 ConflictError)`              |
 | :------------: | :----------------------------------------------------------------------: |
 |  Precondition  |       L’utente modifica il codice della rete con uno già esistente       |
 | Post condition |                     Nessuna modifica viene applicata                     |
@@ -505,18 +422,8 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | L'utente inserisce un nuovo `code` che identifica una rete già esistente |
 |       2        | Il sistema rileva il conflitto e restituisce errore `409 ConflictError`  |
 
-#### Scenario 11.7
 
-| Scenario 11.7  |                Errore interno del server `(500 InternalServerError)`                 |
-| :------------: | :----------------------------------------------------------------------------------: |
-|  Precondition  |        L’utente è autenticato, ma si verifica un errore inatteso lato server         |
-| Post condition |                           Nessuna modifica viene applicata                           |
-|     Step#      |                                     Description                                      |
-|       1        | L'utente compila correttamente il modulo e invia la richiesta di modifica della rete |
-|       2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server  |
-|       3        |        Il sistema restituisce il codice di errore `(500 InternalServerError)`        |
-
-### Use Case 12, Eliminazione Network (UC12)
+### Use Case 12, Eliminazione Network (FR2.1.3)
 
 | Actors Involved  |                      Admin, Operator                       |
 | :--------------: | :--------------------------------------------------------: |
@@ -524,7 +431,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  |            La rete viene eliminata dal sistema             |
 | Nominal Scenario |                       Scenario 12.1                        |
 |     Variants     |                            None                            |
-|    Exceptions    | Scenario 12.2, Scenario 12.3, Scenario 12.4, Scenario 12.5 |
+|    Exceptions    |  Scenario 12.2, UCE401, UCE403, UCE500                     |
 
 #### Scenario 12.1
 
@@ -540,29 +447,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 12.2
 
-| Scenario 12.2  |                Token assente o non valido `(401 UnauthorizedError)`                 |
-| :------------: | :---------------------------------------------------------------------------------: |
-|  Precondition  | L'utente non ha effettuato il login oppure il token è assente, scaduto o malformato |
-| Post condition |                            Nessuna rete viene eliminata                             |
-|     Step#      |                                     Description                                     |
-|       1        | L'utente invia la richiesta di eliminazione senza un header `Authorization` valido  |
-|       2        |                Il sistema verifica il token e lo considera invalido                 |
-|       3        |              Il sistema restituisce il codice `401 UnauthorizedError`               |
-
-#### Scenario 12.3
-
-| Scenario 12.3  |          Ruolo non autorizzato `(403 InsufficientRightsError)`           |
-| :------------: | :----------------------------------------------------------------------: |
-|  Precondition  |       L'utente è autenticato con token valido, ma ha ruolo Viewer        |
-| Post condition |                       Nessuna rete viene eliminata                       |
-|     Step#      |                               Description                                |
-|       1        |               L'utente Viewer tenta di eliminare una rete                |
-|       2        |   Il sistema verifica il ruolo utente e rileva permessi insufficienti    |
-|       3        | Il sistema restituisce il codice di errore `403 InsufficientRightsError` |
-
-#### Scenario 12.4
-
-| Scenario 12.4  |                     Rete non trovata `(404 NotFoundError)`                     |
+| Scenario 12.2  |                     Rete non trovata `(404 NotFoundError)`                     |
 | :------------: | :----------------------------------------------------------------------------: |
 |  Precondition  |               L’utente specifica un `networkCode` non esistente                |
 | Post condition |                          Nessuna rete viene eliminata                          |
@@ -570,18 +455,9 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | L'utente invia la richiesta DELETE con un codice rete non presente nel sistema |
 |       2        |     Il sistema non trova la rete e restituisce errore `404 NotFoundError`      |
 
-#### Scenario 12.5
 
-| Scenario 12.5  |                Errore interno del server `(500 InternalServerError)`                |
-| :------------: | :---------------------------------------------------------------------------------: |
-|  Precondition  |        L’utente è autenticato, ma si verifica un errore inatteso lato server        |
-| Post condition |                            Nessuna rete viene eliminata                             |
-|     Step#      |                                     Description                                     |
-|       1        |                 L'utente invia una richiesta valida di eliminazione                 |
-|       2        | Durante l'elaborazione della richiesta si verifica un errore imprevisto lato server |
-|       3        |        Il sistema restituisce il codice di errore `500 InternalServerError`         |
 
-### Use Case 13, Visualizzazione di tutti i Network (UC13)
+### Use Case 13, Visualizzazione di tutti i Network (FR2.1.4)
 
 | Actors Involved  |             Admin, Operator, Viewer             |
 | :--------------: | :---------------------------------------------: |
@@ -589,7 +465,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | L'elenco delle reti viene restituito all’utente |
 | Nominal Scenario |                  Scenario 13.1                  |
 |     Variants     |                      None                       |
-|    Exceptions    |          Scenario 13.2, Scenario 13.3           |
+|    Exceptions    |          UCE401, UCE500                         |
 
 #### Scenario 13.1
 
@@ -602,29 +478,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                         Il sistema valida il token                          |
 |       3        |       Il sistema restituisce la lista delle reti con codice `200 OK`        |
 
-#### Scenario 13.2
-
-| Scenario 13.2  |      Token assente o non valido `(401 UnauthorizedError)`       |
-| :------------: | :-------------------------------------------------------------: |
-|  Precondition  |  L'utente non ha effettuato il login o ha un token non valido   |
-| Post condition |                 Nessuna lista viene restituita                  |
-|     Step#      |                           Description                           |
-|       1        | L'utente invia la richiesta senza header `Authorization` valido |
-|       2        | Il sistema rileva che il token è assente, scaduto o malformato  |
-|       3        |      Il sistema restituisce errore `401 UnauthorizedError`      |
-
-#### Scenario 13.3
-
-| Scenario 13.3  |        Errore interno del server `(500 InternalServerError)`         |
-| :------------: | :------------------------------------------------------------------: |
-|  Precondition  |     L'utente è autenticato, ma si verifica un errore imprevisto      |
-| Post condition |                    Nessuna lista viene restituita                    |
-|     Step#      |                             Description                              |
-|       1        |     L'utente invia una richiesta valida per la lista delle reti      |
-|       2        |    Il sistema riscontra un errore interno durante l'elaborazione     |
-|       3        | Il sistema restituisce il codice di errore `500 InternalServerError` |
-
-### Use Case 14, Visualizzazione di un Network specifico (UC14)
+### Use Case 14, Visualizzazione di un Network specifico (FR2.1.4.1)
 
 | Actors Involved  |               Admin, Operator, Viewer               |
 | :--------------: | :-------------------------------------------------: |
@@ -632,7 +486,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |  Post condition  | I dettagli della rete vengono restituiti all’utente |
 | Nominal Scenario |                    Scenario 14.1                    |
 |     Variants     |                        None                         |
-|    Exceptions    |     Scenario 14.2, Scenario 14.3, Scenario 14.4     |
+|    Exceptions    |      Scenario 14.2, UCE401, UCE500                  |
 
 #### Scenario 14.1
 
@@ -648,18 +502,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 14.2
 
-| Scenario 14.2  |      Token assente o non valido `(401 UnauthorizedError)`       |
-| :------------: | :-------------------------------------------------------------: |
-|  Precondition  |  L'utente non ha effettuato il login o ha un token non valido   |
-| Post condition |                  Nessuna rete viene restituita                  |
-|     Step#      |                           Description                           |
-|       1        | L'utente invia la richiesta senza header `Authorization` valido |
-|       2        | Il sistema rileva che il token è assente, scaduto o malformato  |
-|       3        |      Il sistema restituisce errore `401 UnauthorizedError`      |
-
-#### Scenario 14.3
-
-| Scenario 14.3  |               Rete non trovata `(404 NotFoundError)`                |
+| Scenario 14.2  |               Rete non trovata `(404 NotFoundError)`                |
 | :------------: | :-----------------------------------------------------------------: |
 |  Precondition  |     Il `networkCode` specificato non corrisponde ad alcuna rete     |
 | Post condition |                    Nessuna rete viene restituita                    |
@@ -668,16 +511,369 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |          Il sistema non trova alcuna rete con quel codice           |
 |       3        |          Il sistema restituisce errore `404 NotFoundError`          |
 
-#### Scenario 14.4
+### Use Case 15, Creazione Gateway (FR2.2.1)
 
-| Scenario 14.4  |     Errore interno del server `(500 InternalServerError)`      |
-| :------------: | :------------------------------------------------------------: |
-|  Precondition  |  L’utente è autenticato, ma si verifica un errore lato server  |
-| Post condition |                 Nessuna rete viene restituita                  |
-|     Step#      |                          Description                           |
-|       1        | L'utente invia una richiesta valida per il recupero della rete |
-|       2        |        Il sistema riscontra un errore interno inatteso         |
-|       3        |    Il sistema restituisce errore `500 InternalServerError`     |
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator |
+|  Post condition  |            Il gateway viene creato nel sistema            |
+| Nominal Scenario |                  Scenario 15.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    |  Scenario 15.2, Scenario 15.3, UCE400, UCE401, UCE403, UCE500 |
+
+#### Scenario 15.1
+
+| Scenario 15.1  |                                    Creazione gateway con successo `(201 Created)`                                      |
+| :------------: | :--------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                    L’utente è autenticato come Admin o Operator                                        |
+| Post condition |                                 Il gateway viene creato e risulta visibile nel sistema                                 |
+|     Step#      |                                                   Description                                                          |
+|       1        |                         Utente: Accede alla sezione "Reti" e seleziona la rete di interesse                            |
+|       2        |                                     Utente: seleziona "Crea nuovo gateway"                                             |
+|       3        | Utente: Compila i campi `macAddress`, `name`, `description`                                                            |
+|       4        |                                         Utente: Invia la richiesta di creazione                                        |
+|       5        |                  Sistema: Valida i dati, registra il gateway e restituisce il codice `201 Created`                     |
+
+#### Scenario 15.2
+
+| Scenario 15.2  |             Network non trovato `(404 NotFoundError)`             |
+| :------------: | :--------------------------------------------------------------: |
+|  Precondition  | L’utente fa una richiesta di creazione su un `networkCode` inesistente |
+| Post condition |                  Nessun gateway viene creato                     |
+|     Step#      |                           Description                            |
+|       1        |Utente: Seleziona un `networkCode` non presente nel sistema     |
+|       2        | Sistema: Non trova la rete e restituisce `404 NotFoundError`   |
+
+#### Scenario 15.3
+
+| Scenario 15.3  |            MAC address già esistente `(409 ConflictError)`           |
+| :------------: | :-----------------------------------------------------------------: |
+|  Precondition  | L’utente inserisce un `macAddress` gateway già presente nel sistema |
+| Post condition |                  Nessun gateway viene creato                        |
+|     Step#      |                             Description                            |
+|       1        |   Utente: Compila il modulo con un `macAddress` associato già ad un Gateway esistente         |
+|       2        | Sistema: Valida i dati, rileva la duplicazione e riporta un errore `(409 ConflictError)` |
+
+
+### Use Case 16, Modifica Gateway (FR2.2.2)
+
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator |
+|  Post condition  |            Il gateway viene aggiornato nel sistema            |
+| Nominal Scenario |                  Scenario 16.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    |  Scenario 16.2, Scenario 16.3, UCE400, UCE401, UCE403, UCE500 |
+
+#### Scenario 16.1
+
+| Scenario 16.1  |                                    Modifica gateway con successo `(204 No Content)`                                    |
+| :------------: | :----------------------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                     L’utente è autenticato come Admin o Operator                                        |
+| Post condition |                            Il gateway viene aggiornato ed è visibile con i dati aggiornati                              |
+|     Step#      |                                                       Description                                                        |
+|       1        | Utente: Accede all’elenco dei gateway associati a una determinata rete               |
+|       2        | Utente: Seleziona un gateway esistente e sceglie l’opzione "Modifica gateway".                                          |
+|       3        | Utente: Aggiorna i campi `macAddress`, `name`, `description` |
+|       4        | Utente: Invia la richiesta di modifica con i dati aggiornati.                                                   |
+|       5        | Sistema: Valida i dati, aggiorna il gateway e restituisce il codice `204 No Content`.                                   |
+
+#### Scenario 16.2
+
+| Scenario 16.2  |           Network/Gateway non trovato `(404 NotFoundError)`            |
+| :------------: | :--------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode` o il `gatewayMac` specificati non esistono nel sistema |
+| Post condition |                 Nessuna modifica viene applicata                       |
+|     Step#      |                                  Description                           |
+|       1        |   Utente: Seleziona o inserisce un `networkCode` e/o `gatewayMac` inesistenti.  |
+|       2        |   Sistema: Non trova l’elemento corrispondente e restituisce `404 NotFoundError`. |
+
+#### Scenario 16.3
+
+| Scenario 16.3  |            MAC address già esistente `(409 ConflictError)`           |
+| :------------: | :-----------------------------------------------------------------: |
+|  Precondition  | L’utente aggiorna il `macAddress` del gateway con uno già presente nel sistema |
+| Post condition |                  Nessun aggiornamento viene applicato               |
+|     Step#      |                             Description                             |
+|       1        |   Utente: Inserisce nella richiesta un `macAddress` associato a un altro Gateway    |
+|       2        |   Sistema: Rileva il conflitto e restituisce `409 ConflictError`.   |
+
+
+### Use Case 17, Eliminazione Gateway (FR2.2.3)
+
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator |
+|  Post condition  |            Il gateway viene eliminato dal sistema            |
+| Nominal Scenario |                  Scenario 17.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    |  Scenario 17.2, UCE401, UCE403, UCE500 |
+
+#### Scenario 17.1
+
+| Scenario 17.1  |                           Eliminazione gateway con successo `(204 No Content)`                            |
+| :------------: | :-------------------------------------------------------------------------------------------------------: |
+|  Precondition  |              L'utente è autenticato come Admin o Operator e il gateway esiste nel sistema                |
+| Post condition |                    Il gateway viene eliminato e non risulta più presente nel sistema               |
+|     Step#      |                                              Description                                                 |
+|       1        | Utente: Accede alla sezione "Gestione Gateway" e seleziona un gateway da eliminare.      |
+|       2        | Utente: Esegue l'azione di eliminazione confermando la rimozione.                               |
+|       3        | Sistema: Verifica il `networkCode` e il `gatewayMac`, procede all'eliminazione e restituisce `204 No Content`. |
+
+#### Scenario 17.2
+
+| Scenario 17.2  |               Network/Gateway non trovato `(404 NotFoundError)`               |
+| :------------: | :--------------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode` o il `gatewayMac` specificati non esistono nel sistema       |
+| Post condition |                        Nessun gateway viene eliminato                         |
+|     Step#      |                                 Description                                   |
+|       1        | Utente: Seleziona un `networkCode` o un `gatewayMac` inesistente             |
+|       2        | Sistema: Non trova il gateway e restituisce `404 NotFoundError`              |
+
+### Use Case 18, Visualizzazione di un Gateway specifico (FR2.2.4)
+
+| Actors Involved  |            Admin, Operator, Viewer            |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   |       L'utente è autenticato con token valido |
+|  Post condition  |      Il gateway viene visualizzato            |
+| Nominal Scenario |                 Scenario 18.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    | Scenario 18.2,  UCE401, UCE500          |
+
+#### Scenario 18.1
+
+| Scenario 18.1  |                   Visualizzazione gateway con successo `(200 OK)`                   |
+| :------------: | :---------------------------------------------------------------------------------: |
+|  Precondition  |         L'utente è autenticato come Admin, Operator o Viewer con token valido          |
+| Post condition |         Il sistema restituisce i dettagli del gateway con codice `200 OK`           |
+|     Step#      |                                      Description                                    |
+|       1        | Utente: Accede all’interfaccia di gestione e seleziona la rete di interesse |
+|       2        | Utente: Visualizza l’elenco dei gateway di quella rete e sceglie quello desiderato  |
+|       3        | Utente: Invia una richiesta per visualizzare il gateway specifico                   |
+|       4        | Sistema: Riceve la richiesta, verifica il token, recupera il gateway e restituisce un payload con `200 OK` |
+
+#### Scenario 18.2
+
+| Scenario 18.2  |           Network/Gateway non trovato `(404 NotFoundError)`            |
+| :------------: | :--------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode` o il `gatewayMac` specificati non esistono nel sistema |
+| Post condition |                   Nessun gateway viene restituito                      |
+|     Step#      |                                Description                             |
+|       1        | Utente: Effettua la richiesta GET con un `networkCode` o `gatewayMac` inesistente |
+|       2        | Sistema: Non trova il gateway e restituisce `404 NotFoundError`        |
+
+
+### Use Case 19, Visualizzazione di tutti i Gateway associati a un Network specifico (FR2.2.4.1)
+
+| Actors Involved  |                Admin, Operator, Viewer                |
+| :--------------: | :---------------------------------------------------: |
+|   Precondition   |  L'utente è autenticato con token valido (qualsiasi ruolo) |
+|  Post condition  | Viene mostrata la lista dei Gateway appartenenti alla rete richiesta |
+| Nominal Scenario |                    Scenario 19.1                       |
+|     Variants     |                         None                          |
+|    Exceptions    |  Scenario 19.2, UCE401, UCE500                  |
+
+#### Scenario 19.1
+
+| Scenario 19.1  |          Recupero elenco gateway con successo `(200 OK)`          |
+| :------------: | :--------------------------------------------------------------: |
+|  Precondition  |  L'utente è autenticato (Admin, Operator o Viewer) con token valido |
+| Post condition |     Il sistema restituisce una lista (anche vuota) di gateway     |
+|     Step#      |                           Description                            |
+|       1        | Utente: Accede alla sezione "Reti" e seleziona la rete di interesse |
+|       2        | Utente: Sceglie l’operazione "Visualizza gateway" per la rete selezionata |
+|       3        | Utente: Invia una richiesta GET a `/networks/{networkCode}/gateways` |
+|       4        | Sistema: Verifica il token, recupera i gateway associati alla rete e ritorna `200 OK` con la lista |
+
+#### Scenario 19.2
+
+| Scenario 19.2  |          Network non trovato `(404 NotFoundError)`          |
+| :------------: | :---------------------------------------------------------: |
+|  Precondition  | L'utente specifica un `networkCode` inesistente nel sistema |
+| Post condition |         Nessun elenco di gateway viene restituito           |
+|     Step#      |                           Description                       |
+|       1        | Utente: Seleziona o inserisce un `networkCode` non presente nel sistema |
+|       2        | Sistema: Non trova la rete e restituisce `404 NotFoundError` |
+
+### Use Case 20, Creazione Sensore (FR2.3.1)
+
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator |
+|  Post condition  |            Il sensore viene creato nel sistema           |
+| Nominal Scenario |                  Scenario 20.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    |  Scenario 20.2, Scenario 20.3, UCE400, UCE401, UCE403, UCE500 |
+
+#### Scenario 20.1
+
+| Scenario 20.1  |                                 Creazione sensore con successo `(201 Created)`                                |
+| :------------: | :-----------------------------------------------------------------------------------------------------------: |
+|  Precondition  |                                    L’utente è autenticato come Admin o Operator                              |
+| Post condition |                                   Il sensore viene creato e risulta visibile nel sistema                     |
+|     Step#      |                                                    Description                                               |
+|       1        | Utente: Accede alla sezione "Gestione Gateway" per il gateway di interesse          |
+|       2        | Utente: Seleziona "Crea nuovo sensore"                                                                      |
+|       3        | Utente: Compila i campi `macAddress`, `name`, `description`, `variable`, `unit`  |
+|       4        | Utente: Invia la richiesta di creazione POST a `/networks/{networkCode}/gateways/{gatewayMac}/sensors`     |
+|       5        | Sistema: Valida i dati, registra il nuovo sensore e restituisce il codice `201 Created`                      |
+
+#### Scenario 20.2
+
+| Scenario 20.2  |               Network/Gateway non trovato `(404 NotFoundError)`                |
+| :------------: | :---------------------------------------------------------------------------: |
+|  Precondition  | L’utente fa una richiesta di creazione su un `networkCode` o `gatewayMac` inesistente |
+| Post condition |                          Nessun sensore viene creato                           |
+|     Step#      |                                  Description                                   |
+|       1        | Utente: Seleziona un `networkCode` o un `gatewayMac` non presente nel sistema  |
+|       2        | Sistema: Non trova gli elementi corrispondenti e restituisce `404 NotFoundError` |
+
+#### Scenario 20.3
+
+| Scenario 20.3  |           MAC address già esistente `(409 ConflictError)`            |
+| :------------: | :-----------------------------------------------------------------: |
+|  Precondition  | L’utente inserisce un `macAddress` già presente come sensore nel sistema |
+| Post condition |                  Nessun sensore viene creato                        |
+|     Step#      |                             Description                            |
+|       1        | Utente: Compila il modulo con un `macAddress` già registrato per un sensore esistente |
+|       2        | Sistema: Valida i dati, rileva la duplicazione e riporta un errore `409 ConflictError` |
+
+### Use Case 21, Modifica Sensore (FR2.3.2)
+
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator e il sensore esiste sul gateway indicato |
+|  Post condition  |            Il sensore viene aggiornato nel sistema            |
+| Nominal Scenario |                  Scenario 21.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    |  Scenario 21.2, Scenario 21.3, UCE400, UCE401, UCE403, UCE500 |
+
+#### Scenario 21.1
+
+| Scenario 21.1  |                           Modifica sensore con successo `(204 No Content)`                            |
+| :------------: | :-----------------------------------------------------------------------------------------------------: |
+|  Precondition  |             L'utente è autenticato come Admin o Operator e il sensore esistente è referenziato             |
+| Post condition |          Il sistema aggiorna il sensore con i dati forniti           |
+|     Step#      |                                          Description                                                     |
+|       1        | Utente: Accede alla sezione "Gestione Gateway/Sensori" e seleziona il sensore da modificare (identificato da `sensorMac`) |
+|       2        | Utente: Aggiorna i campi `macAddress`, `name`, `description`  |
+|       3        | Utente: Invia la richiesta PATCH all’endpoint `/networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}`   |
+|       4        | Sistema: Valida i dati, aggiorna il sensore e restituisce il codice `204 No Content`                         |
+
+#### Scenario 21.2
+
+| Scenario 21.2  |          Network/Gateway/Sensor non trovato `(404 NotFoundError)`          |
+| :------------: | :-------------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode`, `gatewayMac` o `sensorMac` specificati non corrispondono a un elemento esistente |
+| Post condition |                      Nessuna modifica viene applicata                    |
+|     Step#      |                                Description                                   |
+|       1        | Utente: Invia la richiesta PATCH con un `networkCode`, `gatewayMac` o `sensorMac` inesistenti  |
+|       2        | Sistema: Non trova l'elemento corrispondente e restituisce `404 NotFoundError`                 |
+
+#### Scenario 21.3
+
+| Scenario 21.3  |           Sensor mac address già in use `(409 ConflictError)`           |
+| :------------: | :---------------------------------------------------------------------: |
+|  Precondition  | L'utente tenta di aggiornare il sensore assegnandogli un `macAddress` già usato da un altro sensore nel sistema |
+| Post condition |                      Nessuna modifica viene applicata                  |
+|     Step#      |                             Description                                  |
+|       1        | Utente: Invia la richiesta PATCH con un nuovo `macAddress` già usato da un altro sensore nel sistema   |
+|       2        | Sistema: Rileva la duplicazione e restituisce `409 ConflictError`        |
+
+### Use Case 22, Eliminazione Sensore (FR2.3.3)
+
+| Actors Involved  |                Admin, Operator                |
+| :--------------: | :-------------------------------------------: |
+|   Precondition   | L'utente è autenticato con token come Admin o Operator |
+|  Post condition  |              Il sensore viene eliminato dal sistema              |
+| Nominal Scenario |                  Scenario 22.1                 |
+|     Variants     |                     None                      |
+|    Exceptions    |  Scenario 22.2, UCE401, UCE403, UCE500 |
+
+#### Scenario 22.1
+
+| Scenario 22.1  |                         Eliminazione sensore con successo `(204 No Content)`                         |
+| :------------: | :-----------------------------------------------------------------------------------------------------: |
+|  Precondition  |   L'utente è autenticato come Admin o Operator e il sensore da eliminare esiste   |
+| Post condition |      Il sistema elimina il sensore       |
+|     Step#      |                                             Description                                                  |
+|       1        | Utente: Accede alla sezione "Gestione Gateway/Sensori" e individua il sensore da eliminare, identificato da `sensorMac`  |
+|       2        | Utente: Invia la richiesta DELETE all’endpoint `/networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}`      |
+|       3        | Sistema: Verifica il token e i parametri ricevuti                                          |
+|       4        | Sistema: Elimina il sensore dal sistema e restituisce il codice `204 No Content`             |
+
+#### Scenario 22.2
+
+| Scenario 22.2  |             Network/Gateway/Sensor non trovato `(404 NotFoundError)`              |
+| :------------: | :---------------------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode`, `gatewayMac` o `sensorMac` specificati non corrispondono a nessun elemento esistente |
+| Post condition |                         Nessun sensore viene eliminato                          |
+|     Step#      |                                 Description                                         |
+|       1        | Utente: Invia la richiesta DELETE usando un `networkCode`, `gatewayMac` o `sensorMac` inesistenti      |
+|       2        | Sistema: Non trova l'elemento corrispondente e restituisce `404 NotFoundError`       |
+
+### Use Case 23, Visualizzazione Sensore specifico (FR2.3.4)
+
+| Actors Involved  |         Admin, Operator, Viewer          |
+| :--------------: | :--------------------------------------: |
+|   Precondition   | L'utente è autenticato con token valido   |
+|  Post condition  | Il sistema restituisce i dettagli del sensore richiesto |
+| Nominal Scenario |               Scenario 23.1              |
+|     Variants     |                  None                  |
+|    Exceptions    |  Scenario 23.2, UCE401, UCE500 |
+
+#### Scenario 23.1
+
+| Scenario 23.1  |          Visualizzazione sensore con successo `(200 OK)`          |
+| :------------: | :-----------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato (Admin, Operator o Viewer) con token valido    |
+| Post condition | Il sistema restituisce il sensore richiesto  |
+|     Step#      |                              Description                              |
+|       1        | Utente: Invia una richiesta GET all’endpoint `/networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}` con i parametri corretti. |
+|       2        | Sistema: Verifica il token e controlla che i parametri `networkCode`, `gatewayMac` e `sensorMac` siano validi. |
+|       3        | Sistema: Recupera i dettagli del sensore e restituisce il sensore richiesto con codice `200 OK`. |
+
+#### Scenario 23.2
+
+| Scenario 23.2  |         Network/Gateway/Sensor non trovato `(404 NotFoundError)`         |
+| :------------: | :-------------------------------------------------------------------------: |
+|  Precondition  | Il `networkCode`, `gatewayMac` o `sensorMac` specificati non corrispondono a un elemento esistente |
+| Post condition |                         Nessun sensore viene restituito                   |
+|     Step#      |                                Description                                   |
+|       1        | Utente: Invia la richiesta GET con parametri inesistenti o errati.       |
+|       2        | Sistema: Non trova il sensore corrispondente e restituisce `404 NotFoundError`. |
+
+### Use Case 24, Visualizzazione di tutti i Sensori associati a un Gateway specifico (FR2.3.4.1)
+
+| Actors Involved  |        Admin, Operator, Viewer         |
+| :--------------: | :------------------------------------: |
+|   Precondition   | L'utente è autenticato con token valido |
+|  Post condition  | Il sistema restituisce la lista dei sensori associati al gateway richiesto |
+| Nominal Scenario |           Scenario 24.1               |
+|     Variants     |                None                  |
+|    Exceptions    |  Scenario 24.2, UCE401, UCE500 |
+
+#### Scenario 24.1
+
+| Scenario 24.1  |               Recupero elenco sensori con successo `(200 OK)`               |
+| :------------: | :---------------------------------------------------------------------------: |
+|  Precondition  | L'utente è autenticato (Admin, Operator o Viewer) con token valido          |
+| Post condition | Il sistema restituisce la lista dei sensori associati al gateway richiesto    |
+|     Step#      |                                Description                                    |
+|       1        | Utente: Seleziona la rete di interesse e il relativo gateway  |
+|       2        | Utente: Invia una richiesta GET all’endpoint `/networks/{networkCode}/gateways/{gatewayMac}/sensors` |
+|       3        | Sistema: Riceve la richiesta, verifica il token e i parametri forniti       |
+|       4        | Sistema: Recupera la lista dei sensori associati al gateway e la restituisce con codice `200 OK`. |
+
+#### Scenario 24.2
+
+| Scenario 24.2  |         Network/Gateway non trovato `(404 NotFoundError)`         |
+| :------------: | :-----------------------------------------------------------------: |
+|  Precondition  | Il `networkCode` o il `gatewayMac` specificati non corrispondono a elementi esistenti. |
+| Post condition |                   Nessuna lista di sensori viene restituita            |
+|     Step#      |                                Description                                   |
+|       1        | Utente: Invia una richiesta GET utilizzando un `networkCode` o un `gatewayMac` inesistenti. |
+|       2        | Sistema: Non trova il network o il gateway  e restituisce `404 NotFoundError`.        |
 
 ### Use Case 25, Visualizzazione misurazioni di un network (FR3.2.1, FR3.2.2, FR3.2.3)
 
@@ -1179,9 +1375,8 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 # System Design
 
-\<describe here system design>
+![System Design](./images/SystemDesign.png)
 
-\<must be consistent with Context diagram>
 
 # Deployment Diagram
 
