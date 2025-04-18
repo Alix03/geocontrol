@@ -1603,9 +1603,8 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 # System Design
 
-\<describe here system design>
+![System Design](./images/SystemDesign.png)
 
-\<must be consistent with Context diagram>
 
 # Deployment Diagram
 
