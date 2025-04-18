@@ -172,7 +172,6 @@ Admin, operator e viewer rappresentano i clienti che usufruiscono del servizio (
 |    Actor Operator     | Graphical User Interface command line interface |                 Screen, Keyboard                  |
 |     Actor Viewer      |                    GUI, API                     | Screen, Keyboard , Internet Connection (via APIs) |
 | Actor Gateway/sensor  |              API per l'invio dati               |          Internet Connection (via APIs)           |
-| Servizio di pagamento |                       API                       |               Connessione internet                |
 
 # Stories and personas
 
@@ -337,10 +336,10 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 |  Scenario 2.2  |                         Username già in uso `(Code 409)`                          |
 | :------------: | :-------------------------------------------------------------------------------: |
-|  Precondition  |  L’utente tenta di creare un account utente con un identificativo già esistente   |
+|  Precondition  |  L'admin tenta di creare un account utente con un identificativo già esistente   |
 | Post condition |                        Il sistema restituisce l'errore 409                        |
 |     Step#      |                                    Descrizione                                    |
-|       1        | Utente: Effettua una richiesta di creazione account, inserendo i dati nel sistema |
+|       1        | Admin: Effettua una richiesta di creazione account, inserendo i dati nel sistema |
 |       2        |            Sistema: riceve i dati e verifica l'esistenza della risorsa            |
 |       3        |           Sistema:Trova la risorsa nel sistema e ne blocca la creazione           |
 |       4        |                 Sistema: Restituisce il messaggio di errore 409.                  |
@@ -1459,9 +1458,8 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 # Glossary
 
-\<use UML class diagram to define important terms, or concepts in the domain of the application, and their relationships>
+![Glossary](./images/Glossary.png)
 
-\<concepts must be used consistently all over the document, ex in use cases, requirements etc>
 
 # System Design
 
