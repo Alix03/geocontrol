@@ -1,12 +1,12 @@
 # Requirements Document - GeoControl
 
-Date:
+Date: 18/04/2025
 
 Version: V1 - description of Geocontrol as described in the swagger
 
 | Version number | Change |
 | :------------: | :----: |
-|                |        |
+|     V1.1           |        |
 
 # Contents
 
@@ -64,7 +64,6 @@ I clienti pagano un abbonamento che include l’acquisizione dei sensori e gatew
 |                                Competitors                                 |                    Implicato nel fornire soluzioni nella stessa nicchia di mercato                     |
 |                             Geocontrol office                              |                   Responsabili per il design, la gestione e lo sviluppo del sistema                    |
 |                      Residenti nelle aree monitorate                       |              Beneficiano indirettamente del monitoraggio del territorio di cui risiedono               |
-|                           Servizio di pagamento                            |        Offre il servizio per gestire le transazioni per l'acquisto delle license e del servizio        |
 
 # Context Diagram and interfaces
 
@@ -245,7 +244,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 #### Scenario 2.2
 
-|  Scenario 2.2  |                         username già in uso `(Code 409)`                          |
+|  Scenario 2.2  |                         Username già in uso `(Code 409)`                          |
 | :------------: | :-------------------------------------------------------------------------------: |
 |  Precondition  |  L’utente tenta di creare un account utente con un identificativo già esistente   |
 | Post condition |                        Il sistema restituisce l'errore 409                        |
@@ -349,10 +348,10 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 | Actors Involved  |                              Admin, Operator                              |
 | :--------------: | :-----------------------------------------------------------------------: |
-|   Precondition   |          L'utente è autenticato con token come Admin o Operator           |
+|   Precondition   |          L'utente è autenticato come Admin o Operator           |
 |  Post condition  |                       La rete è creata nel sistema                        |
 | Nominal Scenario |                               Scenario 6.1                               |
-|     Variants     |                                   None                                    |
+|     Variants     |                                   Nessuna                                   |
 |    Exceptions    |  Scenario 6.2, UCE400, UCE401, UCE403, UCE500        |
 
 #### Scenario 6.1
@@ -383,7 +382,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 | Actors Involved  |                                     Admin, Operator                                      |
 | :--------------: | :--------------------------------------------------------------------------------------: |
-|   Precondition   |                  L'utente è autenticato con token come Admin o Operator                  |
+|   Precondition   |                  L'utente è autenticato come Admin o Operator                  |
 |  Post condition  |                           La rete viene aggiornata nel sistema                           |
 | Nominal Scenario |                                      Scenario 11.1                                       |
 |     Variants     |                                           None                                           |
@@ -427,7 +426,7 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 | Actors Involved  |                      Admin, Operator                       |
 | :--------------: | :--------------------------------------------------------: |
-|   Precondition   |   L'utente è autenticato con token come Admin o Operator   |
+|   Precondition   |   L'utente è autenticato come Admin o Operator   |
 |  Post condition  |            La rete viene eliminata dal sistema             |
 | Nominal Scenario |                       Scenario 12.1                        |
 |     Variants     |                            None                            |
@@ -875,19 +874,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       1        | Utente: Invia una richiesta GET utilizzando un `networkCode` o un `gatewayMac` inesistenti. |
 |       2        | Sistema: Non trova il network o il gateway  e restituisce `404 NotFoundError`.        |
 
-### Use Case 25, Visualizzazione misurazioni di un network (FR3.2.1, FR3.2.2, FR3.2.3)
+### Use Case 21, Visualizzazione misurazioni di un network (FR3.2.1, FR3.2.2, FR3.2.3)
 
 | Actors Involved  |                    Admin, Operator, Viewer                     |
 | :--------------: | :------------------------------------------------------------: |
 |   Precondition   | L’utente ha accesso alla sezione "Visualizzazione Misurazioni" |
 |  Post condition  |                Le misurazioni vengono mostrate                 |
-| Nominal Scenario |                         Scenario 25.1                          |
-|     Variants     |                      Scenario 25.2, 25.3                       |
-|    Exceptions    |                 Scenario 25.4, UCE401, UCE500                  |
+| Nominal Scenario |                         Scenario 21.1                          |
+|     Variants     |                      Scenario 21.2, 21.3                       |
+|    Exceptions    |                 Scenario 21.4, UCE401, UCE500                  |
 
-#### Scenario 25.1
+#### Scenario 21.1
 
-| Scenario 25.1  |                Visualizzazione misurazioni di un network `(Code 200)`                 |
+| Scenario 21.1  |                Visualizzazione misurazioni di un network `(Code 200)`                 |
 | :------------: | :-----------------------------------------------------------------------------------: |
 |  Precondition  |            L’utente ha accesso alla sezione "Visualizzazione Misurazioni"             |
 | Post condition |                            Le misurazioni vengono mostrate                            |
@@ -896,13 +895,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                             Utente: Seleziona un network                              |
 |       3        |            Sistema: Riceve la richiesta e verifica l'esistenza del network            |
 |       4        |        Sistema: Recupera le misurazioni dei sensori appartenenenti al network         |
-|       5        |                          INCLUDE Calcolo statistiche (UC...)                          |
+|       5        |                          INCLUDE Calcolo statistiche (UC24)                          |
 |       6        |                      Sistema: identifica le misurazioni outlier                       |
 |       7        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network |
 
-#### Scenario 25.2
+#### Scenario 21.2
 
-| Scenario 25.2  |                         Visualizzazione filtrata misurazioni di un network `(Code 200)`                         |
+| Scenario 21.2  |                         Visualizzazione filtrata misurazioni di un network `(Code 200)`                         |
 | :------------: | :-------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                         L’utente ha accesso alla sezione "Visualizzazione Misurazioni"                          |
 | Post condition |                                         Le misurazioni vengono mostrate                                         |
@@ -911,19 +910,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                                          Utente: Seleziona un network                                           |
 |       3        |                         Sistema: Riceve la richiesta e verifica l'esistenza del network                         |
 |       4        |                     Sistema: Recupera le misurazioni dei sensori appartenenenti al network                      |
-|       5        |                                       INCLUDE Calcolo statistiche (UC...)                                       |
+|       5        |                                       INCLUDE Calcolo statistiche (UC24)                                       |
 |       6        |                                   Sistema: identifica le misurazioni outlier                                    |
 |       7        |              Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network              |
 |       8        |                     Utente: Seleziona i filtri di interesse (sensori, intervallo di tempo)                      |
 |       9        |                   Sistema: Verifica l'esistenza dei sensori e il formato delle date di tempo                    |
 |       10       |                     Sistema: Recupera le misurazioni dei sensori appartenenenti al network                      |
-|       11       |                                       INCLUDE Calcolo statistiche (UC...)                                       |
+|       11       |                                       INCLUDE Calcolo statistiche (UC24)                                       |
 |       12       |                                   Sistema: identifica le misurazioni outlier                                    |
 |       13       | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network secondo i filtri indicati |
 
-#### Scenario 25.3
+#### Scenario 21.3
 
-| Scenario 25.3  |                      Visualizzazione misurazioni di un network con fuso orario locale `(Code 200)`                       |
+| Scenario 21.3  |                      Visualizzazione misurazioni di un network con fuso orario locale `(Code 200)`                       |
 | :------------: | :----------------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                              L’utente ha accesso alla sezione "Visualizzazione Misurazioni"                              |
 | Post condition |                                             Le misurazioni vengono mostrate                                              |
@@ -932,16 +931,16 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                                               Utente: Seleziona un network                                               |
 |       3        |                             Sistema: Riceve la richiesta e verifica l'esistenza del network                              |
 |       4        |                          Sistema: Recupera le misurazioni dei sensori appartenenenti al network                          |
-|       5        |                                           INCLUDE Calcolo statistiche (UC...)                                            |
+|       5        |                                           INCLUDE Calcolo statistiche (UC24)                                            |
 |       6        |                                        Sistema: identifica le misurazioni outlier                                        |
 |       7        |                  Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network                   |
 |       8        |                         Utente: Richiede la visualizzazione dei timestamp con fuso orario locale                         |
 |       9        |                    Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente                     |
 |       10       | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network con fuso orario locale dell'utente |
 
-### Scenario 25.4
+### Scenario 21.4
 
-| Scenario 25.4  |                 Network non trovato `(Code 404)`                 |
+| Scenario 21.4  |                 Network non trovato `(Code 404)`                 |
 | :------------: | :--------------------------------------------------------------: |
 |  Precondition  |  L’utente ha accesso alla sezione "Visualizzazione Misurazioni"  |
 | Post condition |               Il sistema restituisce l'errore 404                |
@@ -952,19 +951,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |             Sistema: Non trova il network richiesto              |
 |       5        |         Sistema: Restituisce il messaggio di errore 404.         |
 
-### Use Case 26, Visualizzazione misurazioni di uno specifico sensore (FR3.2.4, FR3.2.5, FR3.2.6)
+### Use Case 22, Visualizzazione misurazioni di uno specifico sensore (FR3.2.4, FR3.2.5, FR3.2.6)
 
 | Actors Involved  |                    Admin, Operator, Viewer                     |
 | :--------------: | :------------------------------------------------------------: |
 |   Precondition   | L’utente ha accesso alla sezione "Visualizzazione Misurazioni" |
 |  Post condition  |                Le misurazioni vengono mostrate                 |
-| Nominal Scenario |                         Scenario 26.1                          |
-|     Variants     |                      Scenario 26.2, 26.3                       |
-|    Exceptions    |                 Scenario 26.4, UCE401, UCE500                  |
+| Nominal Scenario |                         Scenario 22.1                          |
+|     Variants     |                      Scenario 22.2, 22.3                       |
+|    Exceptions    |                 Scenario 22.4, UCE401, UCE500                  |
 
-#### Scenario 26.1
+#### Scenario 22.1
 
-| Scenario 26.1  |           Visualizzazione misurazioni di uno specifico sensore `(Code 200)`           |
+| Scenario 22.1  |           Visualizzazione misurazioni di uno specifico sensore `(Code 200)`           |
 | :------------: | :-----------------------------------------------------------------------------------: |
 |  Precondition  |            L’utente ha accesso alla sezione "Visualizzazione Misurazioni"             |
 | Post condition |                            Le misurazioni vengono mostrate                            |
@@ -973,13 +972,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                 Utente: Seleziona un network, un gateway e un sensore                 |
 |       3        |                Sistema: Verifica l'esistenza delle entità selezionate                 |
 |       4        |                     Sistema: Recupera le misurazioni del sensore                      |
-|       5        |                          INCLUDE Calcolo statistiche (UC...)                          |
+|       5        |                          INCLUDE Calcolo statistiche (UC24)                          |
 |       6        |                      Sistema: identifica le misurazioni outlier                       |
 |       7        | Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network |
 
-#### Scenario 26.2
+#### Scenario 22.2
 
-| Scenario 26.2  |       Visualizzazione filtrata misurazioni di uno specifico sensore `(Code 200)`        |
+| Scenario 22.2  |       Visualizzazione filtrata misurazioni di uno specifico sensore `(Code 200)`        |
 | :------------: | :-------------------------------------------------------------------------------------: |
 |  Precondition  |             L’utente ha accesso alla sezione "Visualizzazione Misurazioni"              |
 | Post condition |                             Le misurazioni vengono mostrate                             |
@@ -988,22 +987,22 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                  Utente: Seleziona un network, un gateway e un sensore                  |
 |       3        |                 Sistema: Verifica l'esistenza delle entità selezionate                  |
 |       4        |                      Sistema: Recupera le misurazioni del sensore                       |
-|       5        |                           INCLUDE Calcolo statistiche (UC...)                           |
+|       5        |                           INCLUDE Calcolo statistiche (UC24)                           |
 |       6        |                       Sistema: identifica le misurazioni outlier                        |
 |       7        |  Sistema: Restituisce le misurazioni e statistiche dei sensori appartenenti al network  |
 |       8        |              Utente: Seleziona i filtri di interesse (intervallo di tempo)              |
 |       9        |                    Sistema: Verifica il formato delle date di tempo                     |
 |       10       |                      Sistema: Recupera le misurazioni del sensore                       |
-|       11       |                           INCLUDE Calcolo statistiche (UC...)                           |
+|       11       |                           INCLUDE Calcolo statistiche (UC24)                           |
 |       12       |                       Sistema: identifica le misurazioni outlier                        |
 |       13       | Sistema: Restituisce le misurazioni e statistiche del sensore secondo i filtri indicati |
 |       14       |        Utente: Richiede la visualizzazione dei timestamp con fuso orario locale         |
 |       15       |    Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente    |
 |       16       | Sistema: Restituisce le misurazioni e statistiche del sensore secondo i filtri indicati |
 
-#### Scenario 26.3
+#### Scenario 22.3
 
-| Scenario 26.3  |     Visualizzazione misurazioni di uno specifico sensore con fuso orario locale `(Code 200)`     |
+| Scenario 22.3  |     Visualizzazione misurazioni di uno specifico sensore con fuso orario locale `(Code 200)`     |
 | :------------: | :----------------------------------------------------------------------------------------------: |
 |  Precondition  |                  L’utente ha accesso alla sezione "Visualizzazione Misurazioni"                  |
 | Post condition |                                 Le misurazioni vengono mostrate                                  |
@@ -1012,16 +1011,16 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |                      Utente: Seleziona un network, un gateway e un sensore                       |
 |       3        |                      Sistema: Verifica l'esistenza delle entità selezionate                      |
 |       4        |                           Sistema: Recupera le misurazioni del sensore                           |
-|       5        |                               INCLUDE Calcolo statistiche (UC...)                                |
+|       5        |                               INCLUDE Calcolo statistiche (UC24)                                |
 |       6        |                            Sistema: identifica le misurazioni outlier                            |
 |       7        |                  Sistema: Restituisce le misurazioni e statistiche del sensore                   |
 |       8        |             Utente: Richiede la visualizzazione dei timestamp con fuso orario locale             |
 |       9        |        Sistema: Converte i timestamp da fuso orario UTC a fuso orario locale dell'utente         |
 |       10       | Sistema: Restituisce le misurazioni e statistiche del sensore con fuso orario locale dell'utente |
 
-### Scenario 26.4
+### Scenario 22.4
 
-| Scenario 26.4  |                       Entità non trovata `(Code 404)`                        |
+| Scenario 22.4  |                       Entità non trovata `(Code 404)`                        |
 | :------------: | :--------------------------------------------------------------------------: |
 |  Precondition  |        L’utente ha accesso alla sezione "Visualizzazione Misurazioni"        |
 | Post condition |                     Il sistema restituisce l'errore 404                      |
@@ -1032,19 +1031,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |  Sistema: Non trova una delle entità richieste (network, gateway, sensore)   |
 |       5        |               Sistema: Restituisce il messaggio di errore 404.               |
 
-### Use Case 27, Inserimento misurazioni (FR3.3)
+### Use Case 23, Inserimento misurazioni (FR3.3)
 
 | Actors Involved  |                      Admin, Operator                       |
 | :--------------: | :--------------------------------------------------------: |
 |   Precondition   | L’utente ha accesso alla sezione "Inserimento Misurazioni" |
 |  Post condition  |                    Misurazione inserita                    |
-| Nominal Scenario |                       Scenario 27.1                        |
+| Nominal Scenario |                       Scenario 23.1                        |
 |     Variants     |                          Nessuna                           |
-|    Exceptions    |       Scenario 27.2, UCE400, UCE401, UCE403, UCE500        |
+|    Exceptions    |       Scenario 23.2, UCE400, UCE401, UCE403, UCE500        |
 
-#### Scenario 27.1
+#### Scenario 23.1
 
-| Scenario 27.1  |                                               Misurazione creata `(Code 201)`                                               |
+| Scenario 23.1  |                                               Misurazione creata `(Code 201)`                                               |
 | :------------: | :-------------------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                 L’utente ha accesso alla sezione "Inserimento Misurazioni"                                  |
 | Post condition |                                                    Misurazione inserita                                                     |
@@ -1056,9 +1055,9 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       5        |                                              Sistema: Memorizza la misurazione                                              |
 |       6        |                                     Sistema: mostra a schermo un messaggio di successo                                      |
 
-### Scenario 27.2
+### Scenario 23.2
 
-| Scenario 27.2  |                                    Entità non trovata `(Code 404)`                                     |
+| Scenario 23.2  |                                    Entità non trovata `(Code 404)`                                     |
 | :------------: | :----------------------------------------------------------------------------------------------------: |
 |  Precondition  |                       L’utente ha accesso alla sezione "Inserimento Misurazioni"                       |
 | Post condition |                                  Il sistema restituisce l'errore 404                                   |
@@ -1069,19 +1068,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       4        |               Sistema: Non trova una delle entità richieste (network, gateway, sensore)                |
 |       5        |                            Sistema: Restituisce il messaggio di errore 404.                            |
 
-### Use Case E, Calcolo Statistiche (FR4.1)
+### Use Case 24, Calcolo Statistiche (FR4.1)
 
 | Actors Involved  |                                                           /                                                            |
 | :--------------: | :--------------------------------------------------------------------------------------------------------------------: |
 |   Precondition   | L'utente ha richiesto una risorsa che necessita il calcolo delle statistiche. Il sistema ha recuperato le misurazioni. |
 |  Post condition  |                                           Le statistiche vengono calcolate.                                            |
-| Nominal Scenario |                                                      Scenario E.1                                                      |
+| Nominal Scenario |                                                      Scenario 24.1                                                      |
 |     Variants     |                                                           -                                                            |
 |    Exceptions    |                                                    Scenario E500.1                                                     |
 
-#### Scenario E.1
+#### Scenario 24.1
 
-|  Scenario E.1  |              Calcolo Statistiche`(Code 200)`               |
+|  Scenario 24.1  |              Calcolo Statistiche`(Code 200)`               |
 | :------------: | :--------------------------------------------------------: |
 |  Precondition  |                  L'utente è autenticato.                   |
 | Post condition |              L'utente visualizza gli outliers              |
@@ -1090,19 +1089,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       2        |       Sistema: calcola la varianza delle misurazioni       |
 |       3        | Sistema: calcola la soglia superiore e la soglia inferiore |
 
-### Use Case A, Visualizzazione Statistiche per un dato Network (FR 4.2.1, FR 4.2.2)
+### Use Case 25, Visualizzazione Statistiche per un dato Network (FR 4.2.1, FR 4.2.2)
 
 | Actors Involved  |                                 User                                 |
 | :--------------: | :------------------------------------------------------------------: |
 |   Precondition   | L'utente richiede la visualizzazione delle statistiche di un network |
 |  Post condition  |             L'utente visualizza le statistiche richieste             |
-| Nominal Scenario |                             Scenario A.1                             |
-|     Variants     |                             Scenario A.2                             |
+| Nominal Scenario |                             Scenario 25.1                             |
+|     Variants     |                             Scenario 25.2                             |
 |    Exceptions    |                    Scenario E401.1, E404, E500.1                     |
 
-#### Scenario A.1 ()
+#### Scenario 25.1
 
-|  Scenario A.1  |               Visualizzazione statistiche per un dato Network `(Code 200)`                |
+|  Scenario 25.1  |               Visualizzazione statistiche per un dato Network `(Code 200)`                |
 | :------------: | :---------------------------------------------------------------------------------------: |
 |  Precondition  |           L'utente richiede la visualizzazione delle statistiche di un network            |
 | Post condition |                       L'utente visualizza le statistiche richieste                        |
@@ -1117,9 +1116,9 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       8        |                         Sistema: invia le statistiche all'utente                          |
 |       9        |                          Utente: legge le statistiche richieste                           |
 
-#### Scenario A.2
+#### Scenario 25.2
 
-|  Scenario A.2  |                              Visualizzazione statistiche per un dato Network con filtri `(Code 200)`                               |
+|  Scenario 25.2  |                              Visualizzazione statistiche per un dato Network con filtri `(Code 200)`                               |
 | :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                L'utente richiede la visualizzazione delle statistiche di un network                                |
 | Post condition |                                            L'utente visualizza le statistiche richieste                                            |
@@ -1131,23 +1130,23 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       5        |                      Sistema: Ricerca il network avente il codice fornito. Il codice network risulta valido.                       |
 |       6        |                          Sistema: Se presenti, converte `startDate` e `endDate` da localTimezone a UTC+0                           |
 |       7        |             Sistema: Recupera le misurazioni del network con codice `networkCode` e che rispettano i filtri applicati              |
-|       8        |                                                 INCLUDE Calcolo statistiche (UC E)                                                 |
+|       8        |                                                 INCLUDE Calcolo statistiche (UC 24)                                                 |
 |       9        |                                              Sistema: invia le statistiche all'utente                                              |
 |       10       |                                               Utente: legge le statistiche richieste                                               |
 
-### Use Case B, Visualizzazione Statistiche per un dato Sensore (FR 4.2.3, FR 4.2.4)
+### Use Case 26, Visualizzazione Statistiche per un dato Sensore (FR 4.2.3, FR 4.2.4)
 
 | Actors Involved  |                                 User                                 |
 | :--------------: | :------------------------------------------------------------------: |
 |   Precondition   | L'utente richiede la visualizzazione delle statistiche di un sensore |
 |  Post condition  |             L'utente visualizza le statistiche richieste             |
-| Nominal Scenario |                             Scenario B.1                             |
-|     Variants     |                             Scenario B.2                             |
+| Nominal Scenario |                             Scenario 26.1                             |
+|     Variants     |                             Scenario 26.2                             |
 |    Exceptions    |                    Scenario E401.1, E404, E500.1                     |
 
-#### Scenario B.1
+#### Scenario 26.1
 
-|  Scenario B.1  |                            Visualizzazione statistiche per un dato Sensore `(Code 200)`                            |
+|  Scenario 26.1  |                            Visualizzazione statistiche per un dato Sensore `(Code 200)`                            |
 | :------------: | :----------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                        L'utente richiede la visualizzazione delle statistiche di un sensore                        |
 | Post condition |                                    L'utente visualizza le statistiche richieste                                    |
@@ -1160,13 +1159,13 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       6        |      Sistema: Ricerca il gateway con il mac fornito all'interno del network. L'indirizzo mac risulta valido.       |
 |       7        |  Sistema: Ricerca il sensore con il mac fornito tra quelli associati al gateway. L'indirizzo mac risulta valido.   |
 |       8        |                      Sistema: Recupera le misurazioni del sensore con indirizzo `sensorMac`.                       |
-|       9        |                                         INCLUDE Calcolo statistiche (UC E)                                         |
+|       9        |                                         INCLUDE Calcolo statistiche (UC 24)                                         |
 |       10       |                                      Sistema: invia le statistiche all'utente                                      |
 |       11       |                                       Utente: legge le statistiche richieste                                       |
 
-#### Scenario B.2
+#### Scenario 26.2
 
-|  Scenario B.2  |                                      Visualizzazione statistiche per un dato Sensore con filtri `(Code 200)`                                      |
+|  Scenario 26.2  |                                      Visualizzazione statistiche per un dato Sensore con filtri `(Code 200)`                                      |
 | :------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                       L'utente richiede la visualizzazione delle statistiche di un sensore                                        |
 | Post condition |                                                   L'utente visualizza le statistiche richieste                                                    |
@@ -1184,19 +1183,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       11       |                                                     Sistema: invia le statistiche all'utente                                                      |
 |       12       |                                                      Utente: legge le statistiche richieste                                                       |
 
-### Use Case C, Visualizzazione Outliers per un dato Network (FR 4.3.1, FR 4.3.2)
+### Use Case 27, Visualizzazione Outliers per un dato Network (FR 4.3.1, FR 4.3.2)
 
 | Actors Involved  |                               User                                |
 | :--------------: | :---------------------------------------------------------------: |
 |   Precondition   | L'utente richiede la visualizzazione degli outliers di un network |
 |  Post condition  |     L'utente visualizza le misurazioni outliers di un network     |
-| Nominal Scenario |                           Scenario C.1                            |
-|     Variants     |                           Scenario C.2                            |
+| Nominal Scenario |                           Scenario 27.1                            |
+|     Variants     |                           Scenario 27.2                            |
 |    Exceptions    |                   Scenario E401.1, E404, E500.1                   |
 
-#### Scenario C.1
+#### Scenario 27.1
 
-|  Scenario C.1  |                        Visualizzazione outliers per un Network specifico `(Code 200)`                         |
+|  Scenario 27.1  |                        Visualizzazione outliers per un Network specifico `(Code 200)`                         |
 | :------------: | :-----------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                       L'utente richiede la visualizzazione degli outliers di un network                       |
 | Post condition |                                       L'utente visualizza gli outliers                                        |
@@ -1214,9 +1213,9 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       11       |                            Sistema: invia le statistiche e gli outliers all'utente                            |
 |       12       |                                  Utente: legge le statistiche e gli outliers                                  |
 
-#### Scenario C.2
+#### Scenario 27.2
 
-|  Scenario C.2  |                               Visualizzazione outliers per un Network specifico e filtri`(Code 200)`                               |
+|  Scenario 27.2  |                               Visualizzazione outliers per un Network specifico e filtri`(Code 200)`                               |
 | :------------: | :--------------------------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                 L'utente richiede la visualizzazione degli outliers di un network                                  |
 | Post condition |                                                  L'utente visualizza gli outliers                                                  |
@@ -1235,19 +1234,19 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       12       |                                      Sistema: invia le statistiche e gli outliers all'utente                                       |
 |       13       |                                            Utente: legge le statistiche e gli outliers                                             |
 
-### Use Case D, Visualizzazione Outliers per un dato Sensore (FR 4.3.3, FR 4.3.4)
+### Use Case 28, Visualizzazione Outliers per un dato Sensore (FR 4.3.3, FR 4.3.4)
 
 | Actors Involved  |                               User                                |
 | :--------------: | :---------------------------------------------------------------: |
 |   Precondition   | L'utente richiede la visualizzazione degli outliers di un sensore |
 |  Post condition  |     L'utente visualizza le misurazioni outliers di un network     |
-| Nominal Scenario |                           Scenario D.1                            |
-|     Variants     |                           Scenario D.2                            |
+| Nominal Scenario |                           Scenario 28.1                            |
+|     Variants     |                           Scenario 28.2                            |
 |    Exceptions    |                   Scenario E401.1, E404, E500.1                   |
 
-#### Scenario D.1
+#### Scenario 28.1
 
-|  Scenario D.1  |                           Visualizzazione outliers per un Sensore specifico `(Code 200)`                           |
+|  Scenario 28.1  |                           Visualizzazione outliers per un Sensore specifico `(Code 200)`                           |
 | :------------: | :----------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                         L'utente richiede la visualizzazione degli outliers di un sensore                          |
 | Post condition |                                          L'utente visualizza gli outliers                                          |
@@ -1267,9 +1266,9 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 |       13       |                              Sistema: invia le statistiche e gli outliers all'utente                               |
 |       14       |                                    Utente: legge le statistiche e gli outliers                                     |
 
-#### Scenario D.2
+#### Scenario 28.2
 
-|  Scenario D.2  |                                      Visualizzazione outliers per un Network specifico e filtri`(Code 200)`                                      |
+|  Scenario 28.2  |                                      Visualizzazione outliers per un Network specifico e filtri`(Code 200)`                                      |
 | :------------: | :----------------------------------------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                                        L'utente richiede la visualizzazione degli outliers di un sensore                                         |
 | Post condition |                                                         L'utente visualizza gli outliers                                                         |
@@ -1380,6 +1379,5 @@ Storia: Sfrutta i servizi di monitoraggio per mantenere costanti temperatura, um
 
 # Deployment Diagram
 
-\<describe here deployment diagram >
 
 ![Diagramma di Gantt](./images/Deployment%20Diagram.png)
