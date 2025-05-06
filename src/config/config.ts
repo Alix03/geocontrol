@@ -1,3 +1,6 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
 import { readdirSync } from "fs";
 import path = require("path");
 
