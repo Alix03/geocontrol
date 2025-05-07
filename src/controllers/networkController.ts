@@ -22,6 +22,11 @@ export async function deleteNetwork(code: string): Promise<void> {
   const networkRepo = new NetworkRepository();
   await networkRepo.deleteNetwork(code);
 }
+export async function updateNetwork(networkDto: NetworkDTO): Promise<void> {
+  const networkRepo = new NetworkRepository();
+  await networkRepo.updateNetwork(networkDto.code, networkDto.name, networkDto.description);
+}
+
 
 
 
