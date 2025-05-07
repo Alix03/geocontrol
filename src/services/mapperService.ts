@@ -3,6 +3,8 @@ import { User as UserDTO } from "@dto/User";
 import { UserDAO } from "@models/dao/UserDAO";
 import { ErrorDTO } from "@models/dto/ErrorDTO";
 import { UserType } from "@models/UserType";
+import { Measurement as MeasurementDTO } from "@dto/Measurement";
+import { MeasurementDAO } from "@models/dao/MeasurementDAO";
 
 export function createErrorDTO(
   code: number,
@@ -36,6 +38,32 @@ export function createUserDTO(
 
 export function mapUserDAOToDTO(userDAO: UserDAO): UserDTO {
   return createUserDTO(userDAO.username, userDAO.type);
+}
+
+export function createMeasurementDTO(
+  id: number,
+  createdAt: Date,
+  value: number,
+  isOutlier: boolean,
+  sensorId: number
+): MeasurementDTO {
+  return removeNullAttributes({
+    id,
+    createdAt,
+    value,
+    isOutlier,
+    sensorId,
+  }) as MeasurementDTO;
+}
+
+export function mapMeasurementDAOToDTO(measurementDAO: MeasurementDAO): MeasurementDTO {
+  return createMeasurementDTO(
+    measurementDAO.id,
+    measurementDAO.createdAt,
+    measurementDAO.value,
+    measurementDAO.isOutlier,
+    measurementDAO.sensor.id 
+  );
 }
 
 function removeNullAttributes<T>(dto: T): Partial<T> {
