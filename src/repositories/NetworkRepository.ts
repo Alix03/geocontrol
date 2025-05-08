@@ -2,7 +2,8 @@ import { AppDataSource } from "@database";
 import { Repository } from "typeorm";
 import { NetworkDAO } from "@dao/NetworkDAO";
 import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
-
+import { NotFoundError } from "@errors/NotFoundError";
+import { ConflictError } from "@errors/ConflictError";
 
 
 
@@ -21,7 +22,7 @@ export class NetworkRepository {
     return findOrThrowNotFound(
       await this.repo.find({ where: { code } }),
       () => true,
-      `User with username '${code}' not found`
+      `Network with '${code}' not found`
     );
   }
 
@@ -48,12 +49,27 @@ export class NetworkRepository {
   }
 
   async updateNetwork(
-    code: string,
+    currentCode: string,
+    newCode: string,
     name?: string,
     description?: string
-  ): Promise<NetworkDAO> {
-    const network = await this.getNetworkByCode(code);
+  ): Promise<void> {
+    // 1. Cerca direttamente il network attuale
+    const network = await this.repo.findOne({ where: { code: currentCode } });
+    if (!network) {
+      throw new NotFoundError(`Network with code '${currentCode}' not found`);
+    }
   
+    // 2. Se il codice è cambiato, verifica che quello nuovo non esista già
+    if (newCode !== currentCode) {
+      const existing = await this.repo.findOne({ where: { code: newCode } });
+      if (existing) {
+        throw new ConflictError(`Network with code '${newCode}' already exists`);
+      }
+      network.code = newCode;
+    }
+  
+    // 3. Aggiorna gli altri campi se forniti
     if (name !== undefined) {
       network.name = name;
     }
@@ -62,6 +78,7 @@ export class NetworkRepository {
       network.description = description;
     }
   
-    return this.repo.save(network);
+    await this.repo.save(network);
   }
+ 
 }

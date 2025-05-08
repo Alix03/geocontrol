@@ -45,14 +45,15 @@ router.get("/:networkCode", authenticateUser([UserType.Admin, UserType.Operator,
 // Update a network (Admin & Operator)
 router.patch("/:networkCode",authenticateUser([UserType.Admin, UserType.Operator]), async (req, res, next) => {
   try {
-    const { name, description } = req.body;
-    const { networkCode } = req.params;
+    const { code, name, description } = req.body;
+    const { networkCode: currentCode } = req.params;
 
-    await updateNetwork({
-      code: networkCode,
+    await updateNetwork(
+      currentCode, 
+      {code,
       name,
-      description,
-    });
+      description}
+    );
 
     res.sendStatus(204); // Successo senza body
   } catch (error) {

@@ -1,9 +1,13 @@
-import { Gateway } from "@models/dto/Gateway";
-import { Entity, PrimaryColumn, Column } from "typeorm";
+import { Entity, Column,PrimaryGeneratedColumn, Unique, OneToMany  } from "typeorm";
 
 @Entity("networks")
+@Unique(["code"])
 export class NetworkDAO{
-    @PrimaryColumn({ nullable: false })
+
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ nullable: false })
     code: string
 
     @Column({ nullable: false })
@@ -12,5 +16,20 @@ export class NetworkDAO{
     @Column({ nullable: false })
     description: string
 
+    /*
+    @OneToMany(() => GatewayDAO, gateway => gateway.network, {
+        cascade: true, // opzionale: salva gateway insieme alla network
+        eager: true // opzionale: carica i gateway automaticamente
+    })
+    gateways: GatewayDAO[]; 
+
+
+    In gatewayDAO ci deve essere questo
+    @ManyToOne(() => NetworkDAO, network => network.gateways)
+    network: NetworkDAO;
+    
+    */
     
 }
+
+
