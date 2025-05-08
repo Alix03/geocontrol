@@ -10,8 +10,8 @@ export class SensorRepository {
     this.repo = AppDataSource.getRepository(SensorDAO);
   }
 
-  getAllSensors(): Promise<SensorDAO[]> {
-    return this.repo.find();
+  getAllSensors(networkCode: string, gatewayMac: string): Promise<SensorDAO[]> {
+    return this.repo.find({ where: {}});
   }
 
   async getSensorByMac(macAddress: string): Promise<SensorDAO> {
@@ -24,10 +24,10 @@ export class SensorRepository {
 
   async createSensor(
     macAddress: string,
-    name: string,
-    description: string,
-    variable: string,
-    unit: string
+    name?: string,
+    description?: string,
+    variable?: string,
+    unit?: string
   ): Promise<SensorDAO> {
     throwConflictIfFound(
       await this.repo.find({ where: { macAddress } }),
@@ -49,11 +49,23 @@ export class SensorRepository {
   }
 
   async updateSensor(
-    macAddress: string,
-    name: string,
-    description: string,
-    variable: string,
-    unit: string): Promise<SensorDAO> {
-      
+    macAddress?: string,
+    name?: string,
+    description?: string,
+    variable?: string,
+    unit?: string): Promise<SensorDAO> {
+      findOrThrowNotFound(
+        await this.repo.find({ where: { macAddress } }),
+        () => true,
+        `Sensor with MAC address '${macAddress}' not found`
+      );
+
+      return this.repo.save({
+        macAddress: macAddress,
+        name: name,
+        description: description,
+        variable: variable,
+        unit: unit
+      });
     }
 }

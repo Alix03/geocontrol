@@ -1,4 +1,5 @@
 import { Sensor as SensorDTO } from "@models/dto/Sensor";
+import { SensorRepository } from "@repositories/SensorRepository";
 
 export async function getAllSensors(networkCode : string, gatewayMac: string): Promise<SensorDTO[]> {
   const sensorRepo = new SensorRepository();

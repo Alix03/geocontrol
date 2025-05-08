@@ -1,8 +1,11 @@
-import { Entity, PrimaryColumn, Column } from "typeorm";
+import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 
 @Entity("sensors")
 export class SensorDAO {
-  @PrimaryColumn({ nullable: false })
+  @PrimaryGeneratedColumn()
+  id: number
+  
+  @Column({ nullable: false })
   macAddress: string;
 
   @Column({ nullable: false })
@@ -16,4 +19,8 @@ export class SensorDAO {
 
   @Column({ nullable: false })
   unit: string;
+
+  @ManyToOne(() => GatewayDAO, (gateway) => gateway.sensors)
+  gateway: GatewayDAO;
+  //da aggiungere onetomany in gatewayDAO
 }
