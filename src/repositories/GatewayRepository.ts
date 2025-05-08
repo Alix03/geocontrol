@@ -64,11 +64,6 @@ export class GatewayRepository{
     description?: string,
   ): Promise<GatewayDAO> {
     const gateway = await this.getGatewayByMac(oldAddress); 
-    if (!gateway) {
-      throw new NotFoundError(`Gateway with code '${oldAddress}' not found`);
-    }
-
-
     
     if (oldAddress != newAddress){
       const existing = await this.repo.findOne({ where: { macAddress: newAddress } });
