@@ -44,15 +44,15 @@ export function createMeasurementDTO(
   id: number,
   createdAt: Date,
   value: number,
-  isOutlier: boolean,
-  sensorId: number
+  sensorMac: number,
+  isOutlier?: boolean
 ): MeasurementDTO {
   return removeNullAttributes({
     id,
     createdAt,
     value,
-    isOutlier,
-    sensorId,
+    sensorMac,
+    isOutlier
   }) as MeasurementDTO;
 }
 
@@ -61,7 +61,6 @@ export function mapMeasurementDAOToDTO(measurementDAO: MeasurementDAO): Measurem
     measurementDAO.id,
     measurementDAO.createdAt,
     measurementDAO.value,
-    measurementDAO.isOutlier,
     measurementDAO.sensor.id 
   );
 }

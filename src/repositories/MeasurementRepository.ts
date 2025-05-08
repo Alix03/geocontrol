@@ -1,6 +1,8 @@
 import { AppDataSource } from "@database";
 import { Repository } from "typeorm";
 import { MeasurementDAO } from "@dao/MeasurementDAO";
+import { Measurement as MeasurementDTO } from "@dto/Measurement";
+import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
 
 export class MeasurementRepository {
   private repo: Repository<MeasurementDAO>;
@@ -9,72 +11,107 @@ export class MeasurementRepository {
     this.repo = AppDataSource.getRepository(MeasurementDAO);
   }
 
-  async getMeasurementByNetworkId(networkId: number): Promise<MeasurementDAO[]> {
-    return await this.repo.find({
-      relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
-      where: {
-        sensor: {
-          gateway: {
-            network: {
-              id: networkId,
-            },
-          },
-        },
-      },
-    });
-  }
-
-  async getMeasurementBySensorId(sensorId: number): Promise<MeasurementDAO[]> {
-    return await this.repo.find({
-      relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
-      where: {
-        sensor: {
-          id: sensorId,
-        },
-      },
-    });
-  }
-
-  async getOutliersByNetworkId(networkId: number): Promise<MeasurementDAO[]> {
-    return await this.repo.find({
-      relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
-      where: {
-        isOutlier: true,
-        sensor: {
-          gateway: {
-            network: {
-              id: networkId,
-            },
-          },
-        },
-      },
-    });
-  }
-
-  async getOutliersBySensorId(sensorId: number): Promise<MeasurementDAO[]> {
-    return await this.repo.find({
-      relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
-      where: {
-        isOutlier: true,
-        sensor: {
-          id: sensorId,
-        },
-      },
-    });
-  }
-
   async createMeasurement(
-    sensorId: number, 
-    measurementData: Partial<MeasurementDAO>
+    networkCode: string,
+    gatewayMac: string,
+    sensorMac: string,
+    measurementData: MeasurementDTO
     ): Promise<MeasurementDAO> {
-    const measurement = this.repo.create({
-      ...measurementData,
-      sensor: { id: sensorId },
+    // Verifica che il sensore esista e sia associato al networkCode e gatewayMac
+    const sensor = await AppDataSource.getRepository(SensorDAO).findOne({
+    relations: ["gateway", "gateway.network"],
+    where: {
+      macAddress: sensorMac,
+      gateway: {
+        macAddress: gatewayMac,
+        network: {
+          code: networkCode,
+        },
+      },
+    },
+  });
+  if (!sensor) {
+    throw new Error(
+      `Sensor with macAddress '${sensorMac}' not found in gateway '${gatewayMac}' and network '${networkCode}'`
+    );
+  }
+  // Salva la misurazione
+  return this.repo.save({
+    createdAt: measurementData.createdAt,
+    value: measurementData.value,
+    isOutlier: measurementData.isOutlier,
+    sensor: sensor, // Associa il sensore
+  });
+}
+
+async getMeasurementByNetworkId(
+  networkCode: string
+): Promise<MeasurementDAO[]> {
+  return await this.repo.find({
+    relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
+    where: {
+      sensor: {
+        gateway: {
+          network: {
+            code: networkCode, // Filtra per networkCode
+          },
+        },
+      },
+    },
+  });
+}
+
+  async getMeasurementBySensorMac(
+    networkCode: string,
+    gatewayMac: string,
+    sensorMac: string
+  ): Promise<MeasurementDAO[]> {
+    return await this.repo.find({
+      relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
+      where: {
+        sensor: {
+          macAddress: sensorMac, // Filtra per sensorMac
+          gateway: {
+            macAddress: gatewayMac, // Filtra per gatewayMac
+            network: {
+              code: networkCode, // Filtra per networkCode
+            },
+          },
+        },
+      },
     });
-    return await this.repo.save(measurement);
   }
 
-  async getStatsByNetworkId(networkId: number): Promise<any[]> {
+  async getOutliersByNetworkId(networkId: string): Promise<MeasurementDAO[]> {
+    return await this.repo.find({
+      relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
+      where: {
+        isOutlier: true,
+        sensor: {
+          gateway: {
+            network: {
+              id: networkId,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async getOutliersBySensorId(sensorId: string): Promise<MeasurementDAO[]> {
+    return await this.repo.find({
+      relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
+      where: {
+        isOutlier: true,
+        sensor: {
+          id: sensorId,
+        },
+      },
+    });
+  }
+
+  //??
+  async getStatsByNetworkId(networkId: string): Promise<any[]> {
     return await this.repo
       .createQueryBuilder("measurement")
       .select("AVG(measurement.value)", "mean")
@@ -87,7 +124,7 @@ export class MeasurementRepository {
       .getRawMany();
   }
 
-  async getStatsBySensorId(sensorId: number): Promise<any[]> {
+  async getStatsBySensorId(sensorId: string): Promise<any[]> {
     return await this.repo
       .createQueryBuilder("measurement")
       .select("AVG(measurement.value)", "mean")

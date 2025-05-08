@@ -15,8 +15,8 @@ export class MeasurementDAO {
   @Column({nullable: false})
   isOutlier: boolean; // Indica se è un valore anomalo
 
-  @ManyToOne(() => Sensor, (sensor) => sensor.measurement, { onDelete: "CASCADE" })
-  sensor: Sensor; 
+  @ManyToOne(() => SensorDAO, (sensor) => sensor.measurement, { onDelete: "CASCADE" })
+  sensor: SensorDAO; 
   // Relazione univoca con il sensore
   // onDelete: "CASCADE" per eliminare le misurazioni associate quando un sensore viene eliminato
   

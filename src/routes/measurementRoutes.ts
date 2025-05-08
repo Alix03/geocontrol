@@ -1,16 +1,34 @@
 import { CONFIG } from "@config";
 import AppError from "@models/errors/AppError";
 import { Router } from "express";
+import { authenticateUser } from "@middlewares/authMiddleware";
+import { UserType } from "@models/UserType";
+import {
+  createMeasurement,
+  getMeasurementBySensorId,
+  getOutliersBySensorId,
+  getMeasurementByNetworkId,
+  getOutliersByNetworkId,
+} from "@controllers/measurementController";
+import { MeasurementFromJSON } from "@models/dto/Measurement";
+
+
 
 const router = Router();
 
 // Store a measurement for a sensor (Admin & Operator)
 router.post(
   CONFIG.ROUTES.V1_SENSORS + "/:sensorMac/measurements",
-  (req, res, next) => {
-    throw new AppError("Method not implemented", 500);
+  authenticateUser([UserType.Admin, UserType.Operator, UserType.Viewer]),
+  async (req, res, next) => {
+    try {
+      const measurement = MeasurementFromJSON(req.body);
+      await createMeasurement(measurement);
+      res.status(201).send();
+    } catch (error) {
+      next(error);
   }
-);
+});
 
 // Retrieve measurements for a specific sensor
 router.get(
