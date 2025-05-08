@@ -1,6 +1,8 @@
 import { Token as TokenDTO } from "@dto/Token";
 import { User as UserDTO } from "@dto/User";
 import { UserDAO } from "@models/dao/UserDAO";
+import { Gateway as GatewayDTO } from "@models/dto/Gateway";
+import { GatewayDAO } from "@models/dao/GatewayDAO";
 import { ErrorDTO } from "@models/dto/ErrorDTO";
 import { UserType } from "@models/UserType";
 
@@ -34,8 +36,25 @@ export function createUserDTO(
   }) as UserDTO;
 }
 
+
 export function mapUserDAOToDTO(userDAO: UserDAO): UserDTO {
   return createUserDTO(userDAO.username, userDAO.type);
+}
+
+export function createGatewayDTO(
+  macAddress: string,
+  name: string,
+  description: string,
+): GatewayDTO{
+  return removeNullAttributes({
+    macAddress,
+    name,
+    description
+  }) as GatewayDTO;
+}
+
+export function mapGatewayDAOToDTO(gatewayDAO: GatewayDAO): GatewayDTO{
+  return createGatewayDTO(gatewayDAO.macAddress, gatewayDAO.name, gatewayDAO.description);
 }
 
 function removeNullAttributes<T>(dto: T): Partial<T> {
