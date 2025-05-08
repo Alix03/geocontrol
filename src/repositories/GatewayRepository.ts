@@ -2,6 +2,8 @@ import { AppDataSource } from "@database";
 import { Repository } from "typeorm";
 import { GatewayDAO } from "@models/dao/GatewayDAO";
 import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
+import { NotFoundError } from "@models/errors/NotFoundError";
+import { ConflictError } from "@models/errors/ConflictError";
 
 export class GatewayRepository{
   private repo: Repository<GatewayDAO>;
@@ -57,15 +59,23 @@ export class GatewayRepository{
 
   async updateGateway(
     oldAddress: string,
-    macAddress: string,
+    newAddress: string,
     name?: string,
     description?: string,
   ): Promise<GatewayDAO> {
     const gateway = await this.getGatewayByMac(oldAddress); 
+    if (!gateway) {
+      throw new NotFoundError(`Gateway with code '${oldAddress}' not found`);
+    }
+
+
     
-    if (oldAddress != macAddress){
-      await this.repo.remove(gateway);
-      gateway.macAddress=macAddress;
+    if (oldAddress != newAddress){
+      const existing = await this.repo.findOne({ where: { macAddress: newAddress } });
+      if (existing) {
+        throw new ConflictError(`Gateway with code '${newAddress}' already exists`);
+      }
+      gateway.macAddress=newAddress;
     }
 
     if (name !== undefined) {
