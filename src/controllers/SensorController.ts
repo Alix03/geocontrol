@@ -1,15 +1,17 @@
 import { Sensor as SensorDTO } from "@models/dto/Sensor";
 import { SensorRepository } from "@repositories/SensorRepository";
+import { mapSensorDAOToDTO } from "@services/mapperService";
+
 
 export async function getAllSensors(networkCode : string, gatewayMac: string): Promise<SensorDTO[]> {
   const sensorRepo = new SensorRepository();
-  return (await sensorRepo.getAllSensors(networkCode, gatewayMac)).map(mapSensorDAOToDTO);  //forse non serve networkCode
+  return (await sensorRepo.getAllSensors(networkCode, gatewayMac)).map(mapSensorDAOToDTO);  
   
 }
 
 export async function getSensor(networkCode : string, gatewayMac: string, sensorMac: string): Promise<SensorDTO> {
   const sensorRepo = new SensorRepository();
-  return mapSensorDAOToDTO(await sensorRepo.getSensorByMac(sensorMac));
+  return mapSensorDAOToDTO(await sensorRepo.getSensorByMac(networkCode, gatewayMac, sensorMac));
   //devo controllare che faccia parte del gateway e del network?
 
 }
@@ -17,17 +19,17 @@ export async function getSensor(networkCode : string, gatewayMac: string, sensor
 export async function createSensor(networkCode : string, gatewayMac: string, sensorDto: SensorDTO): Promise<void> {
   const sensorRepo = new SensorRepository();
   //devo controllare che il gateway faccia parte del network?
-  await sensorRepo.createSensor(sensorDto.macAddress, sensorDto.name, sensorDto.description, sensorDto.variable, sensorDto.unit, gatewayMac);
+  await sensorRepo.createSensor(gatewayMac, sensorDto.macAddress, sensorDto.name, sensorDto.description, sensorDto.variable, sensorDto.unit);
 }
 
-export async function deleteSensor(sensorMac: string): Promise<void> {
+export async function deleteSensor(networkCode : string, gatewayMac: string, sensorMac: string): Promise<void> {
   const sensorRepo = new SensorRepository();
   //controlli?
-  await sensorRepo.deleteSensor(sensorMac);
+  await sensorRepo.deleteSensor(networkCode, gatewayMac, sensorMac);
 }
 
-export async function updateNetwork(sensorDto: SensorDTO): Promise<void> {
+export async function updateNetwork(sensorMac: string, sensorDto: SensorDTO): Promise<void> {
   const sensorRepo = new SensorRepository();
   //controlli?
-  await sensorRepo.updateSensor(sensorDto.macAddress, sensorDto.name, sensorDto.description, sensorDto.variable, sensorDto.unit);
+  await sensorRepo.updateSensor(sensorMac, sensorDto.macAddress, sensorDto.name, sensorDto.description, sensorDto.variable, sensorDto.unit);
 }

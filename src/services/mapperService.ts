@@ -4,6 +4,7 @@ import { SensorDAO } from "@models/dao/SensorDAO";
 import { UserDAO } from "@models/dao/UserDAO";
 import { ErrorDTO } from "@models/dto/ErrorDTO";
 import { UserType } from "@models/UserType";
+import { Sensor as SensorDTO } from "@models/dto/Sensor";
 
 export function createErrorDTO(
   code: number,
@@ -51,16 +52,22 @@ function removeNullAttributes<T>(dto: T): Partial<T> {
 }
 
 
-async function findSensorsByNetworkGateway(networkCode: string, gatewayMac: string): Promise<SensorDAO[]> {
-  
-  const networkDAO = await this.networkRepo.findOne(networkCode);
+export function mapSensorDAOToDTO(SensorDAO: SensorDAO): SensorDTO {
+  return createSensorDTO(SensorDAO.macAddress, SensorDAO.name, SensorDAO.description, SensorDAO.variable, SensorDAO.unit);
+}
 
-  // 2. Verifica appartenenza gateway al network
-  const gatewayDAO = await this.gatewayRepo.findOne({
-    where: { macAddress: gatewayMac, network: { id: network.id } },
-  });
-
-  // 3. Recupera i sensori
-  return this.sensorRepo.findByGatewayId(gatewayDAO.id);
-
+export function createSensorDTO(
+  macAddress: string,
+  name: string,
+  description: string,
+  variable: string,
+  unit: string
+): SensorDTO {
+  return removeNullAttributes({
+  macAddress,
+  name,
+  description,
+  variable,
+  unit
+  }) as SensorDTO;
 }
