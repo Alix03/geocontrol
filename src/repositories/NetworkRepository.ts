@@ -54,13 +54,11 @@ export class NetworkRepository {
     name?: string,
     description?: string
   ): Promise<void> {
-    // 1. Cerca direttamente il network attuale
-    const network = await this.repo.findOne({ where: { code: currentCode } });
-    if (!network) {
-      throw new NotFoundError(`Network with code '${currentCode}' not found`);
-    }
+    // Cerca direttamente il network attuale
+    const network = await this.getNetworkByCode(currentCode);
+    
   
-    // 2. Se il codice è cambiato, verifica che quello nuovo non esista già
+    // Se il codice è cambiato, verifica che quello nuovo non esista già
     if (newCode !== currentCode) {
       const existing = await this.repo.findOne({ where: { code: newCode } });
       if (existing) {
@@ -69,7 +67,7 @@ export class NetworkRepository {
       network.code = newCode;
     }
   
-    // 3. Aggiorna gli altri campi se forniti
+    // Aggiorna gli altri campi se forniti
     if (name !== undefined) {
       network.name = name;
     }
