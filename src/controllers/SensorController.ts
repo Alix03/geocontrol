@@ -28,8 +28,8 @@ export async function deleteSensor(networkCode : string, gatewayMac: string, sen
   await sensorRepo.deleteSensor(networkCode, gatewayMac, sensorMac);
 }
 
-export async function updateNetwork(sensorMac: string, sensorDto: SensorDTO): Promise<void> {
+export async function updateSensor(networkCode: string, gatewayMac: string, sensorMac: string, sensorDto: SensorDTO): Promise<void> {
   const sensorRepo = new SensorRepository();
   //controlli?
-  await sensorRepo.updateSensor(sensorMac, sensorDto.macAddress, sensorDto.name, sensorDto.description, sensorDto.variable, sensorDto.unit);
+  await sensorRepo.updateSensor(networkCode, gatewayMac, sensorMac, sensorDto.macAddress, sensorDto.name, sensorDto.description, sensorDto.variable, sensorDto.unit);
 }
