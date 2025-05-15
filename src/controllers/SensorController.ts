@@ -1,12 +1,19 @@
 import { Sensor as SensorDTO } from "@models/dto/Sensor";
+import { GatewayRepository } from "@repositories/GatewayRepository";
+import { NetworkRepository } from "@repositories/NetworkRepository";
 import { SensorRepository } from "@repositories/SensorRepository";
 import { mapSensorDAOToDTO } from "@services/mapperService";
 
 
 export async function getAllSensors(networkCode : string, gatewayMac: string): Promise<SensorDTO[]> {
   const sensorRepo = new SensorRepository();
-  return (await sensorRepo.getAllSensors(networkCode, gatewayMac)).map(mapSensorDAOToDTO);  
-  
+  const gatewayRepo = new GatewayRepository();
+  const networkRepo = new NetworkRepository();
+
+  await networkRepo.getNetworkByCode(networkCode);
+  await gatewayRepo.getGatewayByMac(gatewayMac);
+
+  return (await sensorRepo.getAllSensors(networkCode, gatewayMac)).map(mapSensorDAOToDTO);
 }
 
 export async function getSensor(networkCode : string, gatewayMac: string, sensorMac: string): Promise<SensorDTO> {
@@ -18,7 +25,6 @@ export async function getSensor(networkCode : string, gatewayMac: string, sensor
 
 export async function createSensor(networkCode : string, gatewayMac: string, sensorDto: SensorDTO): Promise<void> {
   const sensorRepo = new SensorRepository();
-  //devo controllare che il gateway faccia parte del network?
   await sensorRepo.createSensor(gatewayMac, sensorDto.macAddress, sensorDto.name, sensorDto.description, sensorDto.variable, sensorDto.unit);
 }
 

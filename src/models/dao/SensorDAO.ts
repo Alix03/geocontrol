@@ -22,9 +22,9 @@ export class SensorDAO {
   @Column({ nullable: false })
   unit: string;
 
-  @ManyToOne(() => GatewayDAO, (gateway) => gateway.sensors)
+  @ManyToOne(() => GatewayDAO, (gateway) => gateway.sensors, { onDelete: "CASCADE"})
   gateway: GatewayDAO;
 
-  @OneToMany(() => MeasurementDAO, (mes) => mes.sensor)
+  @OneToMany(() => MeasurementDAO, (mes) => mes.sensor, {cascade: true})
    measurements: MeasurementDAO[];
 }
