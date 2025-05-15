@@ -1,5 +1,6 @@
-import {Entity, Column, ManyToOne, PrimaryGeneratedColumn, Unique} from "typeorm";
+import {Entity, Column, ManyToOne, PrimaryGeneratedColumn, Unique, OneToMany} from "typeorm";
 import { NetworkDAO } from "./NetworkDAO";
+import { SensorDAO } from "./SensorDAO";
 
 @Entity("gateways")
 @Unique(["macAddress"])
@@ -16,7 +17,11 @@ export class GatewayDAO{
     @Column({nullable: false})
     description: string
 
-    @ManyToOne(() => NetworkDAO, (network) => network.gateways, { onDelete: "CASCADE" })
+
+    @ManyToOne(() => NetworkDAO, (network) => network.gateways, { cascade:true, eager:true})
 network: NetworkDAO;
+
+    @OneToMany(() => SensorDAO, (gateway) => gateway.sensors, { cascade:true, eager:true })
+sensors: SensorDAO [];
 
 }

@@ -1,4 +1,5 @@
 import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { GatewayDAO } from "./GatewayDAO";
 
 @Entity("sensors")
 export class SensorDAO {
