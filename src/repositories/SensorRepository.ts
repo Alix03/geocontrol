@@ -13,7 +13,6 @@ export class SensorRepository {
   }
 
   getAllSensors(networkCode:string, gatewayMac: string): Promise<SensorDAO[]> {
-    //todo findorthrownotfound per gateway e network
     return this.repo.find({ where: {
       gateway: {
         macAddress: gatewayMac,
@@ -54,7 +53,7 @@ export class SensorRepository {
       `Sensor with MAC address '${macAddress}' already exists`
     );
 
-    const gateway=findOrThrowNotFound(
+    const gateway = findOrThrowNotFound(
       await AppDataSource.getRepository(GatewayDAO).find({ where: { macAddress: gatewayMac } }),
       () => true,
       `Gateway with MAC address '${gatewayMac}' not found`

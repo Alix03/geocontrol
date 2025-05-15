@@ -51,27 +51,31 @@ export function createGatewayDTO(
   macAddress: string,
   name: string,
   description: string,
+  sensors: SensorDAO []
 ): GatewayDTO{
   return removeNullAttributes({
     macAddress,
     name,
-    description
+    description,
+    sensors
   }) as GatewayDTO;
 }
 
 export function mapGatewayDAOToDTO(gatewayDAO: GatewayDAO): GatewayDTO{
-  return createGatewayDTO(gatewayDAO.macAddress, gatewayDAO.name, gatewayDAO.description);
+  return createGatewayDTO(gatewayDAO.macAddress, gatewayDAO.name, gatewayDAO.description, gatewayDAO.sensors);
 }
 
 export function createNetworkDTO(
   code: string,
   name: string,
-  description?: string
+  description: string,
+  gateways : GatewayDAO[]
 ): NetworkDTO {
   return removeNullAttributes({
     code,
     name,
-    description
+    description,
+    gateways 
   }) as NetworkDTO;
 }
 
@@ -79,7 +83,8 @@ export function mapNetworkDAOToDTO(networkDAO: NetworkDAO): NetworkDTO {
   return createNetworkDTO(
     networkDAO.code,
     networkDAO.name,
-    networkDAO.description
+    networkDAO.description,
+    networkDAO.gateways
   );
 }
 
