@@ -142,4 +142,4 @@ export function createSensorDTO(
   unit
   }) as SensorDTO;
 }
-}
+

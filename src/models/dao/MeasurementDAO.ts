@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne, PrimaryColumn } from "typeorm";
-import { Sensor } from "./SensorDAO";
+import { SensorDAO } from "./SensorDAO";
 
 @Entity("measurement")
 export class MeasurementDAO {
@@ -15,7 +15,7 @@ export class MeasurementDAO {
   @Column({nullable: false})
   isOutlier: boolean; // Indica se è un valore anomalo
 
-  @ManyToOne(() => SensorDAO, (sensor) => sensor.measurement, { onDelete: "CASCADE" })
+  @ManyToOne(() => SensorDAO, (sensor) => sensor.measurements, { onDelete: "CASCADE" })
   sensor: SensorDAO; 
   // Relazione univoca con il sensore
   // onDelete: "CASCADE" per eliminare le misurazioni associate quando un sensore viene eliminato
