@@ -1,9 +1,14 @@
 import { Gateway as GatewayDTO } from "@models/dto/Gateway";
 import { GatewayRepository } from "@repositories/GatewayRepository";
+import { NetworkRepository } from "@repositories/NetworkRepository";
 import { mapGatewayDAOToDTO } from "@services/mapperService";
 
 export async function getAllGateways(networkCode  : string): Promise<GatewayDTO[]> {
   const gatewayRepo = new GatewayRepository();
+  const networkRepo = new NetworkRepository();
+
+  await networkRepo.getNetworkByCode(networkCode);
+
   return (await gatewayRepo.getAllGateways(networkCode)).map(gateway => mapGatewayDAOToDTO(gateway));
   
 }
