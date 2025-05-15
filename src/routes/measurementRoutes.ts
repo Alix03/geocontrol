@@ -23,7 +23,7 @@ router.post(
   async (req, res, next) => {
     try {
       const measurement = MeasurementFromJSON(req.body);
-      await createMeasurement(measurement);
+     // await createMeasurement(measurement);
       res.status(201).send();
     } catch (error) {
       next(error);

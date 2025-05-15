@@ -3,6 +3,7 @@ import { Repository } from "typeorm";
 import { SensorDAO } from "@models/dao/SensorDAO";
 import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
 import { ConflictError } from "@models/errors/ConflictError";
+import { GatewayDAO } from "@models/dao/GatewayDAO";
 
 export class SensorRepository {
   private repo: Repository<SensorDAO>;
@@ -53,13 +54,19 @@ export class SensorRepository {
       `Sensor with MAC address '${macAddress}' already exists`
     );
 
+    const gateway=findOrThrowNotFound(
+      await AppDataSource.getRepository(GatewayDAO).find({ where: { macAddress: gatewayMac } }),
+      () => true,
+      `Gateway with MAC address '${gatewayMac}' not found`
+    );
+
     return this.repo.save({
       macAddress: macAddress,
       name: name,
       description: description,
       variable: variable,
       unit: unit,
-      gateway: gatewayMac
+      gateway: gateway
     });
   }
 
