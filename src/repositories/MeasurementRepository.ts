@@ -4,6 +4,8 @@ import { MeasurementDAO } from "@dao/MeasurementDAO";
 import { Measurement as MeasurementDTO } from "@dto/Measurement";
 import { SensorDAO } from "@dao/SensorDAO";
 import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
+import { query } from "winston";
+import { NetworkDAO } from "@dao/NetworkDAO";
 
 export class MeasurementRepository {
   private repo: Repository<MeasurementDAO>;
@@ -40,8 +42,13 @@ export class MeasurementRepository {
 }
 
 async getMeasurementByNetworkId(
-  networkCode: string
+  networkCode: string,
+  query: any,
 ): Promise<MeasurementDAO[]> {
+  const { sensorMacs, startDate, endDate } = query;
+  const network = await AppDataSource.getRepository(NetworkDAO).findOne({
+    where: { code: networkCode,},
+  });
   return null;
 }
 
@@ -49,8 +56,19 @@ async getMeasurementByNetworkId(
   async getMeasurementBySensorMac(
     networkCode: string,
     gatewayMac: string,
-    sensorMac: string
+    sensorMac: string,
+    query: any,
   ): Promise<MeasurementDAO[]> {
+    const { startDate, endDate } = query;
+    const network = await AppDataSource.getRepository(NetworkDAO).findOne({
+      where: { code: networkCode },
+    });
+    const gateway = await AppDataSource.getRepository(SensorDAO).findOne({
+      where: { macAddress: gatewayMac },
+    });
+    const sensor = await AppDataSource.getRepository(SensorDAO).findOne({
+      where: { macAddress: sensorMac },
+    });
     return null;
   }
 

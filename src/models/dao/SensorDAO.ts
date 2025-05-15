@@ -25,6 +25,6 @@ export class SensorDAO {
   @ManyToOne(() => GatewayDAO, (gateway) => gateway.sensors)
   gateway: GatewayDAO;
 
-  @OneToMany(() => MeasurementDAO, (mes) => mes.sensor)
+  @OneToMany(() => MeasurementDAO, (mes) => mes.sensor, {nullable: false, cascade: true})
    measurements: MeasurementDAO[];
 }
