@@ -66,12 +66,14 @@ export function mapGatewayDAOToDTO(gatewayDAO: GatewayDAO): GatewayDTO{
 export function createNetworkDTO(
   code: string,
   name: string,
-  description?: string
+  description: string,
+  gateways : GatewayDAO[]
 ): NetworkDTO {
   return removeNullAttributes({
     code,
     name,
-    description
+    description,
+    gateways 
   }) as NetworkDTO;
 }
 
@@ -79,7 +81,8 @@ export function mapNetworkDAOToDTO(networkDAO: NetworkDAO): NetworkDTO {
   return createNetworkDTO(
     networkDAO.code,
     networkDAO.name,
-    networkDAO.description
+    networkDAO.description,
+    networkDAO.gateways
   );
 }
 
