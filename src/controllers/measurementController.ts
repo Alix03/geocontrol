@@ -26,16 +26,20 @@ export async function createMeasurement(
     networkCode: string,
     gatewayMac: string,
     sensorMac: string,
-    measurementDto: MeasurementDTO
+    measurementDto: MeasurementDTO[]
   ): Promise<void> {
     const measurementRepo = new MeasurementRepository();
+
+    for (const measurement of measurementDto) {
+      
     // Call the repository method with all required parameters
     await measurementRepo.createMeasurement(
-      networkCode,
-      gatewayMac,
+      measurement.createdAt,
+      measurement.value,
       sensorMac,
-      measurementDto
-    );
+      measurement.isOutlier ?? false,
+
+    );}
   }
 
 

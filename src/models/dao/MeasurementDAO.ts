@@ -12,10 +12,14 @@ export class MeasurementDAO {
   @Column("float" ,{nullable: false})
   value: number; 
 
-  @Column({nullable: false})
+  @Column({nullable: true})
   isOutlier: boolean; // Indica se è un valore anomalo
 
+<<<<<<< Updated upstream
   @ManyToOne(() => SensorDAO, (sensor) => sensor.measurements, { onDelete: "CASCADE" })
+=======
+  @ManyToOne(() => SensorDAO, (sensor) => sensor.measurement, { nullable: false, onDelete: "CASCADE" })
+>>>>>>> Stashed changes
   sensor: SensorDAO; 
   // Relazione univoca con il sensore
   // onDelete: "CASCADE" per eliminare le misurazioni associate quando un sensore viene eliminato

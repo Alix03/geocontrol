@@ -14,34 +14,27 @@ export class MeasurementRepository {
 
 
   async createMeasurement(
-    networkCode: string,
-    gatewayMac: string,
+    createdAt: Date,
+    value: number,
     sensorMac: string,
-    measurementData: MeasurementDTO
+    isOutlier?: boolean,
     ): Promise<MeasurementDAO> {
     // Verifica che il sensore esista e sia associato al networkCode e gatewayMac
     const sensor = await AppDataSource.getRepository(SensorDAO).findOne({
-    relations: ["gateway", "gateway.network"],
     where: {
       macAddress: sensorMac,
-      gateway: {
-        macAddress: gatewayMac,
-        network: {
-          code: networkCode,
-        },
-      },
     },
   });
   if (!sensor) {
     throw new Error(
-      `Sensor with macAddress '${sensorMac}' not found in gateway '${gatewayMac}' and network '${networkCode}'`
+      `Sensor with macAddress '${sensorMac}' not found`
     );
   }
   // Salva la misurazione
   return this.repo.save({
-    createdAt: measurementData.createdAt,
-    value: measurementData.value,
-    isOutlier: measurementData.isOutlier,
+    createdAt: createdAt,
+    value: value,
+    isOutlier: isOutlier,
     sensor: sensor, // Associa il sensore
   });
 }
