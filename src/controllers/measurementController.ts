@@ -24,19 +24,11 @@ export async function getOutliersBySensorId(sensorId : string): Promise<Measurem
 
 export async function createMeasurement(
     sensorMac: string,
-    measurementDto: MeasurementDTO
+    measurements: MeasurementDTO[] 
   ): Promise<void> {
-    console.log("createMeasurement", sensorMac, measurementDto);
     const measurementRepo = new MeasurementRepository();
-    measurementRepo.createMeasurement(
-      measurementDto.createdAt,
-      measurementDto.value,
-      sensorMac,
-      measurementDto.isOutlier ?? false,
-    );
-/*
-    for (const measurement of measurementDto) {
-      
+    for (const measurement of measurements) {
+
     // Call the repository method with all required parameters
     await measurementRepo.createMeasurement(
       measurement.createdAt,
@@ -45,7 +37,6 @@ export async function createMeasurement(
       measurement.isOutlier ?? false,
 
     );}
-    */
   }
 
 
