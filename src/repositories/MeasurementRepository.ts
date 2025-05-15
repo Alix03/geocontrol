@@ -42,18 +42,7 @@ export class MeasurementRepository {
 async getMeasurementByNetworkId(
   networkCode: string
 ): Promise<MeasurementDAO[]> {
-  return await this.repo.find({
-    relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
-    where: {
-      sensor: {
-        gateway: {
-          network: {
-            code: networkCode, // Filtra per networkCode
-          },
-        },
-      },
-    },
-  });
+  return null;
 }
 
 
@@ -62,72 +51,16 @@ async getMeasurementByNetworkId(
     gatewayMac: string,
     sensorMac: string
   ): Promise<MeasurementDAO[]> {
-    return await this.repo.find({
-      relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
-      where: {
-        sensor: {
-          macAddress: sensorMac, // Filtra per sensorMac
-          gateway: {
-            macAddress: gatewayMac, // Filtra per gatewayMac
-            network: {
-              code: networkCode, // Filtra per networkCode
-            },
-          },
-        },
-      },
-    });
+    return null;
   }
 
   async getOutliersByNetworkId(networkId: string): Promise<MeasurementDAO[]> {
-    return await this.repo.find({
-      relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
-      where: {
-        isOutlier: true,
-        sensor: {
-          gateway: {
-            network: {
-              id: networkId,
-            },
-          },
-        },
-      },
-    });
+    return null;
   }
 
   async getOutliersBySensorId(sensorId: string): Promise<MeasurementDAO[]> {
-    return await this.repo.find({
-      relations: ["sensor", "sensor.gateway", "sensor.gateway.network"],
-      where: {
-        isOutlier: true,
-        sensor: {
-          id: sensorId,
-        },
-      },
-    });
+    return null;
   }
 
   //??
-  async getStatsByNetworkId(networkId: string): Promise<any[]> {
-    return await this.repo
-      .createQueryBuilder("measurement")
-      .select("AVG(measurement.value)", "mean")
-      .addSelect("VARIANCE(measurement.value)", "variance")
-      .innerJoin("measurement.sensor", "sensor")
-      .innerJoin("sensor.gateway", "gateway")
-      .innerJoin("gateway.network", "network")
-      .where("network.id = :networkId", { networkId })
-      .groupBy("network.id")
-      .getRawMany();
-  }
-
-  async getStatsBySensorId(sensorId: string): Promise<any[]> {
-    return await this.repo
-      .createQueryBuilder("measurement")
-      .select("AVG(measurement.value)", "mean")
-      .addSelect("VARIANCE(measurement.value)", "variance")
-      .where("measurement.sensorId = :sensorId", { sensorId })
-      .groupBy("measurement.sensorId")
-      .getRawMany();
-  }
-      
 }
