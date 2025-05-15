@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "typeorm";
-import { GatewayDAO } from "./GatewayDAO";
-//import { MeasurementDAO } from "./MeasurementDAO";
+import { GatewayDAO } from "@models/dao/GatewayDAO";
+import { MeasurementDAO } from "@models/dao/MeasurementDAO";
 
 @Entity("sensors")
 export class SensorDAO {
@@ -25,6 +25,6 @@ export class SensorDAO {
   @ManyToOne(() => GatewayDAO, (gateway) => gateway.sensors)
   gateway: GatewayDAO;
 
- // @OneToMany(() => MeasurementDAO, (mes) => mes.sensor)
-  //  measurements: MeasurementDAO[];
+  @OneToMany(() => MeasurementDAO, (mes) => mes.sensor)
+   measurements: MeasurementDAO[];
 }

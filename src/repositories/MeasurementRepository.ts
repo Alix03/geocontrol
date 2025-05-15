@@ -61,6 +61,4 @@ async getMeasurementByNetworkId(
   async getOutliersBySensorId(sensorId: string): Promise<MeasurementDAO[]> {
     return null;
   }
-
-  //??
 }

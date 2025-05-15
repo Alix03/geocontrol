@@ -83,31 +83,25 @@ export function mapNetworkDAOToDTO(networkDAO: NetworkDAO): NetworkDTO {
   );
 }
 
-
-
-
 export function createMeasurementDTO(
-  id: number,
   createdAt: Date,
   value: number,
- // sensorMac: number,
+  sensorMac: string,
   isOutlier?: boolean
 ): MeasurementDTO {
   return removeNullAttributes({
-    id,
     createdAt,
     value,
-   // sensorMac,
+    sensorMac,
     isOutlier
   }) as MeasurementDTO;
 }
 
-export function mapMeasurementDAOToDTO(measurementDAO: MeasurementDAO): MeasurementDTO {
+export function mapMeasurementDAOToDTO(measurementDAO: any): any {
   return createMeasurementDTO(
-    measurementDAO.id,
     measurementDAO.createdAt,
     measurementDAO.value,
-   // measurementDAO.sensor.id 
+    measurementDAO.isOutlier
   );
 }
 

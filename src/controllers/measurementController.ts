@@ -1,5 +1,3 @@
-
-/*
 import { Measurement as MeasurementDTO } from "@models/dto/Measurement";
 import { MeasurementRepository } from "@repositories/MeasurementRepository";
 import { mapMeasurementDAOToDTO } from "@services/mapperService";
@@ -25,13 +23,18 @@ export async function getOutliersBySensorId(sensorId : string): Promise<Measurem
 }
 
 export async function createMeasurement(
-    networkCode: string,
-    gatewayMac: string,
     sensorMac: string,
-    measurementDto: MeasurementDTO[]
+    measurementDto: MeasurementDTO
   ): Promise<void> {
+    console.log("createMeasurement", sensorMac, measurementDto);
     const measurementRepo = new MeasurementRepository();
-
+    measurementRepo.createMeasurement(
+      measurementDto.createdAt,
+      measurementDto.value,
+      sensorMac,
+      measurementDto.isOutlier ?? false,
+    );
+/*
     for (const measurement of measurementDto) {
       
     // Call the repository method with all required parameters
@@ -42,6 +45,7 @@ export async function createMeasurement(
       measurement.isOutlier ?? false,
 
     );}
+    */
   }
-*/
+
 

@@ -1,7 +1,6 @@
 import { createSensor, deleteSensor, getAllSensors, getSensor, updateSensor } from "@controllers/SensorController";
 import { authenticateUser } from "@middlewares/authMiddleware";
 import { SensorFromJSON } from "@models/dto/Sensor";
-import AppError from "@models/errors/AppError";
 import { UserType } from "@models/UserType";
 import { Router } from "express";
 
