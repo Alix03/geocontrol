@@ -1,9 +1,11 @@
 import { Token as TokenDTO } from "@dto/Token";
 import { User as UserDTO } from "@dto/User";
 import { SensorDAO } from "@models/dao/SensorDAO";
+import { Network as NetworkDTO } from "@dto/Network"
 import { UserDAO } from "@models/dao/UserDAO";
 import { Gateway as GatewayDTO } from "@models/dto/Gateway";
 import { GatewayDAO } from "@models/dao/GatewayDAO";
+import {NetworkDAO} from "@models/dao/NetworkDAO"
 import { ErrorDTO } from "@models/dto/ErrorDTO";
 import { UserType } from "@models/UserType";
 import { Sensor as SensorDTO } from "@models/dto/Sensor";
@@ -58,6 +60,29 @@ export function createGatewayDTO(
 export function mapGatewayDAOToDTO(gatewayDAO: GatewayDAO): GatewayDTO{
   return createGatewayDTO(gatewayDAO.macAddress, gatewayDAO.name, gatewayDAO.description);
 }
+
+export function createNetworkDTO(
+  code: string,
+  name: string,
+  description?: string
+): NetworkDTO {
+  return removeNullAttributes({
+    code,
+    name,
+    description
+  }) as NetworkDTO;
+}
+
+export function mapNetworkDAOToDTO(networkDAO: NetworkDAO): NetworkDTO {
+  return createNetworkDTO(
+    networkDAO.code,
+    networkDAO.name,
+    networkDAO.description
+  );
+}
+
+
+
 
 function removeNullAttributes<T>(dto: T): Partial<T> {
   return Object.fromEntries(
