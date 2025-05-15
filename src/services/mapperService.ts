@@ -9,6 +9,8 @@ import {NetworkDAO} from "@models/dao/NetworkDAO"
 import { ErrorDTO } from "@models/dto/ErrorDTO";
 import { UserType } from "@models/UserType";
 import { Sensor as SensorDTO } from "@models/dto/Sensor";
+import { Measurement as MeasurementDTO } from "@dto/Measurement";
+import { MeasurementDAO } from "@models/dao/MeasurementDAO";
 
 export function createErrorDTO(
   code: number,
@@ -84,6 +86,31 @@ export function mapNetworkDAOToDTO(networkDAO: NetworkDAO): NetworkDTO {
 
 
 
+export function createMeasurementDTO(
+  id: number,
+  createdAt: Date,
+  value: number,
+  sensorMac: number,
+  isOutlier?: boolean
+): MeasurementDTO {
+  return removeNullAttributes({
+    id,
+    createdAt,
+    value,
+    sensorMac,
+    isOutlier
+  }) as MeasurementDTO;
+}
+
+export function mapMeasurementDAOToDTO(measurementDAO: MeasurementDAO): MeasurementDTO {
+  return createMeasurementDTO(
+    measurementDAO.id,
+    measurementDAO.createdAt,
+    measurementDAO.value,
+    measurementDAO.sensor.id 
+  );
+}
+
 function removeNullAttributes<T>(dto: T): Partial<T> {
   return Object.fromEntries(
     Object.entries(dto).filter(
@@ -114,4 +141,5 @@ export function createSensorDTO(
   variable,
   unit
   }) as SensorDTO;
+}
 }
