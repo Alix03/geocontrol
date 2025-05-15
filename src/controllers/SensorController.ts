@@ -14,7 +14,7 @@ export async function getAllSensors(
   const gatewayRepo = new GatewayRepository();
   const networkRepo = new NetworkRepository();
   await networkRepo.getNetworkByCode(networkCode);
-  await gatewayRepo.getGatewayByMac(gatewayMac);
+  await gatewayRepo.getGatewayByMac(networkCode, gatewayMac);
 
   return (await sensorRepo.getAllSensors(networkCode, gatewayMac)).map(
     mapSensorDAOToDTO
@@ -32,7 +32,7 @@ export async function getSensor(
   const gatewayRepo = new GatewayRepository();
   const networkRepo = new NetworkRepository();
   await networkRepo.getNetworkByCode(networkCode);
-  await gatewayRepo.getGatewayByMac(gatewayMac);
+  await gatewayRepo.getGatewayByMac(networkCode, gatewayMac);
 
   return mapSensorDAOToDTO(
     await sensorRepo.getSensorByMac(networkCode, gatewayMac, sensorMac)
@@ -50,7 +50,7 @@ export async function createSensor(
   const gatewayRepo = new GatewayRepository();
   const networkRepo = new NetworkRepository();
   await networkRepo.getNetworkByCode(networkCode);
-  await gatewayRepo.getGatewayByMac(gatewayMac);
+  await gatewayRepo.getGatewayByMac(networkCode, gatewayMac);
 
   await sensorRepo.createSensor(
     gatewayMac,
@@ -73,7 +73,7 @@ export async function deleteSensor(
   const gatewayRepo = new GatewayRepository();
   const networkRepo = new NetworkRepository();
   await networkRepo.getNetworkByCode(networkCode);
-  await gatewayRepo.getGatewayByMac(gatewayMac);
+  await gatewayRepo.getGatewayByMac(networkCode, gatewayMac);
 
   await sensorRepo.deleteSensor(networkCode, gatewayMac, sensorMac);
 }
@@ -90,7 +90,7 @@ export async function updateSensor(
   const gatewayRepo = new GatewayRepository();
   const networkRepo = new NetworkRepository();
   await networkRepo.getNetworkByCode(networkCode);
-  await gatewayRepo.getGatewayByMac(gatewayMac);
+  await gatewayRepo.getGatewayByMac(networkCode, gatewayMac);
 
   await sensorRepo.updateSensor(
     networkCode,

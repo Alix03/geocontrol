@@ -4,6 +4,7 @@ import { GatewayDAO } from "@models/dao/GatewayDAO";
 import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
 import { NotFoundError } from "@models/errors/NotFoundError";
 import { ConflictError } from "@models/errors/ConflictError";
+import { NetworkDAO } from "@models/dao/NetworkDAO";
 
 export class GatewayRepository{
   private repo: Repository<GatewayDAO>;
@@ -12,23 +13,22 @@ export class GatewayRepository{
     this.repo = AppDataSource.getRepository(GatewayDAO);
   }
 
-  getAllGateways(): Promise<GatewayDAO[]>{
-    return this.repo.find();
+  getAllGateways(networkCode: string): Promise<GatewayDAO[]>{
+    return this.repo.find({ where: {
+      network: {
+        code: networkCode
+      }
+    }})
   }
 
-  async getGatewaysByNetworkId(networkId: string): Promise<GatewayDAO[]> {
-    return await this.repo.find({
-      relations: ["network"], 
-      where: {
-        network: {
-          code: networkId},
-      },
-    });
-  }
 
-  async getGatewayByMac(macAddress: string) : Promise<GatewayDAO>{
+  async getGatewayByMac(networkCode: string, macAddress: string) : Promise<GatewayDAO>{
     return findOrThrowNotFound(
-      await this.repo.find({where: {macAddress}}),
+      await this.repo.find({where: {macAddress,
+        network: {
+          code: networkCode
+        }
+      }}),
       () => true,
       `Gateway with MAC address ${macAddress} not found`
     );
@@ -36,9 +36,10 @@ export class GatewayRepository{
 
 
   async createGateway(
+    networkCode: string,
     macAddress: string,
-    name: string,
-    description: string,
+    name?: string,
+    description?: string,
   ):
   Promise<GatewayDAO>{
     throwConflictIfFound(
@@ -46,24 +47,33 @@ export class GatewayRepository{
       () => true,
       `Gateway with MAC address ${macAddress} already exists`
     );
+
+    const network = findOrThrowNotFound(
+      await AppDataSource.getRepository(NetworkDAO).find({where : {code: networkCode}}),
+      () => true,
+      `Network with code '${networkCode}' not found`
+    );
+
     return this.repo.save({
       macAddress: macAddress,
         name: name,
-        description: description
+        description: description,
+        network: network
     });
   }
 
-  async deleteGateway(macAddress: string): Promise<void>{
-    await this.repo.remove(await this.getGatewayByMac(macAddress));
+  async deleteGateway(networkCode: string, macAddress: string): Promise<void>{
+    await this.repo.remove(await this.getGatewayByMac(networkCode, macAddress));
   }
 
   async updateGateway(
+    networkCode: string,
     oldAddress: string,
     newAddress: string,
     name?: string,
     description?: string,
   ): Promise<GatewayDAO> {
-    const gateway = await this.getGatewayByMac(oldAddress); 
+    const gateway = await this.getGatewayByMac(networkCode, oldAddress); 
     
     if (oldAddress != newAddress){
       const existing = await this.repo.findOne({ where: { macAddress: newAddress } });

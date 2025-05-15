@@ -11,9 +11,9 @@ import { createGateway,
 const router = Router({ mergeParams: true });
 
 // Get all gateways (Any authenticated user)
-router.get("", async (req, res, next) => {
+router.get("", authenticateUser([UserType.Admin, UserType.Operator, UserType.Viewer]),async (req, res, next) => {
   try{
-    res.status(200).json(await getAllGateways());
+    res.status(200).json(await getAllGateways(req.params.networkCode));
   }catch(error){
     next(error);
   }
@@ -22,7 +22,7 @@ router.get("", async (req, res, next) => {
 // Create a new gateway (Admin & Operator)
 router.post("", authenticateUser([UserType.Admin, UserType.Operator]), async (req, res, next) => {
   try{
-    await createGateway(GatewayFromJSON(req.body));
+    await createGateway(req.params.networkCode, GatewayFromJSON(req.body));
     res.status(201).send();
   } catch (error) {
     next(error);
@@ -30,9 +30,9 @@ router.post("", authenticateUser([UserType.Admin, UserType.Operator]), async (re
 });
 
 // Get a specific gateway (Any authenticated user)
-router.get("/:gatewayMac", async (req, res, next) => {
+router.get("/:gatewayMac", authenticateUser([UserType.Admin, UserType.Operator, UserType.Viewer]),async (req, res, next) => {
   try{
-    res.status(200).json(await getGateway(req.params.gatewayMac));
+    res.status(200).json(await getGateway(req.params.networkCode , req.params.gatewayMac));
   }catch(error){
     next(error);
   }
@@ -41,7 +41,7 @@ router.get("/:gatewayMac", async (req, res, next) => {
 // Update a gateway (Admin & Operator)
 router.patch("/:gatewayMac", authenticateUser([UserType.Admin, UserType.Operator]), async (req, res, next) => {
   try{
-    await updateGateway(req.params.gatewayMac,GatewayFromJSON(req.body));
+    await updateGateway(req.params.networkCode, req.params.gatewayMac,GatewayFromJSON(req.body));
     res.status(204).send();
   }catch(error){
     next(error);
@@ -49,9 +49,9 @@ router.patch("/:gatewayMac", authenticateUser([UserType.Admin, UserType.Operator
 });
 
 // Delete a gateway (Admin & Operator)
-router.delete("/:gatewayMac", async (req, res, next) => {
+router.delete("/:gatewayMac", authenticateUser([UserType.Admin, UserType.Operator]), async (req, res, next) => {
   try{
-    await deleteGateway(req.params.gatewayMac);
+    await deleteGateway(req.params.networkCode, req.params.gatewayMac);
     res.status(204).send();
   }catch(error){
     next(error);
