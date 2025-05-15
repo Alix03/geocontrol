@@ -18,7 +18,7 @@ export class GatewayDAO{
     description: string
 
 
-    @ManyToOne(() => NetworkDAO, (network) => network.gateways, { cascade:true, eager:true})
+    @ManyToOne(() => NetworkDAO, (network) => network.gateways, { })
 network: NetworkDAO;
 
     @OneToMany(() => SensorDAO, (sensor) => sensor.gateway, { cascade:true, eager:true })
