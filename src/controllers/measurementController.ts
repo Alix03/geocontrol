@@ -1,3 +1,5 @@
+
+/*
 import { Measurement as MeasurementDTO } from "@models/dto/Measurement";
 import { MeasurementRepository } from "@repositories/MeasurementRepository";
 import { mapMeasurementDAOToDTO } from "@services/mapperService";
@@ -37,5 +39,5 @@ export async function createMeasurement(
       measurementDto
     );
   }
-
+*/
 

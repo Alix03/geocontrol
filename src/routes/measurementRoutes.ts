@@ -1,3 +1,5 @@
+/*
+
 import { CONFIG } from "@config";
 import AppError from "@models/errors/AppError";
 import { Router } from "express";
@@ -76,3 +78,4 @@ router.get(
 );
 
 export default router;
+*/

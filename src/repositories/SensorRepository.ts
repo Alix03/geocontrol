@@ -58,8 +58,7 @@ export class SensorRepository {
       name: name,
       description: description,
       variable: variable,
-      unit: unit,
-      gateway: gatewayMac
+      unit: unit
     });
   }
 
