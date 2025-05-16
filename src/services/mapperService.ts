@@ -1,11 +1,11 @@
 import { Token as TokenDTO } from "@dto/Token";
 import { User as UserDTO } from "@dto/User";
 import { SensorDAO } from "@models/dao/SensorDAO";
-import { Network as NetworkDTO } from "@dto/Network"
+import { Network as NetworkDTO } from "@dto/Network";
 import { UserDAO } from "@models/dao/UserDAO";
 import { Gateway as GatewayDTO } from "@models/dto/Gateway";
 import { GatewayDAO } from "@models/dao/GatewayDAO";
-import {NetworkDAO} from "@models/dao/NetworkDAO"
+import { NetworkDAO } from "@models/dao/NetworkDAO";
 import { ErrorDTO } from "@models/dto/ErrorDTO";
 import { UserType } from "@models/UserType";
 import { Sensor as SensorDTO } from "@models/dto/Sensor";
@@ -22,13 +22,13 @@ export function createErrorDTO(
   return removeNullAttributes({
     code,
     name,
-    message
+    message,
   }) as ErrorDTO;
 }
 
 export function createTokenDTO(token: string): TokenDTO {
   return removeNullAttributes({
-    token: token
+    token: token,
   }) as TokenDTO;
 }
 
@@ -40,10 +40,9 @@ export function createUserDTO(
   return removeNullAttributes({
     username,
     type,
-    password
+    password,
   }) as UserDTO;
 }
-
 
 export function mapUserDAOToDTO(userDAO: UserDAO): UserDTO {
   return createUserDTO(userDAO.username, userDAO.type);
@@ -53,31 +52,36 @@ export function createGatewayDTO(
   macAddress: string,
   name: string,
   description: string,
-  sensors: SensorDAO []
-): GatewayDTO{
+  sensors: SensorDAO[]
+): GatewayDTO {
   return removeNullAttributes({
     macAddress,
     name,
     description,
-    sensors
+    sensors,
   }) as GatewayDTO;
 }
 
-export function mapGatewayDAOToDTO(gatewayDAO: GatewayDAO): GatewayDTO{
-  return createGatewayDTO(gatewayDAO.macAddress, gatewayDAO.name, gatewayDAO.description, gatewayDAO.sensors);
+export function mapGatewayDAOToDTO(gatewayDAO: GatewayDAO): GatewayDTO {
+  return createGatewayDTO(
+    gatewayDAO.macAddress,
+    gatewayDAO.name,
+    gatewayDAO.description,
+    gatewayDAO.sensors
+  );
 }
 
 export function createNetworkDTO(
   code: string,
   name: string,
   description: string,
-  gateways : GatewayDAO[]
+  gateways: GatewayDAO[]
 ): NetworkDTO {
   return removeNullAttributes({
     code,
     name,
     description,
-    gateways 
+    gateways,
   }) as NetworkDTO;
 }
 
@@ -112,7 +116,7 @@ export function createMeasurementDTO(
     createdAt,
     value,
     sensorMac,
-    isOutlier
+    isOutlier,
   }) as MeasurementDTO;
 }
 
@@ -137,9 +141,14 @@ function removeNullAttributes<T>(dto: T): Partial<T> {
   ) as Partial<T>;
 }
 
-
 export function mapSensorDAOToDTO(SensorDAO: SensorDAO): SensorDTO {
-  return createSensorDTO(SensorDAO.macAddress, SensorDAO.name, SensorDAO.description, SensorDAO.variable, SensorDAO.unit);
+  return createSensorDTO(
+    SensorDAO.macAddress,
+    SensorDAO.name,
+    SensorDAO.description,
+    SensorDAO.variable,
+    SensorDAO.unit
+  );
 }
 
 export function createSensorDTO(
@@ -150,11 +159,61 @@ export function createSensorDTO(
   unit: string
 ): SensorDTO {
   return removeNullAttributes({
-  macAddress,
-  name,
-  description,
-  variable,
-  unit
+    macAddress,
+    name,
+    description,
+    variable,
+    unit,
   }) as SensorDTO;
 }
 
+export function createStatsDTO(
+  mean: number,
+  variance: number,
+  upperThreshold: number,
+  lowerThreshold: number,
+  startDate?: Date,
+  endDate?: Date
+): StatsDTO {
+  return removeNullAttributes({
+    startDate,
+    endDate,
+    mean,
+    variance,
+    upperThreshold,
+    lowerThreshold,
+  }) as StatsDTO;
+}
+
+export function computeStats(
+  measurements: MeasurementDAO[],
+  startDate?: Date,
+  endDate?: Date
+): StatsDTO {
+  const filteredmeas = measurements.filter((measurement) => {
+    if (startDate && measurement.createdAt < startDate) return false;
+    if (endDate && measurement.createdAt > endDate) return false;
+    return true;
+  });
+
+  const n = filteredmeas.length;
+  if (n === 0) {
+    return null;
+  }
+  const mean = filteredmeas.reduce((sum, m) => sum + m.value, 0) / n;
+  const variance =
+    filteredmeas.reduce((sum, m) => sum + Math.pow(m.value - mean, 2), 0) / n;
+
+  const sigma = Math.sqrt(variance);
+  const upperThreshold = mean + 2 * sigma;
+  const lowerThreshold = mean - 2 * sigma;
+
+  return createStatsDTO(
+    mean,
+    variance,
+    upperThreshold,
+    lowerThreshold,
+    startDate,
+    endDate
+  );
+}
