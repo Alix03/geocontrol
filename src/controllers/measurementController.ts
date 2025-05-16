@@ -30,7 +30,7 @@ export async function getMeasurementByNetworkId(networkCode: string, query: any)
     // Calcola le statistiche per ogni gruppo di sensori
     const measurements: MeasurementsDTO[] = [];
     groupedMeasurements.forEach((measurementsForSensor, sensorMac) => {
-        const stats: StatsDTO = computeStats(measurementsForSensor);
+        const stats: StatsDTO = computeStats(measurementsForSensor, query.startDate, query.endDate);
         const sensorMeasurements = createMeasurementsDTO(sensorMac, stats, measurementsForSensor);
        measurements.push(sensorMeasurements);
        

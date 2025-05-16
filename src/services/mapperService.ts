@@ -181,6 +181,7 @@ export function createStatsDTO(
   startDate?: Date,
   endDate?: Date
 ): StatsDTO {
+  
   return removeNullAttributes({
     startDate,
     endDate,
