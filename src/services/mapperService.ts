@@ -11,6 +11,8 @@ import { UserType } from "@models/UserType";
 import { Sensor as SensorDTO } from "@models/dto/Sensor";
 import { Measurement as MeasurementDTO } from "@dto/Measurement";
 import { MeasurementDAO } from "@models/dao/MeasurementDAO";
+import { Stats as StatsDTO } from "@dto/Stats";
+import { createMeasurement } from "@controllers/measurementController";
 
 export function createErrorDTO(
   code: number,
@@ -87,6 +89,18 @@ export function mapNetworkDAOToDTO(networkDAO: NetworkDAO): NetworkDTO {
     networkDAO.gateways
   );
 }
+export function createMeasurementsDTO(
+  sensorMacAddress: string,
+  stats?: StatsDTO,
+  measurements?: MeasurementDTO[]
+): any {
+  return removeNullAttributes({
+    sensorMacAddress,
+    stats,
+    measurements
+  });
+}
+
 
 export function createMeasurementDTO(
   createdAt: Date,
@@ -102,12 +116,14 @@ export function createMeasurementDTO(
   }) as MeasurementDTO;
 }
 
-export function mapMeasurementDAOToDTO(measurementDAO: any): any {
-  return createMeasurementDTO(
-    measurementDAO.createdAt,
-    measurementDAO.value,
-    measurementDAO.isOutlier
-  );
+export function mapMeasurementDAOToDTO(measurementDAO: MeasurementDAO ): MeasurementDTO {
+  console.log("measurementDAO", measurementDAO);
+   return createMeasurementDTO(
+     measurementDAO.createdAt,
+     measurementDAO.value,
+     measurementDAO.sensor.macAddress,
+     measurementDAO.isOutlier
+ );
 }
 
 function removeNullAttributes<T>(dto: T): Partial<T> {

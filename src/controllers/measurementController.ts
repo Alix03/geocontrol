@@ -1,17 +1,25 @@
 import { Measurement as MeasurementDTO } from "@models/dto/Measurement";
 import { MeasurementRepository } from "@repositories/MeasurementRepository";
-import { mapMeasurementDAOToDTO } from "@services/mapperService";
+import { mapMeasurementDAOToDTO, createMeasurementsDTO } from "@services/mapperService";
 import { NetworkRepository } from "@repositories/NetworkRepository";
 import { Network as NetworkDTO } from "@models/dto/Network";
+import { Measurements as MeasurementsDTO} from "@models/dto/Measurements";
 import { getNetwork } from "@controllers/networkController";
 import { getGateway } from "@controllers/gatewayController";
 import { getSensor } from "@controllers/SensorController";
+import { parseISODateParamToUTC } from "@utils";
+import { Stats as StatsDTO } from "@models/dto/Stats";
 
-export async function getMeasurementByNetworkId(networkCode : string, query: any): Promise<MeasurementDTO[]> {
+export async function getMeasurementByNetworkId(networkCode : string, query: any): Promise<MeasurementsDTO[]> {
     const measurementRepo = new MeasurementRepository();
     //check se esiste il network
     await getNetwork(networkCode);
-    return (await measurementRepo.getMeasurementByNetworkId(networkCode, query)).map(mapMeasurementDAOToDTO);
+    const measurementArray =(await measurementRepo.getMeasurementByNetworkId(networkCode, query))
+    .map((measurementDAO) => mapMeasurementDAOToDTO(measurementDAO)) || [];
+    const stats : StatsDTO= [];
+    console.log("measurement", measurementArray);
+    const measurements = createMeasurementsDTO(query.sensorMacs, stats, measurementArray);
+    return measurements;
 }
 
 export async function getMeasurementBySensorId(networkCode : string, gatewayMac : string, sensorMac : string, query: any): Promise<MeasurementDTO[]> {
@@ -37,9 +45,9 @@ export async function createMeasurement(
   ): Promise<void> {
     const measurementRepo = new MeasurementRepository();
     for (const measurement of measurements) {
-
     // Call the repository method with all required parameters
     await measurementRepo.createMeasurement(
+      //quando viene passato createdAt, viene convertito in UTC
       measurement.createdAt,
       measurement.value,
       sensorMac,
