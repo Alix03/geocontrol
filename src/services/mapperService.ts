@@ -196,19 +196,15 @@ export function computeStats(
   startDate?: Date,
   endDate?: Date
 ): StatsDTO {
-  const filteredmeas = measurements.filter((measurement) => {
-    if (startDate && measurement.createdAt < startDate) return false;
-    if (endDate && measurement.createdAt > endDate) return false;
-    return true;
-  });
 
-  const n = filteredmeas.length;
+
+  const n = measurements.length;
   if (n === 0) {
     return null;
   }
-  const mean = filteredmeas.reduce((sum, m) => sum + m.value, 0) / n;
+  const mean = measurements.reduce((sum, m) => sum + m.value, 0) / n;
   const variance =
-    filteredmeas.reduce((sum, m) => sum + Math.pow(m.value - mean, 2), 0) / n;
+    measurements.reduce((sum, m) => sum + Math.pow(m.value - mean, 2), 0) / n;
 
   const sigma = Math.sqrt(variance);
   const upperThreshold = mean + 2 * sigma;
