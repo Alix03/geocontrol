@@ -1,24 +1,42 @@
 import { Measurement as MeasurementDTO } from "@models/dto/Measurement";
 import { MeasurementRepository } from "@repositories/MeasurementRepository";
-import { mapMeasurementDAOToDTO, createMeasurementsDTO } from "@services/mapperService";
+import { mapMeasurementDAOToDTO, createMeasurementsDTO, computeStats } from "@services/mapperService";
 import { NetworkRepository } from "@repositories/NetworkRepository";
 import { Network as NetworkDTO } from "@models/dto/Network";
-import { Measurements as MeasurementsDTO} from "@models/dto/Measurements";
+import { Measurements as MeasurementsDTO, MeasurementsToJSON} from "@models/dto/Measurements";
 import { getNetwork } from "@controllers/networkController";
 import { getGateway } from "@controllers/gatewayController";
 import { getSensor } from "@controllers/SensorController";
 import { parseISODateParamToUTC } from "@utils";
 import { Stats as StatsDTO } from "@models/dto/Stats";
 
-export async function getMeasurementByNetworkId(networkCode : string, query: any): Promise<MeasurementsDTO[]> {
+
+export async function getMeasurementByNetworkId(networkCode: string, query: any): Promise<MeasurementsDTO[]> {
     const measurementRepo = new MeasurementRepository();
-    //check se esiste il network
+    // Check se esiste il network
     await getNetwork(networkCode);
-    const measurementArray =(await measurementRepo.getMeasurementByNetworkId(networkCode, query))
-    .map((measurementDAO) => mapMeasurementDAOToDTO(measurementDAO)) || [];
-    const stats : StatsDTO= [];
-    console.log("measurement", measurementArray);
-    const measurements = createMeasurementsDTO(query.sensorMacs, stats, measurementArray);
+
+    // Ottieni le misurazioni dal repository
+    const measurementArray = (await measurementRepo.getMeasurementByNetworkId(networkCode, query)) || [];
+    // Raggruppa le misurazioni per sensore
+    const groupedMeasurements: Map<string, MeasurementDTO[]> = new Map();
+    measurementArray.forEach((measurement) => {
+        const sensorMac = measurement.sensor.macAddress; // Assumendo che il sensore abbia un campo macAddress
+        if (!groupedMeasurements.has(sensorMac)) {
+            groupedMeasurements.set(sensorMac, []);
+        }
+        groupedMeasurements.get(sensorMac)!.push(mapMeasurementDAOToDTO(measurement));
+    });
+    // Calcola le statistiche per ogni gruppo di sensori
+    const measurements: MeasurementsDTO[] = [];
+    groupedMeasurements.forEach((measurementsForSensor, sensorMac) => {
+        const stats: StatsDTO = computeStats(measurementsForSensor);
+        const sensorMeasurements = createMeasurementsDTO(sensorMac, stats, measurementsForSensor);
+       measurements.push(sensorMeasurements);
+       
+    }); 
+    // Converti in JSON e restituisci
+    MeasurementsToJSON(measurements); 
     return measurements;
 }
 

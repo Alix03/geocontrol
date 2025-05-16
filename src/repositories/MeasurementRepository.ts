@@ -49,7 +49,7 @@ export class MeasurementRepository {
     const network = await AppDataSource.getRepository(NetworkDAO).findOne({
       where: { code: networkCode },
     });
-    console.log("sensorMacs", sensorMacs);
+    
     //se l'array di sensori è vuoto, mi ritorna tutte le measurement 
     if ((sensorMacs.length == 0)) {
       const measurements = await this.repo.find({
@@ -66,13 +66,12 @@ export class MeasurementRepository {
     for (const sensorMac of sensorMacsArray) {
       const measurements = await this.repo.find({
         relations: {sensor: true},
-        /*where: {
-          sensor: { macAddress: sensorMac, gateway: { network: network } },
+        where: {
+          sensor: { macAddress: sensorMac },
           createdAt: Between(startDate, endDate),
-      },*/
+      },
       });
       
-      console.log("measurements", measurements);
       measurementArray.push(...measurements);
     } 
     return measurementArray;

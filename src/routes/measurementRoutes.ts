@@ -35,8 +35,7 @@ router.get(
   async (req, res, next) => {
     try {
       const networkCode = req.params.networkCode;
-      await getMeasurementByNetworkId(networkCode, req.query);
-      res.status(200).json({});
+      res.status(200).json( await getMeasurementByNetworkId(networkCode, req.query));
     } catch (error) {
       next(error);
     }

@@ -13,6 +13,7 @@ import { Measurement as MeasurementDTO } from "@dto/Measurement";
 import { MeasurementDAO } from "@models/dao/MeasurementDAO";
 import { Stats as StatsDTO } from "@dto/Stats";
 import { createMeasurement } from "@controllers/measurementController";
+import { Measurements as MeasurementsDTO } from "@models/dto/Measurements";
 
 export function createErrorDTO(
   code: number,
@@ -96,14 +97,20 @@ export function mapNetworkDAOToDTO(networkDAO: NetworkDAO): NetworkDTO {
 export function createMeasurementsDTO(
   sensorMacAddress: string,
   stats?: StatsDTO,
-  measurements?: MeasurementDTO[]
-): any {
-  return removeNullAttributes({
+  measurement?: MeasurementDTO[]
+): MeasurementsDTO {
+  const measurements= {
     sensorMacAddress,
-    stats,
-    measurements
-  });
+    ...removeNullAttributes({
+      stats,
+      measurement
+    })
+  } as MeasurementsDTO;
+ 
+  return measurements;
+
 }
+
 
 
 export function createMeasurementDTO(
@@ -121,7 +128,6 @@ export function createMeasurementDTO(
 }
 
 export function mapMeasurementDAOToDTO(measurementDAO: MeasurementDAO ): MeasurementDTO {
-  console.log("measurementDAO", measurementDAO);
    return createMeasurementDTO(
      measurementDAO.createdAt,
      measurementDAO.value,
@@ -186,7 +192,7 @@ export function createStatsDTO(
 }
 
 export function computeStats(
-  measurements: MeasurementDAO[],
+  measurements: MeasurementDTO[],
   startDate?: Date,
   endDate?: Date
 ): StatsDTO {
