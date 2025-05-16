@@ -204,7 +204,7 @@ export function computeStats(
   }
   const mean = measurements.reduce((sum, m) => sum + m.value, 0) / n;
   const variance =
-    measurements.reduce((sum, m) => sum + Math.pow(m.value - mean, 2), 0) / n;
+    measurements.reduce((sum, m) => sum + (m.value - mean)**2, 0) / n;
 
   const sigma = Math.sqrt(variance);
   const upperThreshold = mean + 2 * sigma;
