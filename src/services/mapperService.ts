@@ -97,17 +97,17 @@ export function mapNetworkDAOToDTO(networkDAO: NetworkDAO): NetworkDTO {
 export function createMeasurementsDTO(
   sensorMacAddress: string,
   stats?: StatsDTO,
-  measurement?: MeasurementDTO[]
+  measurements?: MeasurementDTO[]
 ): MeasurementsDTO {
-  const measurements= {
+  const measurement= {
     sensorMacAddress,
     ...removeNullAttributes({
       stats,
-      measurement
+      measurements
     })
   } as MeasurementsDTO;
  
-  return measurements;
+  return measurement;
 
 }
 
@@ -219,4 +219,19 @@ export function computeStats(
     startDate,
     endDate
   );
+}
+
+export function setOUtliers(measurements: MeasurementsDTO): MeasurementsDTO { 
+    const lowerThreshold = measurements.stats.lowerThreshold;
+    const upperThreshold = measurements.stats.upperThreshold;
+    const measurementArray = measurements.measurements;
+    measurementArray.forEach((y) => {
+      if (y.value > upperThreshold || y.value < lowerThreshold) {
+        y.isOutlier = true;
+      } else {
+        y.isOutlier = false;
+      }
+    });
+
+  return measurements;
 }

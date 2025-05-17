@@ -6,8 +6,8 @@ import { SensorDAO } from "@dao/SensorDAO";
 import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
 import { NetworkDAO } from "@dao/NetworkDAO";
 import { parseISODateParamToUTC, parseStringArrayParam } from "@utils";
-import { Between } from "typeorm";
-
+import { GatewayDAO } from "@models/dao/GatewayDAO";
+import { Between, MoreThanOrEqual, LessThanOrEqual } from "typeorm";
 export class MeasurementRepository {
   private repo: Repository<MeasurementDAO>;
 
@@ -75,7 +75,6 @@ export class MeasurementRepository {
       measurementArray.push(...measurements);
     } 
     return measurementArray;
-
   }
 
   async getMeasurementBySensorMac(
@@ -84,18 +83,36 @@ export class MeasurementRepository {
     sensorMac: string,
     query: any
   ): Promise<MeasurementDAO[]> {
-    const { startDate, endDate } = query;
-    const network = await AppDataSource.getRepository(NetworkDAO).findOne({
-      where: { code: networkCode },
+    const startDate = parseISODateParamToUTC(query.startDate);
+    const endDate = parseISODateParamToUTC(query.endDate);
+
+    const whereCondition: any = {
+      sensor: { macAddress: sensorMac, gateway: { network: { code: networkCode } } },
+    };
+    
+    // Aggiungi il filtro per le date solo se sono definite
+    if (startDate && endDate) {
+      whereCondition.createdAt = Between(startDate, endDate);
+    } else if (startDate) {
+      whereCondition.createdAt = MoreThanOrEqual(startDate);
+    } else if (endDate) {
+      whereCondition.createdAt = LessThanOrEqual(endDate);
+    }
+    
+    // Esegui la query con la condizione dinamica
+    const measurements = await this.repo.find({
+      where: whereCondition,
+      relations: { sensor: { gateway: { network: true } } },
     });
-    const gateway = await AppDataSource.getRepository(SensorDAO).findOne({
-      where: { macAddress: gatewayMac },
-    });
-    const sensor = await AppDataSource.getRepository(SensorDAO).findOne({
-      where: { macAddress: sensorMac },
-    });
-    return null;
-  }
+    //raggruppo le misurazioni per sensore
+    const groupedMeasurements: MeasurementDAO[] = [];
+    for (const measurement of measurements) {
+      if (measurement.sensor.macAddress === sensorMac) {
+        groupedMeasurements.push(measurement);
+      }
+    }
+    return groupedMeasurements;
+ }
 
   async getOutliersByNetworkId(networkId: string): Promise<MeasurementDAO[]> {
     return null;
