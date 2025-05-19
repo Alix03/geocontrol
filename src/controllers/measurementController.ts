@@ -27,6 +27,7 @@ export async function getMeasurementByNetworkId(
   // Ottieni le misurazioni dal repository
   const measurementArray =
     (await measurementRepo.getMeasurementByNetworkId(networkCode, query)) || [];
+    
   // Raggruppa le misurazioni per sensore
   const groupedMeasurements = groupMeasurementBySensor(measurementArray);
   // Calcola le statistiche per ogni gruppo di sensori
