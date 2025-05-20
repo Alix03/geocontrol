@@ -24,9 +24,11 @@ router.post(
   authenticateUser([UserType.Admin, UserType.Operator]),
   async (req, res, next) => {
     try {
+      const networkCode = req.params.networkCode;
+      const gatewayMac = req.params.gatewayMac;
       const sensorMac = req.params.sensorMac;
       const measurement = req.body;
-      await createMeasurement(sensorMac, measurement);
+      await createMeasurement(networkCode, gatewayMac, sensorMac, measurement);
       res.status(201).send();
     } catch (error) {
       next(error);
