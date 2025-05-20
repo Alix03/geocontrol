@@ -1,9 +1,9 @@
-import { Entity, Column, ManyToOne, PrimaryColumn } from "typeorm";
+import { Entity, Column, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { SensorDAO } from "./SensorDAO";
 
 @Entity("measurement")
 export class MeasurementDAO {
-  @PrimaryColumn({nullable: false})
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({nullable: false})

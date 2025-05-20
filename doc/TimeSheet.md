@@ -15,9 +15,9 @@ These figures will not be used to evaluate neither the project nor the team, the
 |   Apr 7 - 13   |           22h           |        |        |              |                     |                    |                  |            |
 |  Apr 14 - 20   |           22h           |   8h   |        |              |                     |                    |                  |     3h     |
 |  Apr 21 - 27   |                         |        |        |              |                     |                    |                  |            |
-| Apr 28 - May 4 |                         |        |        |              |                     |                    |                  |            |
-|   May 5 - 11   |                         |        |        |              |                     |                    |                  |            |
-|  May 12 - 18   |                         |        |        |              |                     |                    |                  |            |
+| Apr 28 - May 4 |                         |        |        |              |                     |                    |                  |     4h     |
+|   May 5 - 11   |                         |        |   84h  |              |                     |                    |                  |            |
+|  May 12 - 18   |                         |        |   48h  |              |                     |                    |                  |            |
 |  May 19 - 25   |                         |        |        |              |                     |                    |                  |            |
 | May 26 - Jun 1 |                         |        |        |              |                     |                    |                  |            |
 |   Jun 2 - 8    |                         |        |        |              |                     |                    |                  |            |
