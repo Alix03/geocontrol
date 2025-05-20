@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "typeorm";
 import { GatewayDAO } from "@models/dao/GatewayDAO";
 import { MeasurementDAO } from "@models/dao/MeasurementDAO";
 
