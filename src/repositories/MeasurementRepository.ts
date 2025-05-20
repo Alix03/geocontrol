@@ -69,7 +69,7 @@ export class MeasurementRepository {
     } else if (endDate) {
       whereClause.createdAt = LessThanOrEqual(endDate);
     }
-
+    
     return await this.repo.find({
       where: whereClause,
       relations: {

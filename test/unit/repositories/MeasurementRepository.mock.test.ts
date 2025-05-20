@@ -3,6 +3,7 @@ import { MeasurementDAO } from "@dao/MeasurementDAO";
 import { ConflictError } from "@models/errors/ConflictError";
 import { NotFoundError } from "@models/errors/NotFoundError";
 import { SensorDAO } from "@models/dao/SensorDAO";
+import { Between } from "typeorm";
 
 const mockFind = jest.fn();
 const mockFindOne = jest.fn();
@@ -32,17 +33,16 @@ describe("UserRepository: mocked database", () => {
     const sensor = new SensorDAO();
     sensor.id = 1;
     sensor.macAddress = "mac1";
-    /*
     sensor.name = "sensor1";
     sensor.description = "description";
     sensor.variable = "temperature";
     sensor.unit = "C";
-    */
+    
 
     const mockDate = new Date("20 May 2025 14:48 UTC");   
    
     mockFind.mockResolvedValue([]);
-    mockFindOne.mockResolvedValue([sensor.macAddress]);
+    mockFindOne.mockResolvedValue(sensor);
 
     const savedMeasurement = new MeasurementDAO();
     savedMeasurement.id = 1;
@@ -55,6 +55,7 @@ describe("UserRepository: mocked database", () => {
     const result = await repo.createMeasurement(new Date("20 May 2025 14:48 UTC"), 5, "mac1");
 
     expect(result).toBeInstanceOf(MeasurementDAO);
+    expect(result).toBe(savedMeasurement);
     expect(result.id).toBe(1);
     expect(result.createdAt.toISOString()).toBe("2025-05-20T14:48:00.000Z");
     expect(result.value).toBe(5);
@@ -67,51 +68,107 @@ describe("UserRepository: mocked database", () => {
   });
 
   
-  it("create measurement without existing sensor: sensor not found", async () => {   
-    mockFindOne.mockResolvedValue([]);
+  it("create measurement: sensor not found", async () => {   
+    mockFindOne.mockResolvedValue(null);
 
     await expect(
       repo.createMeasurement(new Date("20 May 2025 14:48 UTC"), 5, "mac1")
     ).rejects.toThrow(NotFoundError);
   });
 
-  it("create measurement without right gateway: sensor not found", async () => {   
-    mockFindOne.mockResolvedValue([]);
 
-    await expect(
-      repo.createMeasurement(new Date("20 May 2025 14:48 UTC"), 5, "mac1")  //da aggiungere gateway e network come parametri
-    ).rejects.toThrow(NotFoundError);
+  it("get measurement by network", async () => {
+
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.name = "sensor1";
+    sensor.description = "description";
+    sensor.variable = "temperature";
+    sensor.unit = "C";
+
+    const foundMeasurement = new MeasurementDAO();
+    foundMeasurement.createdAt = new Date("20 May 2025 14:48 UTC");
+    foundMeasurement.id = 1;
+    foundMeasurement.value = 5;
+    foundMeasurement.sensor = sensor;
+
+    mockFind.mockResolvedValue([foundMeasurement]);
+
+    const result = await repo.getMeasurementByNetworkId("NET01", []);  //secondo campo dovrebbe essere opzionale
+    expect(Array.isArray(result)).toBe(true);
+    expect(result[0]).toBeInstanceOf(MeasurementDAO);
+    expect(result[0].id).toBe(1);
+    expect(result[0].createdAt.toISOString()).toBe("2025-05-20T14:48:00.000Z");
+    expect(result[0].value).toBe(5);
+    expect(result[0].sensor.macAddress).toBe("mac1");
   });
 
-  it("create measurement without right network: sensor not found", async () => {   
-    mockFindOne.mockResolvedValue([]);
+  it("get measurement by network with list of sensors mac", async () => {
 
-    await expect(
-      repo.createMeasurement(new Date("20 May 2025 14:48 UTC"), 5, "mac1")  //da aggiungere gateway e network come parametri
-    ).rejects.toThrow(NotFoundError);
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.name = "sensor1";
+    sensor.description = "description";
+    sensor.variable = "temperature";
+    sensor.unit = "C";
+
+    const foundMeasurement = new MeasurementDAO();
+    foundMeasurement.createdAt = new Date("20 May 2025 14:48 UTC");
+    foundMeasurement.id = 1;
+    foundMeasurement.value = 5;
+    foundMeasurement.sensor = sensor;
+
+    mockFind.mockResolvedValue([foundMeasurement]);
+
+    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1", "mac2"]);  
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(1);
+    expect(result[0]).toBeInstanceOf(MeasurementDAO);
+    expect(result[0].id).toBe(1);
+    expect(result[0].createdAt.toISOString()).toBe("2025-05-20T14:48:00.000Z");
+    expect(result[0].value).toBe(5);
+    expect(result[0].sensor.macAddress).toBe("mac1");
   });
+
+  it("get measurement by network with start date and end date", async () => {
+
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.name = "sensor1";
+    sensor.description = "description";
+    sensor.variable = "temperature";
+    sensor.unit = "C";
+
+    const foundMeasurement = new MeasurementDAO();
+    foundMeasurement.createdAt = new Date("20 May 2025 14:48 UTC");
+    foundMeasurement.id = 1;
+    foundMeasurement.value = 5;
+    foundMeasurement.sensor = sensor;
+
+    const startDate = new Date("2025-05-20T14:40:00.000Z");
+    const endDate = new Date("2025-05-20T14:50:00.000Z");
+
+    mockFind.mockResolvedValue([foundMeasurement]);
+
+    const result = await repo.getMeasurementByNetworkId("NET01", {startDate: "2025-05-20T14:40:00.000Z", endDate:"2025-05-20T14:50:00.000Z" } );  
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(1);
+    expect(result[0]).toBeInstanceOf(MeasurementDAO);
+    expect(result[0]).toBe(foundMeasurement);
+
+    
+    expect(mockFind).toHaveBeenCalledWith({
+      where: { 
+        sensor:{gateway:{network:{code:"NET01"}}},
+        createdAt: Between(startDate, endDate)
+    }
+    });
+  });
+
 /*
-  it("find measurement by network", async () => {
-    const foundUser = new UserDAO();
-    foundUser.username = "john";
-    foundUser.password = "pass123";
-    foundUser.type = UserType.Operator;
-
-    mockFind.mockResolvedValue([foundUser]);
-
-    const result = await repo.getUserByUsername("john");
-    expect(result).toBe(foundUser);
-    expect(result.type).toBe(UserType.Operator);
-  });
-
-  it("find user by username: not found", async () => {
-    mockFind.mockResolvedValue([]);
-
-    await expect(repo.getUserByUsername("ghost")).rejects.toThrow(
-      NotFoundError
-    );
-  });
-
   it("delete user", async () => {
     const user = new UserDAO();
     user.username = "john";
