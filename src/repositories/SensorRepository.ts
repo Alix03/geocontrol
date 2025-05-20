@@ -53,6 +53,7 @@ export class SensorRepository {
       `Sensor with MAC address '${macAddress}' already exists`
     );
 
+    //verifica che il gateway faccia parte del network non fatta perchè già eseguita dal sensorController
     const gateway = findOrThrowNotFound(
       await AppDataSource.getRepository(GatewayDAO).find({ where: { macAddress: gatewayMac } }),
       () => true,
@@ -97,6 +98,7 @@ export class SensorRepository {
 
         sensor.macAddress = macAddress;
       }
+      //se il nuovo macAddress non è presente nella richiesta di update rimane il macAddress vecchio
 
       Object.assign(sensor, {
         ...(name !== undefined && { name }),
