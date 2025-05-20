@@ -5,6 +5,7 @@ import {
   createMeasurementsDTO,
   computeStats,
   setOUtliers,
+  createStatsDTO,
 } from "@services/mapperService";
 import {
   Measurements as MeasurementsDTO,
@@ -68,7 +69,7 @@ export async function getMeasurementBySensorId(
   const sensorMeasurements = createMeasurementsDTO(
     sensorMac,
     measurementArray.length>0 ? stats : undefined,
-    measurementArray.length>0 ? measurementArray.map(mapMeasurementDAOToDTO) : undefined
+    measurementArray.length>0 ? measurementArray.map(mapMeasurementDAOToDTO) :  undefined
   );
   setOUtliers(sensorMeasurements);
   // Converti in JSON e restituisci
@@ -161,13 +162,12 @@ export async function getOutliersBySensorId(
   );
   setOUtliers(measurements);
 
-  const outliers = measurements.measurements.filter(
-    (measurement) => measurement.isOutlier === true
-  );
+  
   const measurementsDTO=createMeasurementsDTO(
       measurements.sensorMacAddress,
       measurements.stats,
-      outliers
+      measurements.measurements != undefined ? measurements.measurements.
+        filter((measurement) => measurement.isOutlier === true) : []
     )
   return measurementsDTO;
 }
