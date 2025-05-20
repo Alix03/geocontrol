@@ -5,6 +5,7 @@ import { NotFoundError } from "@models/errors/NotFoundError";
 import { SensorDAO } from "@models/dao/SensorDAO";
 
 const mockFind = jest.fn();
+const mockFindOne = jest.fn();
 const mockSave = jest.fn();
 const mockRemove = jest.fn();
 
@@ -12,6 +13,7 @@ jest.mock("@database", () => ({
   AppDataSource: {
     getRepository: () => ({
       find: mockFind,
+      findOne: mockFindOne,
       save: mockSave,
       remove: mockRemove
     })
@@ -26,43 +28,70 @@ describe("UserRepository: mocked database", () => {
   });
 
   it("create measurement", async () => {
+    
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    /*
+    sensor.name = "sensor1";
+    sensor.description = "description";
+    sensor.variable = "temperature";
+    sensor.unit = "C";
+    */
+
+    const mockDate = new Date("20 May 2025 14:48 UTC");   
+   
     mockFind.mockResolvedValue([]);
+    mockFindOne.mockResolvedValue([sensor.macAddress]);
 
     const savedMeasurement = new MeasurementDAO();
     savedMeasurement.id = 1;
-    savedMeasurement.createdAt = new Date("20 May 2025 14:48 UTC");
+    savedMeasurement.createdAt = mockDate;
     savedMeasurement.value = 5;
-    savedMeasurement.sensor = new SensorDAO();  //non va bene
+    savedMeasurement.sensor = sensor;
 
-    mockSave.mockResolvedValue(savedUser);
+    mockSave.mockResolvedValue(savedMeasurement);
 
-    const result = await repo.createUser("john", "pass123", UserType.Admin);
+    const result = await repo.createMeasurement(new Date("20 May 2025 14:48 UTC"), 5, "mac1");
 
-    expect(result).toBeInstanceOf(UserDAO);
-    expect(result.username).toBe("john");
-    expect(result.password).toBe("pass123");
-    expect(result.type).toBe(UserType.Admin);
+    expect(result).toBeInstanceOf(MeasurementDAO);
+    expect(result.id).toBe(1);
+    expect(result.createdAt.toISOString()).toBe("2025-05-20T14:48:00.000Z");
+    expect(result.value).toBe(5);
+    expect(result.sensor.macAddress).toBe("mac1");
     expect(mockSave).toHaveBeenCalledWith({
-      username: "john",
-      password: "pass123",
-      type: UserType.Admin
+      createdAt: mockDate, 
+      value: 5, 
+      sensor: sensor,
     });
   });
 
-  it("create user: conflict", async () => {
-    const existingUser = new UserDAO();
-    existingUser.username = "john";
-    existingUser.password = "pass123";
-    existingUser.type = UserType.Admin;
-
-    mockFind.mockResolvedValue([existingUser]);
+  
+  it("create measurement without existing sensor: sensor not found", async () => {   
+    mockFindOne.mockResolvedValue([]);
 
     await expect(
-      repo.createUser("john", "another", UserType.Viewer)
-    ).rejects.toThrow(ConflictError);
+      repo.createMeasurement(new Date("20 May 2025 14:48 UTC"), 5, "mac1")
+    ).rejects.toThrow(NotFoundError);
   });
 
-  it("find user by username", async () => {
+  it("create measurement without right gateway: sensor not found", async () => {   
+    mockFindOne.mockResolvedValue([]);
+
+    await expect(
+      repo.createMeasurement(new Date("20 May 2025 14:48 UTC"), 5, "mac1")  //da aggiungere gateway e network come parametri
+    ).rejects.toThrow(NotFoundError);
+  });
+
+  it("create measurement without right network: sensor not found", async () => {   
+    mockFindOne.mockResolvedValue([]);
+
+    await expect(
+      repo.createMeasurement(new Date("20 May 2025 14:48 UTC"), 5, "mac1")  //da aggiungere gateway e network come parametri
+    ).rejects.toThrow(NotFoundError);
+  });
+/*
+  it("find measurement by network", async () => {
     const foundUser = new UserDAO();
     foundUser.username = "john";
     foundUser.password = "pass123";
@@ -96,4 +125,6 @@ describe("UserRepository: mocked database", () => {
 
     expect(mockRemove).toHaveBeenCalledWith(user);
   });
+  */
 });
+
