@@ -87,7 +87,13 @@ export class MeasurementRepository {
 
   for (const sensorMac of sensorMacsArray) {
     const whereClause: any = {
-      sensor: { macAddress: sensorMac },
+      sensor: { macAddress: sensorMac,
+        gateway: {
+          network: {
+            code: networkCode
+          }
+         }
+       },
     };
 
     if (startDate && endDate) {
@@ -136,6 +142,7 @@ export class MeasurementRepository {
       where: whereCondition,
       relations: { sensor: { gateway: { network: true } } },
     });
+    
     //raggruppo le misurazioni per sensore
     const groupedMeasurements: MeasurementDAO[] = [];
     for (const measurement of measurements) {
@@ -143,14 +150,10 @@ export class MeasurementRepository {
         groupedMeasurements.push(measurement);
       }
     }
+
+    //
+
     return groupedMeasurements;
  }
 
-  async getOutliersByNetworkId(networkId: string): Promise<MeasurementDAO[]> {
-    return null;
-  }
-
-  async getOutliersBySensorId(sensorId: string): Promise<MeasurementDAO[]> {
-    return null;
-  }
 }
