@@ -116,14 +116,10 @@ export function createMeasurementsDTO(
 export function createMeasurementDTO(
   createdAt: Date,
   value: number,
-  sensorMac: string,
-  isOutlier?: boolean
 ): MeasurementDTO {
   return removeNullAttributes({
     createdAt,
     value,
-    sensorMac,
-    isOutlier,
   }) as MeasurementDTO;
 }
 
@@ -131,8 +127,6 @@ export function mapMeasurementDAOToDTO(measurementDAO: MeasurementDAO ): Measure
    return createMeasurementDTO(
      measurementDAO.createdAt,
      measurementDAO.value,
-     measurementDAO.sensor.macAddress,
-     measurementDAO.isOutlier
  );
 }
 
@@ -229,12 +223,13 @@ export function setOUtliers(measurements: MeasurementsDTO): MeasurementsDTO {
     const lowerThreshold = measurements.stats.lowerThreshold;
     const upperThreshold = measurements.stats.upperThreshold;
     const measurementArray = measurements.measurements;
-    
+  
     measurementArray.forEach((y) => {
       if (y.value > upperThreshold || y.value < lowerThreshold) {
         y.isOutlier = true;
       } else {
         y.isOutlier = false;
+        
       }
     });
 
