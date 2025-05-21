@@ -20,7 +20,7 @@ import { parseStringArrayParam } from "@utils";
 
 export async function getMeasurementByNetworkId(
   networkCode: string,
-  query: any
+  query?: any 
 ): Promise<MeasurementsDTO[]> {
   const measurementRepo = new MeasurementRepository();
   // Check se esiste il network
