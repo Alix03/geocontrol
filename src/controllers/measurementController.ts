@@ -35,7 +35,7 @@ export async function getMeasurementByNetworkId(
       const measurementsDTO = [];
       const sensorMacArray = parseStringArrayParam(query.sensorMacs);
       //per ogni sensore passato, creo un oggetto MeasurementsDTO con il campo obbligatorio sensorMacAddress
-      console.log(measurementArray);
+
       sensorMacArray.forEach((sensorMac: string) => {
               measurementsDTO.push(createMeasurementsDTO(sensorMac));
             });
@@ -86,6 +86,7 @@ export async function getMeasurementBySensorId(
     measurementArray.length>0 ? stats : undefined,
     measurementArray.length>0 ? measurementArray.map(mapMeasurementDAOToDTO) :  undefined
   );
+  
   setOUtliers(sensorMeasurements);
   // Converti in JSON e restituisci
   return MeasurementsToJSON(sensorMeasurements);
@@ -204,7 +205,7 @@ export async function createMeasurement(
       measurement.createdAt,
       measurement.value,
       sensorMac,
-      measurement.isOutlier ?? false
+      //measurement.isOutlier ?? false
     );
   }
 }

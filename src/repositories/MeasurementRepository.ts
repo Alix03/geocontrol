@@ -20,7 +20,6 @@ export class MeasurementRepository {
     createdAt: Date,
     value: number,
     sensorMac: string,
-    isOutlier?: boolean
   ): Promise<MeasurementDAO> {
     // Verifica che il sensore esista e sia associato al networkCode e gatewayMac
    
@@ -36,7 +35,6 @@ export class MeasurementRepository {
     return this.repo.save({
       createdAt: createdAt,
       value: value,
-      isOutlier: isOutlier,
       sensor: sensor, // Associa il sensore
     });
   }

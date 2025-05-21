@@ -12,9 +12,6 @@ export class MeasurementDAO {
   @Column("float" ,{nullable: false})
   value: number; 
 
-  @Column({nullable: true})
-  isOutlier: boolean; // Indica se è un valore anomalo
-
   @ManyToOne(() => SensorDAO, (sensor) => sensor.measurements, { nullable: false, onDelete: "CASCADE" })
   sensor: SensorDAO; 
   // Relazione univoca con il sensore
