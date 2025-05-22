@@ -55,6 +55,15 @@ describe("GatewayRepository: SQLite in-memory", () => {
     const saved = await repo.getGatewayByMac("NET1", "AA:BB:CC:DD:EE:FF");
     expect(saved.macAddress).toBe("AA:BB:CC:DD:EE:FF");
   });
+  it("Create gateway : success con soli campi obbligatori", async () => {
+    await TestDataSource.getRepository(NetworkDAO).save(baseNetwork);
+
+    const gw = await repo.createGateway("NET1", "11:22:33:44:55:66");
+
+    // name/description opzionali -> null
+    expect(gw.name).toBeNull();
+    expect(gw.description).toBeNull();
+  });
 
   it("Create new gateway: network inesistente (NotFoundError)", async () => {
     await expect(
@@ -71,5 +80,41 @@ describe("GatewayRepository: SQLite in-memory", () => {
     ).rejects.toThrow(ConflictError);
   });
 
+  it("Create new gateway: MAC duplicato su reti diverse (ConflictError)", async () => {
+    const secondNetwork = { code: "NET2", name: "Secondary", description: "Rete 2" };
+    await TestDataSource.getRepository(NetworkDAO).save([baseNetwork, secondNetwork]);
+
+    await repo.createGateway("NET1", "AA:BB:CC:DD:EE:FF", "GW-1", "GW-1 desc");
+
+    // stesso MAC ma su rete differente → deve comunque andare in conflitto
+    await expect(
+      repo.createGateway("NET2", "AA:BB:CC:DD:EE:FF", "GW-dup", "GW-dup desc")
+    ).rejects.toThrow(ConflictError);
+  });
+
+   it("Create new gateway: l'entità è collegata alla rete giusta", async () => {
+    await TestDataSource.getRepository(NetworkDAO).save(baseNetwork);
+
+    const gw = await repo.createGateway(
+      "NET1",
+      "CC:DD:EE:FF:00:11",
+      "Gateway-Rel",
+      "Desc-Rel"
+    );
+
+    // l'oggetto appena salvato deve essere legato alla rete con code NET1
+    expect(gw.network.code).toBe("NET1");
+
+    // verifica ulteriore via query (con relations) per sicurezza
+    const saved = await TestDataSource.getRepository(GatewayDAO).findOne({
+      where: { macAddress: "CC:DD:EE:FF:00:11" },
+      relations: ["network"],
+    });
+    expect(saved?.network.code).toBe("NET1");
+  });
+
+  describe("Get All Gateways", () => {
+
+  })
   
 });
