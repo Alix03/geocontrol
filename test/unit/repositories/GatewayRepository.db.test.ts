@@ -115,6 +115,15 @@ describe("GatewayRepository: SQLite in-memory", () => {
 
   describe("Get All Gateways", () => {
 
+    it("Get All Gateways: network senza gatewat", async () => {
+    
+    await TestDataSource.getRepository(NetworkDAO).save(baseNetwork);
+
+    // 2) chiamo getAllGateways
+    const list = await repo.getAllGateways("NET1");
+
+    expect(list).toEqual([]);
+  });
   })
   
 });
