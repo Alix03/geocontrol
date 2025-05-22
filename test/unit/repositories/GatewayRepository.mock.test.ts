@@ -181,8 +181,31 @@ describe("GatewayRepository: mocked database", () => {
       
       expect(result).toEqual([gw1, gw2]);
       });
-       
+
+      
 
     });
+    describe("Get Gateway By MacAddress", () => {
+    it("Get Gateway By MacAddress: success", async () => {
+      const networkCode = "NET01";
+      const mac = "AA:BB:CC:DD:EE:FF";
+      const gw = new GatewayDAO();
+      const network = new NetworkDAO();
+      
+      network.code = networkCode
+      gw.id = 42;
+      gw.macAddress = mac;
+      gw.network = network;
+
+      mockGatewayFind.mockResolvedValue([gw]);
+
+      const result = await repo.getGatewayByMac(networkCode, mac);
+
+      expect(mockGatewayFind).toHaveBeenCalledWith({
+        where: { macAddress: mac, network: { code: networkCode } },});
+      
+      expect(result).toBe(gw);
+    });
+  });
  
 });

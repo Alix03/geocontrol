@@ -15,7 +15,9 @@ export async function getAllGateways(networkCode  : string): Promise<GatewayDTO[
 
 export async function getGateway(networkCode : string, gatewayMac: string): Promise<GatewayDTO> {
   const gatewayRepo = new GatewayRepository(); 
+  // manca controllo su networkCode se esiste o meno
   const gatewayDAO= await gatewayRepo.getGatewayByMac(networkCode,gatewayMac);
+  
   const gatewayDTO = mapGatewayDAOToDTO(gatewayDAO);
 
   return gatewayDTO ;
