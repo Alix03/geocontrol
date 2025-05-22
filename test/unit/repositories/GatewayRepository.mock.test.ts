@@ -2,6 +2,7 @@
 import { GatewayRepository } from "@repositories/GatewayRepository";
 import { GatewayDAO } from "@dao/GatewayDAO";
 import { NetworkDAO } from "@dao/NetworkDAO";
+import { ConflictError } from "@models/errors/ConflictError";
 
 /* ------------------------------------------------------------------ */
 /* 1.  Dichiarazione dei mock per i metodi che il repository utilizza */
@@ -39,7 +40,7 @@ describe("GatewayRepository: mocked database", () => {
     jest.clearAllMocks();
   });
 
-  it("deve salvare un nuovo gateway e restituirlo quando i controlli passano", async () => {
+  it("Create new Gateway: success", async () => {
     
     // Nessun gateway con lo stesso MAC → nessun conflitto
     mockGatewayFind.mockResolvedValue([]);
@@ -84,4 +85,26 @@ describe("GatewayRepository: mocked database", () => {
     });
     expect(result).toBe(savedGateway);
   });
+
+  it("Create new Gateway: macAddress già in uso", async () => {
+
+    const existing = new GatewayDAO();
+    existing.id = 99;
+    existing.macAddress = "AA:BB:CC:DD:EE:FF";
+    existing.name = "Gateway";
+    existing.description = "Gateway già esistente"
+    mockGatewayFind.mockResolvedValue([existing]);
+
+    
+
+    await expect(repo.createGateway(
+        "NET01",
+        "AA:BB:CC:DD:EE:FF",
+        "Gateway",
+        "Gateway già esistente"),).rejects.toBeInstanceOf(ConflictError);
+    expect(mockGatewaySave).not.toHaveBeenCalled();
+    expect(mockNetworkFind).not.toHaveBeenCalled();
+  });
+
+
 });
