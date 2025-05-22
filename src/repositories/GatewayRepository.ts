@@ -64,7 +64,7 @@ export class GatewayRepository{
   }
 
   async deleteGateway(networkCode: string, macAddress: string): Promise<void>{
-    await this.repo.remove(await this.getGatewayByMac(networkCode, macAddress));
+    await this.repo.delete({macAddress});
   }
 
   async updateGateway(
