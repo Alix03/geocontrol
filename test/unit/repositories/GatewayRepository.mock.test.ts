@@ -3,19 +3,16 @@ import { GatewayRepository } from "@repositories/GatewayRepository";
 import { GatewayDAO } from "@dao/GatewayDAO";
 import { NetworkDAO } from "@dao/NetworkDAO";
 import { ConflictError } from "@models/errors/ConflictError";
+import { NotFoundError } from "@models/errors/NotFoundError";
 
-/* ------------------------------------------------------------------ */
-/* 1.  Dichiarazione dei mock per i metodi che il repository utilizza */
-/* ------------------------------------------------------------------ */
+/* Dichiarazione dei mock per i metodi che il repository utilizza */
+
 const mockGatewayFind  = jest.fn();
 const mockGatewaySave  = jest.fn();
 const mockNetworkFind  = jest.fn();
 
-/* ------------------------------------------------------------------ */
-/* 2.  Mock di AppDataSource.getRepository:                           */
-/*     – per GatewayDAO → espone find & save                          */
-/*     – per NetworkDAO → espone find                                 */
-/* ------------------------------------------------------------------ */
+
+/* Mock di AppDataSource.getRepository:                           */
 jest.mock("@database", () => ({
   AppDataSource: {
     getRepository: (dao: unknown) => {
@@ -30,16 +27,19 @@ jest.mock("@database", () => ({
   },
 }));
 
-/* ------------------------------------------------------------------ */
+
 /* 3.  Test-suite                                                     */
-/* ------------------------------------------------------------------ */
+
 describe("GatewayRepository: mocked database", () => {
+  
   const repo = new GatewayRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();
+    
   });
 
+  // Creazione gateway con successo
   it("Create new Gateway: success", async () => {
     
     // Nessun gateway con lo stesso MAC → nessun conflitto
@@ -86,6 +86,7 @@ describe("GatewayRepository: mocked database", () => {
     expect(result).toBe(savedGateway);
   });
 
+  // ConflictError se il MAC è duplicato
   it("Create new Gateway: macAddress già in uso", async () => {
 
     const existing = new GatewayDAO();
@@ -106,5 +107,48 @@ describe("GatewayRepository: mocked database", () => {
     expect(mockNetworkFind).not.toHaveBeenCalled();
   });
 
+  // NotFoundError se MAC unico ma network non esiste
+  it("Create new Gateway: Network code inesistente", async ()=>{
+            
+    mockGatewayFind.mockResolvedValue([]);
 
+    
+    mockNetworkFind.mockResolvedValue([]);
+
+    
+    await expect(
+      repo.createGateway("INVALID_NET", "AA:BB:CC:DD:EE:11", "GW-NEW", "Gateway"),
+    ).rejects.toBeInstanceOf(NotFoundError);
+
+    
+    expect(mockGatewayFind).toHaveBeenCalledWith({
+      where: { macAddress: "AA:BB:CC:DD:EE:11" },
+    });
+    expect(mockNetworkFind).toHaveBeenCalledWith({
+      where: { code: "INVALID_NET" },
+    });
+  } );
+
+
+  // ConflictError se MAC duplicato + network non esiste
+  it("Creazione Gateway: macAddress già in uso e network code inesistente", async () => {
+   
+    const existing = new GatewayDAO();
+    existing.id = 100;
+    existing.macAddress = "AA:BB:CC:DD:EE:FF";
+    mockGatewayFind.mockResolvedValue([existing]);
+
+    
+    mockNetworkFind.mockResolvedValue([]);
+
+    
+    await expect(
+      repo.createGateway("INVALID_NET", "AA:BB:CC:DD:EE:FF"),
+    ).rejects.toBeInstanceOf(ConflictError);
+
+    
+
+    expect(mockGatewaySave).not.toHaveBeenCalled();
+    expect(mockNetworkFind).not.toHaveBeenCalled();
+  });
 });
