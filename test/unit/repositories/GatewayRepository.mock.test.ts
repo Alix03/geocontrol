@@ -8,6 +8,7 @@ import { NotFoundError } from "@models/errors/NotFoundError";
 /* Dichiarazione dei mock per i metodi che il repository utilizza */
 
 const mockGatewayFind  = jest.fn();
+const mockGatewayFindOne   = jest.fn();
 const mockGatewaySave  = jest.fn();
 const mockGatewayDelete = jest.fn();
 const mockNetworkFind  = jest.fn();
@@ -18,7 +19,7 @@ jest.mock("@database", () => ({
   AppDataSource: {
     getRepository: (dao: unknown) => {
       if ((dao as any).name === "GatewayDAO") {
-        return { find: mockGatewayFind, save: mockGatewaySave,  delete: mockGatewayDelete, };
+        return { find: mockGatewayFind, findOne: mockGatewayFindOne,save: mockGatewaySave,  delete: mockGatewayDelete, };
       }
       if ((dao as any).name === "NetworkDAO") {
         return { find: mockNetworkFind };
@@ -237,8 +238,8 @@ describe("GatewayRepository: mocked database", () => {
     });
 
 
-     describe("Delete Gateway: success", () => {
-    it("should delete gateway by macAddress", async () => {
+     describe("Delete Gateway", () => {
+    it("Delete Gateway: success", async () => {
       const mac = "AA:BB:CC:DD:EE:FF";
       mockGatewayDelete.mockResolvedValue({ affected: 1 });
 
@@ -246,6 +247,63 @@ describe("GatewayRepository: mocked database", () => {
 
       expect(mockGatewayDelete).toHaveBeenCalledWith({ macAddress: mac });
     });
+
+    describe("Update Gateway", () => {
+   it("Update Gateway: success", async () => {
+    const netCode = "NET01";
+    const oldMac  = "AA:BB:CC:DD:EE:FF";
+    const newMac  = "11:22:33:44:55:66";
+
+    /* Gateway prima dell’update */
+    const original = Object.assign(new GatewayDAO(), {
+      id: 5,
+      macAddress: oldMac,
+      name: "GW-old",
+      description: "old desc",
+      network: { code: netCode } as any,
+    });
+
+    /* Gateway dopo l’update */
+    const updated = Object.assign({}, original, {
+      macAddress: newMac,
+      name: "GW-new",
+      description: "new desc",
+    }) as GatewayDAO;
+
+    /* -------- Arrange -------- */
+    mockGatewayFind   .mockResolvedValueOnce([original]); // lookup getGatewayByMac
+    mockGatewayFindOne.mockResolvedValueOnce(undefined);  // no duplicate on newMac
+    mockGatewaySave   .mockResolvedValueOnce(updated);    // save returns updated
+
+    /* ---------- Act ---------- */
+    const result = await repo.updateGateway(
+      netCode,
+      oldMac,
+      newMac,
+      "GW-new",
+      "new desc",
+    );
+
+    /* -------- Assert -------- */
+    expect(mockGatewayFind).toHaveBeenCalledWith({
+      where: {
+        macAddress: oldMac,
+        network: { code: netCode },
+      },
+    });
+
+    expect(mockGatewayFindOne).toHaveBeenCalledWith({
+      where: { macAddress: newMac },
+    });
+
+    expect(mockGatewaySave).toHaveBeenCalledWith(updated);
+    expect(result).toBe(updated);
+  });
+  });
+
+
+    
+    
   });
     
 
