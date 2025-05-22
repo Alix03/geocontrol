@@ -9,6 +9,7 @@ import { NotFoundError } from "@models/errors/NotFoundError";
 
 const mockGatewayFind  = jest.fn();
 const mockGatewaySave  = jest.fn();
+const mockGatewayRemove = jest.fn();
 const mockNetworkFind  = jest.fn();
 
 
@@ -17,7 +18,7 @@ jest.mock("@database", () => ({
   AppDataSource: {
     getRepository: (dao: unknown) => {
       if ((dao as any).name === "GatewayDAO") {
-        return { find: mockGatewayFind, save: mockGatewaySave };
+        return { find: mockGatewayFind, save: mockGatewaySave, remove: mockGatewayRemove };
       }
       if ((dao as any).name === "NetworkDAO") {
         return { find: mockNetworkFind };
@@ -39,116 +40,149 @@ describe("GatewayRepository: mocked database", () => {
     
   });
 
-  // Creazione gateway con successo
-  it("Create new Gateway: success", async () => {
+  describe("Create new Gateway", ()=> { 
     
-    // Nessun gateway con lo stesso MAC → nessun conflitto
-    mockGatewayFind.mockResolvedValue([]);
+    // Creazione gateway con successo
+    it("Create new Gateway: success", async () => {
+        
+        // Nessun gateway con lo stesso MAC → nessun conflitto
+        mockGatewayFind.mockResolvedValue([]);
 
-    // Network esistente
-    const network = new NetworkDAO();
-    network.id          = 10;
-    network.code        = "NET01";
-    network.name        = "Network 01";
-    network.description = "Test network";
-    mockNetworkFind.mockResolvedValue([network]);
+        // Network esistente
+        const network = new NetworkDAO();
+        network.id          = 10;
+        network.code        = "NET01";
+        network.name        = "Network 01";
+        network.description = "Test network";
+        mockNetworkFind.mockResolvedValue([network]);
 
-    
-    const savedGateway = new GatewayDAO();
-    savedGateway.id          = 1;
-    savedGateway.macAddress  = "AA:BB:CC:DD:EE:FF";
-    savedGateway.name        = "GW-1";
-    savedGateway.description = "Edge gateway";
-    savedGateway.network     = network;
-    mockGatewaySave.mockResolvedValue(savedGateway);
+        
+        const savedGateway = new GatewayDAO();
+        savedGateway.id          = 1;
+        savedGateway.macAddress  = "AA:BB:CC:DD:EE:FF";
+        savedGateway.name        = "GW-1";
+        savedGateway.description = "Edge gateway";
+        savedGateway.network     = network;
+        mockGatewaySave.mockResolvedValue(savedGateway);
 
-    
-    const result = await repo.createGateway(
-      "NET01",
-      "AA:BB:CC:DD:EE:FF",
-      "GW-1",
-      "Edge gateway",
-    );
-
-    
-    expect(mockGatewayFind).toHaveBeenCalledWith({
-      where: { macAddress: "AA:BB:CC:DD:EE:FF" },
-    });
-    expect(mockNetworkFind).toHaveBeenCalledWith({
-      where: { code: "NET01" },
-    });
-    expect(mockGatewaySave).toHaveBeenCalledWith({
-      macAddress:  "AA:BB:CC:DD:EE:FF",
-      name:        "GW-1",
-      description: "Edge gateway",
-      network,
-    });
-    expect(result).toBe(savedGateway);
-  });
-
-  // ConflictError se il MAC è duplicato
-  it("Create new Gateway: macAddress già in uso", async () => {
-
-    const existing = new GatewayDAO();
-    existing.id = 99;
-    existing.macAddress = "AA:BB:CC:DD:EE:FF";
-    existing.name = "Gateway";
-    existing.description = "Gateway già esistente"
-    mockGatewayFind.mockResolvedValue([existing]);
-
-    
-
-    await expect(repo.createGateway(
+        
+        const result = await repo.createGateway(
         "NET01",
         "AA:BB:CC:DD:EE:FF",
-        "Gateway",
-        "Gateway già esistente"),).rejects.toBeInstanceOf(ConflictError);
-    expect(mockGatewaySave).not.toHaveBeenCalled();
-    expect(mockNetworkFind).not.toHaveBeenCalled();
-  });
+        "GW-1",
+        "Edge gateway",
+        );
 
-  // NotFoundError se MAC unico ma network non esiste
-  it("Create new Gateway: Network code inesistente", async ()=>{
-            
-    mockGatewayFind.mockResolvedValue([]);
-
-    
-    mockNetworkFind.mockResolvedValue([]);
-
-    
-    await expect(
-      repo.createGateway("INVALID_NET", "AA:BB:CC:DD:EE:11", "GW-NEW", "Gateway"),
-    ).rejects.toBeInstanceOf(NotFoundError);
-
-    
-    expect(mockGatewayFind).toHaveBeenCalledWith({
-      where: { macAddress: "AA:BB:CC:DD:EE:11" },
+        
+        expect(mockGatewayFind).toHaveBeenCalledWith({
+        where: { macAddress: "AA:BB:CC:DD:EE:FF" },
+        });
+        expect(mockNetworkFind).toHaveBeenCalledWith({
+        where: { code: "NET01" },
+        });
+        expect(mockGatewaySave).toHaveBeenCalledWith({
+        macAddress:  "AA:BB:CC:DD:EE:FF",
+        name:        "GW-1",
+        description: "Edge gateway",
+        network,
+        });
+        expect(result).toBe(savedGateway);
     });
-    expect(mockNetworkFind).toHaveBeenCalledWith({
-      where: { code: "INVALID_NET" },
+
+    // ConflictError se il MAC è duplicato
+    it("Create new Gateway: macAddress già in uso", async () => {
+
+        const existing = new GatewayDAO();
+        existing.id = 99;
+        existing.macAddress = "AA:BB:CC:DD:EE:FF";
+        existing.name = "Gateway";
+        existing.description = "Gateway già esistente"
+        mockGatewayFind.mockResolvedValue([existing]);
+
+        
+
+        await expect(repo.createGateway(
+            "NET01",
+            "AA:BB:CC:DD:EE:FF",
+            "Gateway",
+            "Gateway già esistente"),).rejects.toBeInstanceOf(ConflictError);
+        expect(mockGatewaySave).not.toHaveBeenCalled();
+        expect(mockNetworkFind).not.toHaveBeenCalled();
     });
-  } );
+
+    // NotFoundError se MAC unico ma network non esiste
+    it("Create new Gateway: Network code inesistente", async ()=>{
+                
+        mockGatewayFind.mockResolvedValue([]);
+
+        
+        mockNetworkFind.mockResolvedValue([]);
+
+        
+        await expect(
+        repo.createGateway("INVALID_NET", "AA:BB:CC:DD:EE:11", "GW-NEW", "Gateway"),
+        ).rejects.toBeInstanceOf(NotFoundError);
+
+        
+        expect(mockGatewayFind).toHaveBeenCalledWith({
+        where: { macAddress: "AA:BB:CC:DD:EE:11" },
+        });
+        expect(mockNetworkFind).toHaveBeenCalledWith({
+        where: { code: "INVALID_NET" },
+        });
+    } );
 
 
-  // ConflictError se MAC duplicato + network non esiste
-  it("Creazione Gateway: macAddress già in uso e network code inesistente", async () => {
-   
-    const existing = new GatewayDAO();
-    existing.id = 100;
-    existing.macAddress = "AA:BB:CC:DD:EE:FF";
-    mockGatewayFind.mockResolvedValue([existing]);
-
+    // ConflictError se MAC duplicato + network non esiste
+    it("Creazione Gateway: macAddress già in uso e network code inesistente", async () => {
     
-    mockNetworkFind.mockResolvedValue([]);
+        const existing = new GatewayDAO();
+        existing.id = 100;
+        existing.macAddress = "AA:BB:CC:DD:EE:FF";
+        mockGatewayFind.mockResolvedValue([existing]);
 
-    
-    await expect(
-      repo.createGateway("INVALID_NET", "AA:BB:CC:DD:EE:FF"),
-    ).rejects.toBeInstanceOf(ConflictError);
+        
+        mockNetworkFind.mockResolvedValue([]);
 
-    
+        
+        await expect(
+        repo.createGateway("INVALID_NET", "AA:BB:CC:DD:EE:FF"),
+        ).rejects.toBeInstanceOf(ConflictError);
 
-    expect(mockGatewaySave).not.toHaveBeenCalled();
-    expect(mockNetworkFind).not.toHaveBeenCalled();
-  });
+        
+
+        expect(mockGatewaySave).not.toHaveBeenCalled();
+        expect(mockNetworkFind).not.toHaveBeenCalled();
+    });});
+
+
+    describe("Get All Gateways ",  ()=>{
+
+      it("Get All Gateways: success", async ()=> {
+        // Arrange
+      const networkCode = "NET01";
+      const gw1 = new GatewayDAO();
+      gw1.id = 1;
+      gw1.macAddress = "AA:AA:AA:AA:AA:AA";
+      const gw2 = new GatewayDAO();
+      gw2.id = 2;
+      gw2.macAddress = "BB:BB:BB:BB:BB:BB";
+      mockGatewayFind.mockResolvedValue([gw1, gw2]);
+
+      // Act
+      const result = await repo.getAllGateways(networkCode);
+
+      // Assert
+      expect(mockGatewayFind).toHaveBeenCalledWith({
+        where: {
+          network: { code: networkCode },
+        },
+      });
+      
+      expect(result).toEqual([gw1, gw2]);
+      });
+       
+
+    });
+ 
 });
