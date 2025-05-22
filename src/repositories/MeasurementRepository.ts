@@ -8,6 +8,7 @@ import { NetworkDAO } from "@dao/NetworkDAO";
 import { parseISODateParamToUTC, parseStringArrayParam } from "@utils";
 import { GatewayDAO } from "@models/dao/GatewayDAO";
 import { Between, MoreThanOrEqual, LessThanOrEqual } from "typeorm";
+import { NotFoundError } from "@models/errors/NotFoundError";
 export class MeasurementRepository {
   private repo: Repository<MeasurementDAO>;
 
@@ -19,29 +20,28 @@ export class MeasurementRepository {
     createdAt: Date,
     value: number,
     sensorMac: string,
-    isOutlier?: boolean
   ): Promise<MeasurementDAO> {
     // Verifica che il sensore esista e sia associato al networkCode e gatewayMac
+   
     const sensor = await AppDataSource.getRepository(SensorDAO).findOne({
       where: {
         macAddress: sensorMac,
       },
     });
     if (!sensor) {
-      throw new Error(`Sensor with macAddress '${sensorMac}' not found`);
+      throw new NotFoundError(`Sensor with macAddress '${sensorMac}' not found`);
     }
     // Salva la misurazione
     return this.repo.save({
       createdAt: createdAt,
       value: value,
-      isOutlier: isOutlier,
       sensor: sensor, // Associa il sensore
     });
   }
 
   async getMeasurementByNetworkId(
   networkCode: string,
-  query: any
+  query?: any
 ): Promise<MeasurementDAO[]> {
   const sensorMacs = query.sensorMacs || [];
   const startDate = parseISODateParamToUTC(query.startDate);
@@ -61,7 +61,6 @@ export class MeasurementRepository {
     };
 
     let whereClause: any = { ...whereBase };
-
     if (startDate && endDate) {
       whereClause.createdAt = Between(startDate, endDate);
     } else if (startDate) {
