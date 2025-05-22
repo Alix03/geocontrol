@@ -56,18 +56,20 @@ describe("GatewayRepository: SQLite in-memory", () => {
     expect(saved.macAddress).toBe("AA:BB:CC:DD:EE:FF");
   });
 
-  it("Crea gateway: network inesistente (NotFoundError)", async () => {
+  it("Create new gateway: network inesistente (NotFoundError)", async () => {
     await expect(
-      repo.createGateway("MISSING", "11:22", "GW", "Desc")
+      repo.createGateway("MISSING", "11:22", "GW", "Descr")
     ).rejects.toThrow(NotFoundError);
   });
 
-  it("crea gateway: MAC già presente ➜ ConflictError", async () => {
+  it("Create new Gatewat: macAddress già presente (ConflictError)", async () => {
     await TestDataSource.getRepository(NetworkDAO).save(baseNetwork);
     await repo.createGateway("NET1", "AA:BB:CC:DD:EE:FF");
 
     await expect(
-      repo.createGateway("NET1", "AA:BB:CC:DD:EE:FF", "Dup")
+      repo.createGateway("NET1", "AA:BB:CC:DD:EE:FF", "Duplicato")
     ).rejects.toThrow(ConflictError);
   });
+
+  
 });
