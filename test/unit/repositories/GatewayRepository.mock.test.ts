@@ -9,7 +9,7 @@ import { NotFoundError } from "@models/errors/NotFoundError";
 
 const mockGatewayFind  = jest.fn();
 const mockGatewaySave  = jest.fn();
-const mockGatewayRemove = jest.fn();
+const mockGatewayDelete = jest.fn();
 const mockNetworkFind  = jest.fn();
 
 
@@ -18,7 +18,7 @@ jest.mock("@database", () => ({
   AppDataSource: {
     getRepository: (dao: unknown) => {
       if ((dao as any).name === "GatewayDAO") {
-        return { find: mockGatewayFind, save: mockGatewaySave, remove: mockGatewayRemove };
+        return { find: mockGatewayFind, save: mockGatewaySave,  delete: mockGatewayDelete, };
       }
       if ((dao as any).name === "NetworkDAO") {
         return { find: mockNetworkFind };
@@ -236,6 +236,17 @@ describe("GatewayRepository: mocked database", () => {
       expect(mockGatewayFind).toHaveBeenCalled();
     });
 
+
+     describe("Delete Gateway: success", () => {
+    it("should delete gateway by macAddress", async () => {
+      const mac = "AA:BB:CC:DD:EE:FF";
+      mockGatewayDelete.mockResolvedValue({ affected: 1 });
+
+      await expect(repo.deleteGateway("NET01", mac)).resolves.toBeUndefined();
+
+      expect(mockGatewayDelete).toHaveBeenCalledWith({ macAddress: mac });
+    });
+  });
     
 
     
