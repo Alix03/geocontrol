@@ -207,5 +207,16 @@ describe("GatewayRepository: mocked database", () => {
       expect(result).toBe(gw);
     });
   });
+
+   it("Get Gateway By MacAddress: MacAddress inesistente", async () => {
+      mockGatewayFind.mockResolvedValue([]);
+
+      await expect(repo.getGatewayByMac("NET01", "00:11:22:33:44:55")).rejects.toBeInstanceOf(NotFoundError);
+
+      expect(mockGatewayFind).toHaveBeenCalled();
+    });
+
+
+
  
 });
