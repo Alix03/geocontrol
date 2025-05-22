@@ -301,6 +301,25 @@ describe("GatewayRepository: mocked database", () => {
   });
   });
 
+  it("Update Gateway: macAddress già esistente", async () =>{
+         const netCode = "NET01";
+      const oldMac  = "AA:BB";
+      const newMac  = "11:22";
+
+      const original = Object.assign(new GatewayDAO(), { macAddress: oldMac, network: { code: netCode } });
+      const duplicate = Object.assign(new GatewayDAO(), { macAddress: newMac });
+
+      mockGatewayFind.mockResolvedValueOnce([original]);   // lookup ok
+      mockGatewayFindOne.mockResolvedValueOnce(duplicate); // duplicate found
+
+      await expect(repo.updateGateway(netCode, oldMac, newMac, "GW-new"))
+        .rejects.toBeInstanceOf(ConflictError);
+
+      expect(mockGatewaySave).not.toHaveBeenCalled();
+  });
+
+  
+
 
     
     
