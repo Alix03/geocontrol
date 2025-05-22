@@ -195,6 +195,16 @@ describe("GatewayRepository: mocked database", () => {
       
 
     });
+
+    it("Get All Gateways: network senza gateways", async () => {
+        const networkCode = "NET01";
+        mockGatewayFind.mockResolvedValue([]);
+
+        const result = await repo.getAllGateways(networkCode);
+
+        expect(mockGatewayFind).toHaveBeenCalledWith({ where: { network: { code: networkCode } } });
+        expect(result).toEqual([]);
+});
     describe("Get Gateway By MacAddress", () => {
     it("Get Gateway By MacAddress: success", async () => {
       const networkCode = "NET01";
@@ -225,6 +235,8 @@ describe("GatewayRepository: mocked database", () => {
 
       expect(mockGatewayFind).toHaveBeenCalled();
     });
+
+    
 
     
 
