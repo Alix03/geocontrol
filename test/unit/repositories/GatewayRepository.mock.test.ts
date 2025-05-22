@@ -182,6 +182,16 @@ describe("GatewayRepository: mocked database", () => {
       expect(result).toEqual([gw1, gw2]);
       });
 
+      it("Get All Gateways: network code inesistente", async () => {
+      const invalidCode = "MISSING_NET";
+      mockGatewayFind.mockResolvedValue([]);
+
+      const result = await repo.getAllGateways(invalidCode);
+
+      expect(mockGatewayFind).toHaveBeenCalledWith({ where: { network: { code: invalidCode } } });
+      expect(result).toEqual([]);
+      expect(mockNetworkFind).not.toHaveBeenCalled();
+
       
 
     });
@@ -216,7 +226,8 @@ describe("GatewayRepository: mocked database", () => {
       expect(mockGatewayFind).toHaveBeenCalled();
     });
 
-
+    
 
  
+});
 });
