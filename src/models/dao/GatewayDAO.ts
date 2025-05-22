@@ -11,10 +11,10 @@ export class GatewayDAO{
     @Column({nullable: false})
     macAddress: string
 
-    @Column({nullable: false})
+    @Column({nullable: true})
     name: string
 
-    @Column({nullable: false})
+    @Column({nullable: true})
     description: string
 
 
