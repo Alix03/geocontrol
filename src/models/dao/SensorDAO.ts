@@ -10,16 +10,16 @@ export class SensorDAO {
   @Column({ nullable: false, unique: true })
   macAddress: string;
 
-  @Column({ nullable: false })
+  @Column()
   name: string;
 
-  @Column({ nullable: false })
+  @Column()
   description: string;
 
-  @Column({ nullable: false })
+  @Column()
   variable: string;
 
-  @Column({ nullable: false })
+  @Column()
   unit: string;
 
   @ManyToOne(() => GatewayDAO, (gateway) => gateway.sensors, { onDelete: "CASCADE"})
