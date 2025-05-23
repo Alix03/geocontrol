@@ -392,6 +392,42 @@ it("get measurement by network with only end date", async () => {
     });
 });
 
+  it("get measurement by network with list of sensors mac with some unvalid sensors", async () => {
+
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.name = "sensor1";
+    sensor.description = "description";
+    sensor.variable = "temperature";
+    sensor.unit = "C";
+
+    const foundMeasurement = new MeasurementDAO();
+    foundMeasurement.createdAt = new Date("20 May 2025 14:48 UTC");
+    foundMeasurement.id = 1;
+    foundMeasurement.value = 5;
+    foundMeasurement.sensor = sensor;
+
+    mockFind.mockResolvedValue([foundMeasurement]);
+
+    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1", "mac2"]);  
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(1);
+    expect(result[0]).toBeInstanceOf(MeasurementDAO);
+    expect(result[0].id).toBe(1);
+    expect(result[0].createdAt.toISOString()).toBe("2025-05-20T14:48:00.000Z");
+    expect(result[0].value).toBe(5);
+    expect(result[0].sensor.macAddress).toBe("mac1");
+  });
+
+    it("get measurement by network with list of sensors mac with all empty string", async () => {
+    mockFind.mockResolvedValue([]);
+
+    const result = await repo.getMeasurementByNetworkId("NET01", ["", ""]);  
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(0);
+  });
+
  /*
     GET MEASUREMENTS BY SENSOR
   */
