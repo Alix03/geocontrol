@@ -22,37 +22,14 @@ afterAll(async () => {
 beforeEach(async () => {
   await TestDataSource.getRepository(MeasurementDAO).clear();
   await TestDataSource.getRepository(NetworkDAO).clear();
+  await TestDataSource.getRepository(GatewayDAO).clear();
+  await TestDataSource.getRepository(SensorDAO).clear();
 });
 
 
 describe("MeasurementRepository: SQLite in-memory", () => {
   const repo = new MeasurementRepository();
-/*
-  it("create measurement", async () => {
-    const measurement = await repo.createMeasurement(new Date("20 May 2025 14:48 UTC"), 5, UserType.Admin);
-    expect(user).toMatchObject({
-      username: "john",
-      password: "pass123",
-      type: UserType.Admin
-    });
 
-    const found = await repo.getUserByUsername("john");
-    expect(found.username).toBe("john");
-  });
-
-  it("find user by username: not found", async () => {
-    await expect(repo.getUserByUsername("ghost")).rejects.toThrow(
-      NotFoundError
-    );
-  });
-
-  it("create user: conflict", async () => {
-    await repo.createUser("john", "pass123", UserType.Admin);
-    await expect(
-      repo.createUser("john", "anotherpass", UserType.Viewer)
-    ).rejects.toThrow(ConflictError);
-  });
-  */
     it("get measurement by network with list of sensors mac with all sensors of other networks", async () => {
     const networkRepo = TestDataSource.getRepository(NetworkDAO);
     await networkRepo.save({
