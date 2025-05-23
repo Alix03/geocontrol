@@ -218,5 +218,162 @@ describe("GatewayRepository: SQLite in-memory", () => {
     });
   });
 
+  describe("Update Gateway", () => {
+    it("Update Gateway: name and description senza cambiare macAddress", async () => {
+      const network = await createTestNetwork();
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Old Name",
+        description: "Old Description",
+        network
+      });
+
+      const updated = await repo.updateGateway(
+        "TEST_NET",
+        "AA:BB:CC:DD:EE:01",
+        "AA:BB:CC:DD:EE:01",
+        "New Name",
+        "New Description"
+      );
+
+      expect(updated.macAddress).toBe("AA:BB:CC:DD:EE:01");
+      expect(updated.name).toBe("New Name");
+      expect(updated.description).toBe("New Description");
+      
+    });
+
+    it("Update Gateway: update macAddress", async () => {
+      const network = await createTestNetwork();
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Test Gateway",
+        network
+      });
+
+      const updated = await repo.updateGateway(
+        "TEST_NET",
+        "AA:BB:CC:DD:EE:01",
+        "AA:BB:CC:DD:EE:02",
+        "Updated Gateway"
+      );
+
+      expect(updated.macAddress).toBe("AA:BB:CC:DD:EE:02");
+      expect(updated.name).toBe("Updated Gateway");
+    });
+
+    it("Update Gateway: Gateway non esistente", async () => {
+      await createTestNetwork();
+      
+      await expect(
+        repo.updateGateway(
+          "TEST_NET",
+          "NONEXISTENT:MAC",
+          "NEW:MAC",
+          "New Name"
+        )
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    it("Update Gateway: nuovo macAddress già esistente", async () => {
+      const network = await createTestNetwork();
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      // Crea due gateway
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Gateway 1",
+        network
+      });
+      
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:02",
+        name: "Gateway 2",
+        network
+      });
+
+      await expect(
+        repo.updateGateway(
+          "TEST_NET",
+          "AA:BB:CC:DD:EE:01",
+          "AA:BB:CC:DD:EE:02",
+          "Updated Name"
+        )
+      ).rejects.toThrow(ConflictError);
+    });
+
+    it("Update Gateway: aggiorna solo alcuni campi (gestione caso undefined)", async () => {
+      const network = await createTestNetwork();
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Original Name",
+        description: "Original Description",
+        network
+      });
+
+      // Aggiorna solo il nome
+      const updated = await repo.updateGateway(
+        "TEST_NET",
+        "AA:BB:CC:DD:EE:01",
+        "AA:BB:CC:DD:EE:01",
+        "New Name",
+        undefined
+      );
+
+      expect(updated.name).toBe("New Name");
+      expect(updated.description).toBe("Original Description");
+    });
+
+    it("Update Gateway: Aggiorno con stringa vuota", async () => {
+      const network = await createTestNetwork();
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Original Name",
+        description: "Original Description",
+        network
+      });
+
+      const updated = await repo.updateGateway(
+        "TEST_NET",
+        "AA:BB:CC:DD:EE:01",
+        "AA:BB:CC:DD:EE:01",
+        "",
+        ""
+      );
+
+      expect(updated.name).toBe("");
+      expect(updated.description).toBe("");
+    });
+
+    it("Update Gateway: macAddress esistente in un altra network", async () => {
+      const network1 = await createTestNetwork("NET_1");
+      const network2 = await createTestNetwork("NET_2");
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Gateway in NET_1",
+        network: network1
+      });
+
+      // Questo dovrebbe fallire perché getGatewayByMac cerca nella NET_2
+      await expect(
+        repo.updateGateway(
+          "NET_2",
+          "AA:BB:CC:DD:EE:01",
+          "AA:BB:CC:DD:EE:02"
+        )
+      ).rejects.toThrow(NotFoundError);
+    });
+  });
+
+
  
 });
