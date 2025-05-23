@@ -175,9 +175,10 @@ describe("GatewayRepository: mocked database", () => {
 
       // Assert
       expect(mockGatewayFind).toHaveBeenCalledWith({
-        where: {
-          network: { code: networkCode },
-        },
+       network: {
+        code: networkCode
+      }},
+      relations: ["network"]
       });
       
       expect(result).toEqual([gw1, gw2]);
