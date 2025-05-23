@@ -1,4 +1,4 @@
-import { MeasurementRepository } from "@repositories/MeasurementRepository";
+import { MeasurementRepository  } from "@repositories/MeasurementRepository";
 import {
   initializeTestDataSource,
   closeTestDataSource,
@@ -51,9 +51,9 @@ describe("MeasurementRepository: SQLite in-memory", () => {
   */
     it("get measurement by network with list of sensors mac with all sensors of other networks", async () => {
     //dovrebbe tornare array vuoto
-    mockFind.mockResolvedValue([]);
+    await repo.createMeasurement(new Date("2025-05-20T14:48:00.000Z"), 5, "mac1");
 
-    const result = await repo.getMeasurementByNetworkId("NET01",{sensorMacs: ["mac1", "mac2"]});  
+    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1", "mac2"]);  
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(0);
   });

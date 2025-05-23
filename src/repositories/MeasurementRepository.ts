@@ -45,7 +45,7 @@ export class MeasurementRepository {
   startDate?: Date,
   endDate?: Date
 ): Promise<MeasurementDAO[]> {
-   const whereClause: any ={sensor:{}};
+   const whereClause: any ={sensor:{ macAddress: In(sensorMacs)}};
 
   if (startDate && endDate) {
     whereClause.createdAt = Between(startDate, endDate);
@@ -54,23 +54,6 @@ export class MeasurementRepository {
   } else if (endDate) {
     whereClause.createdAt = LessThanOrEqual(endDate);
   }
-
-  // Caso: senza filtro MAC → filtriamo per network
-  if (sensorMacs===undefined) {
-    return await this.repo.find({
-      where: whereClause,
-      relations: {
-        sensor: {
-          gateway: {
-            network: true,
-          },
-        },
-      },
-    });
-  }
-
-  //aggiungo filtro per sensori prensenti nel paramentro in input
-  whereClause.sensor.macAddress = In(sensorMacs);
 
   const measurements = await this.repo.find({
       where: whereClause,
