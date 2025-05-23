@@ -4,6 +4,8 @@ import { ConflictError } from "@models/errors/ConflictError";
 import { NotFoundError } from "@models/errors/NotFoundError";
 import { SensorDAO } from "@models/dao/SensorDAO";
 import { Between } from "typeorm";
+import { GatewayDAO } from "@models/dao/GatewayDAO";
+import { NetworkDAO } from "@models/dao/NetworkDAO";
 
 const mockFind = jest.fn();
 const mockFindOne = jest.fn();
@@ -41,7 +43,6 @@ describe("UserRepository: mocked database", () => {
 
     const mockDate = new Date("20 May 2025 14:48 UTC");   
    
-    mockFind.mockResolvedValue([]);
     mockFindOne.mockResolvedValue(sensor);
 
     const savedMeasurement = new MeasurementDAO();
@@ -106,6 +107,65 @@ describe("UserRepository: mocked database", () => {
 
   it("get measurement by network with list of sensors mac", async () => {
 
+    const network = new NetworkDAO();
+    network.id = 1;
+    network.code = "NET01";
+
+    const gateway = new GatewayDAO();
+    gateway.id = 1;
+    gateway.macAddress = "gmac1";
+    gateway.network = network;
+
+    const sensor1 = new SensorDAO();
+    sensor1.id = 1;
+    sensor1.macAddress = "mac1";
+    sensor1.name = "sensor1";
+    sensor1.description = "description";
+    sensor1.variable = "temperature";
+    sensor1.unit = "C";
+    sensor1.gateway = gateway;
+
+    const sensor2 = new SensorDAO();
+    sensor2.id = 1;
+    sensor2.macAddress = "mac2";
+    sensor2.name = "sensor2";
+    sensor2.description = "description";
+    sensor2.variable = "temperature";
+    sensor2.unit = "C";
+    sensor2.gateway = gateway;
+
+    const foundMeasurement = new MeasurementDAO();
+    foundMeasurement.createdAt = new Date("20 May 2025 14:48 UTC");
+    foundMeasurement.id = 1;
+    foundMeasurement.value = 5;
+    foundMeasurement.sensor = sensor1;
+
+    const foundMeasurement2 = new MeasurementDAO();
+    foundMeasurement2.createdAt = new Date("21 May 2025 14:48 UTC");
+    foundMeasurement2.id = 2;
+    foundMeasurement2.value = 6;
+    foundMeasurement2.sensor = sensor2;
+
+    sensor1.measurements = [foundMeasurement];
+    sensor2.measurements =[foundMeasurement2];
+
+    mockFind.mockResolvedValue([foundMeasurement, foundMeasurement2]);
+    const result = await repo.getMeasurementByNetworkId("NET01", { sensorMacs: ["mac1", "mac2"] });  
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(2);
+    expect(result[0]).toBeInstanceOf(MeasurementDAO);
+    expect(result[0].id).toBe(1);
+    expect(result[0].createdAt.toISOString()).toBe("2025-05-20T14:48:00.000Z");
+    expect(result[0].value).toBe(5);
+    expect(result[0].sensor.macAddress).toBe("mac1");
+      expect(result[1].id).toBe(2);
+    expect(result[1].createdAt.toISOString()).toBe("2025-05-21T14:48:00.000Z");
+    expect(result[1].value).toBe(6);
+    expect(result[1].sensor.macAddress).toBe("mac2");
+  });
+
+  it("get measurement by network with list of sensors mac 2", async () => {
+
     const sensor = new SensorDAO();
     sensor.id = 1;
     sensor.macAddress = "mac1";
@@ -122,7 +182,7 @@ describe("UserRepository: mocked database", () => {
 
     mockFind.mockResolvedValue([foundMeasurement]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1", "mac2"]);  
+    const result = await repo.getMeasurementByNetworkId("NET01",{sensorMacs: ["mac1", "mac2"]});  
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(1);
     expect(result[0]).toBeInstanceOf(MeasurementDAO);
