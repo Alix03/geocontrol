@@ -7,7 +7,7 @@ import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
 import { NetworkDAO } from "@dao/NetworkDAO";
 import { parseISODateParamToUTC, parseStringArrayParam } from "@utils";
 import { GatewayDAO } from "@models/dao/GatewayDAO";
-import { Between, MoreThanOrEqual, LessThanOrEqual } from "typeorm";
+import { Between, MoreThanOrEqual, LessThanOrEqual, In } from "typeorm";
 import { NotFoundError } from "@models/errors/NotFoundError";
 export class MeasurementRepository {
   private repo: Repository<MeasurementDAO>;
@@ -22,7 +22,7 @@ export class MeasurementRepository {
     sensorMac: string,
   ): Promise<MeasurementDAO> {
     // Verifica che il sensore esista e sia associato al networkCode e gatewayMac
-   
+   //se ci sono li filtriamo e tornanomo solo quelli validi per quel network
     const sensor = await AppDataSource.getRepository(SensorDAO).findOne({
       where: {
         macAddress: sensorMac,
@@ -41,34 +41,22 @@ export class MeasurementRepository {
 
   async getMeasurementByNetworkId(
   networkCode: string,
-  query?: any
+  sensorMacs?: string[],
+  startDate?: Date,
+  endDate?: Date
 ): Promise<MeasurementDAO[]> {
-  const sensorMacs = query.sensorMacs || [];
-  const startDate = parseISODateParamToUTC(query.startDate);
-  const endDate = parseISODateParamToUTC(query.endDate);
+   const whereClause: any ={sensor:{}};
 
-  const sensorMacsArray = parseStringArrayParam(sensorMacs);
-  const isFilteringByMac = sensorMacsArray.length > 0;
+  if (startDate && endDate) {
+    whereClause.createdAt = Between(startDate, endDate);
+  } else if (startDate) {
+    whereClause.createdAt = MoreThanOrEqual(startDate);
+  } else if (endDate) {
+    whereClause.createdAt = LessThanOrEqual(endDate);
+  }
 
   // Caso: senza filtro MAC → filtriamo per network
-  if (!isFilteringByMac) {
-    const whereBase = {
-      sensor: {
-        gateway: {
-          network: { code: networkCode },
-        },
-      },
-    };
-
-    let whereClause: any = { ...whereBase };
-    if (startDate && endDate) {
-      whereClause.createdAt = Between(startDate, endDate);
-    } else if (startDate) {
-      whereClause.createdAt = MoreThanOrEqual(startDate);
-    } else if (endDate) {
-      whereClause.createdAt = LessThanOrEqual(endDate);
-    }
-
+  if (sensorMacs===undefined) {
     return await this.repo.find({
       where: whereClause,
       relations: {
@@ -81,37 +69,14 @@ export class MeasurementRepository {
     });
   }
 
-  
-  const allMeasurements: MeasurementDAO[] = [];
+  //aggiungo filtro per sensori prensenti nel paramentro in input
+  whereClause.sensor.macAddress = In(sensorMacs);
 
-  for (const sensorMac of sensorMacsArray) {
-    const whereClause: any = {
-      sensor: { macAddress: sensorMac,
-        gateway: {
-          network: {
-            code: networkCode
-          }
-         }
-       },
-    };
-
-    if (startDate && endDate) {
-      whereClause.createdAt = Between(startDate, endDate);
-    } else if (startDate) {
-      whereClause.createdAt = MoreThanOrEqual(startDate);
-    } else if (endDate) {
-      whereClause.createdAt = LessThanOrEqual(endDate);
-    }
-
-    const measurements = await this.repo.find({
+  const measurements = await this.repo.find({
       where: whereClause,
       relations: { sensor: true },
-    });
-
-    allMeasurements.push(...measurements);
-  }
-
-  return allMeasurements;
+  }); 
+  return measurements;
 }
 
   async getMeasurementBySensorMac(
@@ -141,18 +106,7 @@ export class MeasurementRepository {
       where: whereCondition,
       relations: { sensor: { gateway: { network: true } } },
     });
-    
-    //raggruppo le misurazioni per sensore
-    const groupedMeasurements: MeasurementDAO[] = [];
-    for (const measurement of measurements) {
-      if (measurement.sensor.macAddress === sensorMac) {
-        groupedMeasurements.push(measurement);
-      }
-    }
-
-    //
-
-    return groupedMeasurements;
+    return measurements;
  }
 
 }
