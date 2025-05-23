@@ -13,59 +13,90 @@ import {
 } from "@models/dto/Measurements";
 import { getNetwork } from "@controllers/networkController";
 import { getSensor } from "@controllers/SensorController";
+import { SensorDAO } from "@models/dao/SensorDAO";
 import { Stats as StatsDTO, StatsToJSON } from "@models/dto/Stats";
 import { MeasurementDAO } from "@models/dao/MeasurementDAO";
-import { set } from "date-fns";
-import { parseStringArrayParam } from "@utils";
+import { parseStringArrayParam, parseISODateParamToUTC } from "@utils";
+import { AppDataSource } from "@database";
+import { In } from "typeorm";
+import { create } from "domain";
 
 export async function getMeasurementByNetworkId(
   networkCode: string,
-  query?: any 
+  query?: any
 ): Promise<MeasurementsDTO[]> {
   const measurementRepo = new MeasurementRepository();
   // Check se esiste il network
   await getNetwork(networkCode);
 
-  // Ottieni le misurazioni dal repository
-  const measurementArray =
-    (await measurementRepo.getMeasurementByNetworkId(networkCode, query)) || [];
-  
-    //Se non ci sonomisurazione per i sensori passati, creo un array vuoto
-    if (measurementArray.length === 0) {
-      const measurementsDTO = [];
-      const sensorMacArray = parseStringArrayParam(query.sensorMacs);
-      //per ogni sensore passato, creo un oggetto MeasurementsDTO con il campo obbligatorio sensorMacAddress
+  const startDate = parseISODateParamToUTC(query.startDate);
+  const endDate = parseISODateParamToUTC(query.endDate);
 
-      sensorMacArray.forEach((sensorMac: string) => {
-              measurementsDTO.push(createMeasurementsDTO(sensorMac));
-            });
-      return measurementsDTO;
-          }
+  let sensorMacs: string = query.sensorMacs;
+  let sensorArray: string[] = [];
+  let filterSensor: any = [];
+
+  if (sensorMacs !== undefined && sensorMacs !== "") {
+    sensorArray = parseStringArrayParam(sensorMacs);
+    //Array di sensori appartenenti al network
+    filterSensor = await AppDataSource.getRepository(SensorDAO).find({
+      where: {
+        macAddress: In(sensorArray),
+        gateway: {
+          network: {
+            code: networkCode,
+          },
+        },
+      },
+    });
+  } else {
+    filterSensor = await AppDataSource.getRepository(SensorDAO).find({
+      where: {
+        gateway: {
+          network: {
+            code: networkCode,
+          },
+        },
+      },
+    });
+  }
+
+  sensorArray = filterSensor.map((sensor: SensorDAO) => sensor.macAddress);
+
+  // Ottieni le misurazioni dal repository
+  const measurementArray = await measurementRepo.getMeasurementByNetworkId(
+    networkCode,
+    sensorArray,
+    startDate,
+    endDate
+  );
+
   // Raggruppa le misurazioni per sensore
   const groupedMeasurements = groupMeasurementBySensor(measurementArray);
-
   // Calcola le statistiche per ogni gruppo di sensori
   const measurements: MeasurementsDTO[] = [];
-  groupedMeasurements.forEach((measurementsForSensor, sensorMac) => {
-    const stats: StatsDTO = computeStats(measurementsForSensor);
+
+  filterSensor.forEach((sensor) => {
+    const sensorMac = sensor.macAddress;
+    const sensorMeasurement = groupedMeasurements.get(sensorMac);
+    const stats: StatsDTO = computeStats(sensorMeasurement);
     const sensorMeasurements = createMeasurementsDTO(
       sensorMac,
-      measurementArray.length>0 ? stats : undefined,
-      measurementsForSensor.length > 0 ? measurementsForSensor : [] // Array vuoto se non ci sono misurazioni
+      sensorMeasurement && sensorMeasurement.length > 0 ? stats : undefined,
+      sensorMeasurement && sensorMeasurement.length > 0 ? sensorMeasurement : [] // Array vuoto se non ci sono misurazioni
     );
     setOUtliers(sensorMeasurements);
     measurements.push(sensorMeasurements);
   });
- 
+
   return measurements;
 }
-
 
 export async function getMeasurementBySensorId(
   networkCode: string,
   gatewayMac: string,
   sensorMac: string,
-  query: any
+  query?: any
 ): Promise<MeasurementsDTO> {
   const measurementRepo = new MeasurementRepository();
   //check se esiste il sensore
@@ -83,10 +114,12 @@ export async function getMeasurementBySensorId(
   const stats: StatsDTO = computeStats(measurementArray);
   const sensorMeasurements = createMeasurementsDTO(
     sensorMac,
-    measurementArray.length>0 ? stats : undefined,
-    measurementArray.length>0 ? measurementArray.map(mapMeasurementDAOToDTO) :  undefined
+    measurementArray.length > 0 ? stats : undefined,
+    measurementArray.length > 0
+      ? measurementArray.map(mapMeasurementDAOToDTO)
+      : undefined
   );
-  
+
   setOUtliers(sensorMeasurements);
   // Converti in JSON e restituisci
   return MeasurementsToJSON(sensorMeasurements);
@@ -178,13 +211,15 @@ export async function getOutliersBySensorId(
   );
   setOUtliers(measurements);
 
-  
-  const measurementsDTO=createMeasurementsDTO(
-      measurements.sensorMacAddress,
-      measurements.stats,
-      measurements.measurements != undefined ? measurements.measurements.
-        filter((measurement) => measurement.isOutlier === true) : []
-    )
+  const measurementsDTO = createMeasurementsDTO(
+    measurements.sensorMacAddress,
+    measurements.stats,
+    measurements.measurements != undefined
+      ? measurements.measurements.filter(
+          (measurement) => measurement.isOutlier === true
+        )
+      : []
+  );
   return measurementsDTO;
 }
 
@@ -204,7 +239,7 @@ export async function createMeasurement(
       //quando viene passato createdAt, viene convertito in UTC
       measurement.createdAt,
       measurement.value,
-      sensorMac,
+      sensorMac
       //measurement.isOutlier ?? false
     );
   }
@@ -223,12 +258,11 @@ export function groupMeasurementBySensor(
       .get(sensorMac)!
       .push(mapMeasurementDAOToDTO(measurement));
   });
-   // Aggiungi un controllo per i sensori senza misurazioni
-   groupedMeasurements.forEach((measurements, sensorMac) => {
+  // Aggiungi un controllo per i sensori senza misurazioni
+  groupedMeasurements.forEach((measurements, sensorMac) => {
     if (measurements.length === 0) {
       groupedMeasurements.set(sensorMac, []); // Assicurati che sia un array vuoto
     }
   });
   return groupedMeasurements;
 }
-

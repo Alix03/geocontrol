@@ -193,10 +193,10 @@ export function computeStats(
 ): StatsDTO {
 
 
+  if(measurements === undefined)
+    return undefined;
+
   const n = measurements.length;
-  if (n === 0) {
-    return null;
-  }
   const mean = measurements.reduce((sum, m) => sum + m.value, 0) / n;
   const variance =
     measurements.reduce((sum, m) => sum + (m.value - mean) **2, 0) / n;
