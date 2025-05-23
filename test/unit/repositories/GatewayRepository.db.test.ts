@@ -173,5 +173,50 @@ describe("GatewayRepository: SQLite in-memory", () => {
     });
   });
 
+
+  describe("Get Gateway By macAddress", () => {
+    it("Get Gateway By macAddress: success", async () => {
+      const network = await createTestNetwork();
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Test Gateway",
+        description: "Test description",
+        network
+      });
+
+      const gateway = await repo.getGatewayByMac("TEST_NET", "AA:BB:CC:DD:EE:01");
+      expect(gateway.macAddress).toBe("AA:BB:CC:DD:EE:01");
+      expect(gateway.name).toBe("Test Gateway");
+      expect(gateway.description).toBe("Test description");
+    });
+
+    it("Get Gateway By macAddress: macAddress inesistente", async () => {
+      await createTestNetwork();
+      
+      await expect(
+        repo.getGatewayByMac("TEST_NET", "NONEXISTENT:MAC")
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    it("Get Gateway By macAddress: macAddress esistente ma in un altra rete", async () => {
+      const network1 = await createTestNetwork("NET_1");
+      const network2 = await createTestNetwork("NET_2");
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      // Gateway in NET_1
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Gateway 1",
+        network: network1
+      });
+
+      await expect(
+        repo.getGatewayByMac("NET_2", "AA:BB:CC:DD:EE:01")
+      ).rejects.toThrow(NotFoundError);
+    });
+  });
+
  
 });
