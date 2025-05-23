@@ -2,7 +2,7 @@ import { AppDataSource } from "@database";
 import { Repository } from "typeorm";
 import { GatewayDAO } from "@models/dao/GatewayDAO";
 import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
-
+import { NotFoundError } from "@models/errors/NotFoundError";
 import { ConflictError } from "@models/errors/ConflictError";
 import { NetworkDAO } from "@models/dao/NetworkDAO";
 
