@@ -99,23 +99,20 @@ export function createMeasurementsDTO(
   stats?: StatsDTO,
   measurements?: MeasurementDTO[]
 ): MeasurementsDTO {
-  const measurement= {
+  const measurement = {
     sensorMacAddress,
     ...removeNullAttributes({
       stats,
-      measurements
-    })
+      measurements,
+    }),
   } as MeasurementsDTO;
- 
+
   return measurement;
-
 }
-
-
 
 export function createMeasurementDTO(
   createdAt: Date,
-  value: number,
+  value: number
 ): MeasurementDTO {
   return removeNullAttributes({
     createdAt,
@@ -123,11 +120,10 @@ export function createMeasurementDTO(
   }) as MeasurementDTO;
 }
 
-export function mapMeasurementDAOToDTO(measurementDAO: MeasurementDAO ): MeasurementDTO {
-   return createMeasurementDTO(
-     measurementDAO.createdAt,
-     measurementDAO.value,
- );
+export function mapMeasurementDAOToDTO(
+  measurementDAO: MeasurementDAO
+): MeasurementDTO {
+  return createMeasurementDTO(measurementDAO.createdAt, measurementDAO.value);
 }
 
 function removeNullAttributes<T>(dto: T): Partial<T> {
@@ -175,7 +171,6 @@ export function createStatsDTO(
   startDate?: Date,
   endDate?: Date
 ): StatsDTO {
-  
   return removeNullAttributes({
     startDate,
     endDate,
@@ -191,15 +186,12 @@ export function computeStats(
   startDate?: Date,
   endDate?: Date
 ): StatsDTO {
-
-
-  if(measurements === undefined)
-    return undefined;
+  if (measurements === undefined) return undefined;
 
   const n = measurements.length;
   const mean = measurements.reduce((sum, m) => sum + m.value, 0) / n;
   const variance =
-    measurements.reduce((sum, m) => sum + (m.value - mean) **2, 0) / n;
+    measurements.reduce((sum, m) => sum + (m.value - mean) ** 2, 0) / n;
 
   const sigma = Math.sqrt(variance);
   const upperThreshold = mean + 2 * sigma;
@@ -215,23 +207,20 @@ export function computeStats(
   );
 }
 
-export function setOUtliers(measurements: MeasurementsDTO): MeasurementsDTO { 
+export function setOUtliers(measurements: MeasurementsDTO): MeasurementsDTO {
+  if (measurements.measurements == undefined) return measurements;
 
-  if (measurements.measurements == undefined)
-      return measurements;
+  const lowerThreshold = measurements.stats.lowerThreshold;
+  const upperThreshold = measurements.stats.upperThreshold;
+  const measurementArray = measurements.measurements;
 
-    const lowerThreshold = measurements.stats.lowerThreshold;
-    const upperThreshold = measurements.stats.upperThreshold;
-    const measurementArray = measurements.measurements;
-  
-    measurementArray.forEach((y) => {
-      if (y.value > upperThreshold || y.value < lowerThreshold) {
-        y.isOutlier = true;
-      } else {
-        y.isOutlier = false;
-        
-      }
-    });
+  measurementArray.forEach((y) => {
+    if (y.value > upperThreshold || y.value < lowerThreshold) {
+      y.isOutlier = true;
+    } else {
+      y.isOutlier = false;
+    }
+  });
 
   return measurements;
 }
