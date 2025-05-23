@@ -19,17 +19,19 @@ export class MeasurementRepository {
   async createMeasurement(
     createdAt: Date,
     value: number,
-    sensorMac: string,
+    sensorMac: string
   ): Promise<MeasurementDAO> {
     // Verifica che il sensore esista e sia associato al networkCode e gatewayMac
-   //se ci sono li filtriamo e tornanomo solo quelli validi per quel network
+    //se ci sono li filtriamo e tornanomo solo quelli validi per quel network
     const sensor = await AppDataSource.getRepository(SensorDAO).findOne({
       where: {
         macAddress: sensorMac,
       },
     });
     if (!sensor) {
-      throw new NotFoundError(`Sensor with macAddress '${sensorMac}' not found`);
+      throw new NotFoundError(
+        `Sensor with macAddress '${sensorMac}' not found`
+      );
     }
     // Salva la misurazione
     return this.repo.save({
@@ -55,12 +57,12 @@ export class MeasurementRepository {
     whereClause.createdAt = LessThanOrEqual(endDate);
   }
 
-  const measurements = await this.repo.find({
+    const measurements = await this.repo.find({
       where: whereClause,
       relations: { sensor: true },
-  }); 
-  return measurements;
-}
+    });
+    return measurements;
+  }
 
   async getMeasurementBySensorMac(
     networkCode: string,
@@ -72,9 +74,12 @@ export class MeasurementRepository {
     const endDate = parseISODateParamToUTC(query.endDate);
 
     const whereCondition: any = {
-      sensor: { macAddress: sensorMac, gateway: { network: { code: networkCode } } },
+      sensor: {
+        macAddress: sensorMac,
+        gateway: { network: { code: networkCode } },
+      },
     };
-    
+
     // Aggiungi il filtro per le date solo se sono definite
     if (startDate && endDate) {
       whereCondition.createdAt = Between(startDate, endDate);
@@ -83,13 +88,12 @@ export class MeasurementRepository {
     } else if (endDate) {
       whereCondition.createdAt = LessThanOrEqual(endDate);
     }
-    
+
     // Esegui la query con la condizione dinamica
     const measurements = await this.repo.find({
       where: whereCondition,
       relations: { sensor: { gateway: { network: true } } },
     });
     return measurements;
- }
-
+  }
 }

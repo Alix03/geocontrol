@@ -61,7 +61,7 @@ export function MeasurementFromJSONTyped(
   return {
     createdAt: new Date(json["createdAt"]),
     value: json["value"],
-    isOutlier: json["isOutlier"] == null ? undefined : json["isOutlier"]
+    isOutlier: json["isOutlier"] == null ? undefined : json["isOutlier"],
   };
 }
 
@@ -80,6 +80,6 @@ export function MeasurementToJSONTyped(
   return {
     createdAt: value["createdAt"].toISOString(),
     value: value["value"],
-    isOutlier: value["isOutlier"]
+    isOutlier: value["isOutlier"],
   };
 }

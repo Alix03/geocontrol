@@ -111,6 +111,7 @@ export async function getMeasurementBySensorId(
       query
     )) || [];
   // Calcola le statistiche per ogni gruppo di sensori
+
   const stats: StatsDTO = computeStats(measurementArray);
   const sensorMeasurements = createMeasurementsDTO(
     sensorMac,
