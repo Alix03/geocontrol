@@ -15,7 +15,7 @@ export async function getAllGateways(networkCode  : string): Promise<GatewayDTO[
 
 export async function getGateway(networkCode : string, gatewayMac: string): Promise<GatewayDTO> {
   const gatewayRepo = new GatewayRepository(); 
-  // manca controllo su networkCode se esiste o meno
+  // manca controllo su networkCode se esiste o meno -> se non esiste deve lanciare eccezione
   const gatewayDAO= await gatewayRepo.getGatewayByMac(networkCode,gatewayMac);
   
   const gatewayDTO = mapGatewayDAOToDTO(gatewayDAO);
@@ -25,17 +25,18 @@ export async function getGateway(networkCode : string, gatewayMac: string): Prom
 
 export async function createGateway(networkCode : string, gatewayDTO: GatewayDTO ): Promise<void> {
   const gatewayRepo = new GatewayRepository();
+  // controllo su networkCode fatto nella repo
   await gatewayRepo.createGateway(networkCode, gatewayDTO.macAddress, gatewayDTO.name, gatewayDTO.description);
 }
 
 export async function deleteGateway( networkCode : string ,gatewayMac: string): Promise<void> {
   const gatewayRepo = new GatewayRepository();
-  //controlli?
+  //controllo su networkcode? non so se necessario perchè al massimo non elimino nulla se non esiste
   await gatewayRepo.deleteGateway(networkCode, gatewayMac);
 }
 
 export async function updateGateway(networkCode : string, oldAddress: string, gatewayDTO: GatewayDTO): Promise<void> {
   const gatewayRepo = new GatewayRepository();
-  //controlli?
+  //controllo su network code non viene fatto nè qui e nè nella repo
   await gatewayRepo.updateGateway(networkCode, oldAddress, gatewayDTO.macAddress, gatewayDTO.name, gatewayDTO.description);
 }
