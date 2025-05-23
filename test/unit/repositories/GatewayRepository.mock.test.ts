@@ -177,7 +177,7 @@ describe("GatewayRepository: mocked database", () => {
       expect(mockGatewayFind).toHaveBeenCalledWith({
        network: {
         code: networkCode
-      }},
+      },
       relations: ["network"]
       });
       
@@ -287,10 +287,10 @@ describe("GatewayRepository: mocked database", () => {
 
     /* -------- Assert -------- */
     expect(mockGatewayFind).toHaveBeenCalledWith({
-      where: {
-        macAddress: oldMac,
-        network: { code: netCode },
+      network: {
+        code: networkCode
       },
+      relations: ["network"]
     });
 
     expect(mockGatewayFindOne).toHaveBeenCalledWith({

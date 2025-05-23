@@ -393,7 +393,7 @@ describe("GatewayRepository: SQLite in-memory", () => {
       expect(deletedGateway).toBeNull();
     });
 
-    it("should not throw error when deleting non-existent gateway", async () => {
+    it("Delete gateway: gateway inesistente", async () => {
       await createTestNetwork();
       
       // Non dovrebbe lanciare errori anche se il gateway non esiste
@@ -420,6 +420,58 @@ describe("GatewayRepository: SQLite in-memory", () => {
         where: { macAddress: "AA:BB:CC:DD:EE:01" }
       });
       expect(deletedGateway).toBeNull();
+    });
+  });
+
+
+  describe("Edge cases", () => {
+    it("Gestione di più gateway con operazioni in cascata", async () => {
+      const network = await createTestNetwork();
+      
+      // Crea più gateways
+      await repo.createGateway("TEST_NET", "AA:BB:CC:DD:EE:01", "Gateway 1");
+      await repo.createGateway("TEST_NET", "AA:BB:CC:DD:EE:02", "Gateway 2");
+      await repo.createGateway("TEST_NET", "AA:BB:CC:DD:EE:03", "Gateway 3");
+
+      const allGateways = await repo.getAllGateways("TEST_NET");
+      expect(allGateways).toHaveLength(3);
+
+      // Elimina uno e verifica che gli altri rimangano
+      await repo.deleteGateway("TEST_NET", "AA:BB:CC:DD:EE:02");
+      
+      const remainingGateways = await repo.getAllGateways("TEST_NET");
+      expect(remainingGateways).toHaveLength(2);
+      expect(remainingGateways.map(g => g.macAddress)).not.toContain("AA:BB:CC:DD:EE:02");
+    });
+
+    it("Integrità dei dati durante le operazioni", async () => {
+      const network = await createTestNetwork();
+      
+      // Crea gateway
+      const created = await repo.createGateway(
+        "TEST_NET",
+        "AA:BB:CC:DD:EE:01",
+        "Original Gateway",
+        "Original Description"
+      );
+      
+      // Recupera gateway
+      const retrieved = await repo.getGatewayByMac("TEST_NET", "AA:BB:CC:DD:EE:01");
+      expect(retrieved.id).toBe(created.id);
+      expect(retrieved.network.code).toBe("TEST_NET");
+      
+      // Aggiorna gateway
+      const updated = await repo.updateGateway(
+        "TEST_NET",
+        "AA:BB:CC:DD:EE:01",
+        "AA:BB:CC:DD:EE:99",
+        "Updated Gateway"
+      );
+      
+      // Verifica che l'ID rimanga lo stesso ma i dati siano aggiornati
+      expect(updated.id).toBe(created.id);
+      expect(updated.macAddress).toBe("AA:BB:CC:DD:EE:99");
+      expect(updated.name).toBe("Updated Gateway");
     });
   });
 
