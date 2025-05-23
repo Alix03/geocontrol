@@ -142,17 +142,7 @@ export class MeasurementRepository {
       relations: { sensor: { gateway: { network: true } } },
     });
     
-    //raggruppo le misurazioni per sensore
-    const groupedMeasurements: MeasurementDAO[] = [];
-    for (const measurement of measurements) {
-      if (measurement.sensor.macAddress === sensorMac) {
-        groupedMeasurements.push(measurement);
-      }
-    }
-
-    //
-
-    return groupedMeasurements;
+    return measurements;
  }
 
 }

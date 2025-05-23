@@ -20,10 +20,10 @@ beforeEach(async () => {
   await TestDataSource.getRepository(MeasurementDAO).clear();
 });
 
-/*
+
 describe("MeasurementRepository: SQLite in-memory", () => {
   const repo = new MeasurementRepository();
-
+/*
   it("create measurement", async () => {
     const measurement = await repo.createMeasurement(new Date("20 May 2025 14:48 UTC"), 5, UserType.Admin);
     expect(user).toMatchObject({
@@ -48,5 +48,15 @@ describe("MeasurementRepository: SQLite in-memory", () => {
       repo.createUser("john", "anotherpass", UserType.Viewer)
     ).rejects.toThrow(ConflictError);
   });
+  */
+    it("get measurement by network with list of sensors mac with all sensors of other networks", async () => {
+    //dovrebbe tornare array vuoto
+    mockFind.mockResolvedValue([]);
+
+    const result = await repo.getMeasurementByNetworkId("NET01",{sensorMacs: ["mac1", "mac2"]});  
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(0);
+  });
+
+
 });
-*/

@@ -3,7 +3,7 @@ import { MeasurementDAO } from "@dao/MeasurementDAO";
 import { ConflictError } from "@models/errors/ConflictError";
 import { NotFoundError } from "@models/errors/NotFoundError";
 import { SensorDAO } from "@models/dao/SensorDAO";
-import { Between } from "typeorm";
+import { Between, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { GatewayDAO } from "@models/dao/GatewayDAO";
 import { NetworkDAO } from "@models/dao/NetworkDAO";
 
@@ -30,6 +30,9 @@ describe("UserRepository: mocked database", () => {
     jest.clearAllMocks();
   });
 
+  /*
+    CREATE MEASUREMENT
+  */
   it("create measurement", async () => {
     
     const sensor = new SensorDAO();
@@ -77,8 +80,19 @@ describe("UserRepository: mocked database", () => {
     ).rejects.toThrow(NotFoundError);
   });
 
-
+ /*
+    GET MEASUREMENTS BY NETWORK
+  */
   it("get measurement by network", async () => {
+
+    const network = new NetworkDAO();
+    network.id = 1;
+    network.code = "NET01";
+
+    const gateway = new GatewayDAO();
+    gateway.id = 1;
+    gateway.macAddress = "gmac1";
+    gateway.network = network;
 
     const sensor = new SensorDAO();
     sensor.id = 1;
@@ -87,6 +101,7 @@ describe("UserRepository: mocked database", () => {
     sensor.description = "description";
     sensor.variable = "temperature";
     sensor.unit = "C";
+    sensor.gateway = gateway;
 
     const foundMeasurement = new MeasurementDAO();
     foundMeasurement.createdAt = new Date("20 May 2025 14:48 UTC");
@@ -96,7 +111,7 @@ describe("UserRepository: mocked database", () => {
 
     mockFind.mockResolvedValue([foundMeasurement]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01", []);  //secondo campo dovrebbe essere opzionale
+    const result = await repo.getMeasurementByNetworkId("NET01"); 
     expect(Array.isArray(result)).toBe(true);
     expect(result[0]).toBeInstanceOf(MeasurementDAO);
     expect(result[0].id).toBe(1);
@@ -164,7 +179,7 @@ describe("UserRepository: mocked database", () => {
     expect(result[1].sensor.macAddress).toBe("mac2");
   });
 
-  it("get measurement by network with list of sensors mac 2", async () => {
+  it("get measurement by network with list of sensors mac with some unvalid sensors", async () => {
 
     const sensor = new SensorDAO();
     sensor.id = 1;
@@ -190,6 +205,15 @@ describe("UserRepository: mocked database", () => {
     expect(result[0].createdAt.toISOString()).toBe("2025-05-20T14:48:00.000Z");
     expect(result[0].value).toBe(5);
     expect(result[0].sensor.macAddress).toBe("mac1");
+  });
+
+    it("get measurement by network with list of sensors mac with all unvalid sensors", async () => {
+    //dovrebbe tornare array vuoto
+    mockFind.mockResolvedValue([]);
+
+    const result = await repo.getMeasurementByNetworkId("NET01",{sensorMacs: ["mac1", "mac2"]});  
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(0);
   });
 
   it("get measurement by network with start date and end date", async () => {
@@ -234,6 +258,36 @@ describe("UserRepository: mocked database", () => {
     });
   });
 
+  it("get measurement by network with list of sensors and start date and end date in local time zone", async () => {
+
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.name = "sensor1";
+    sensor.description = "description";
+    sensor.variable = "temperature";
+    sensor.unit = "C";
+
+    const foundMeasurement = new MeasurementDAO();
+    foundMeasurement.createdAt = new Date("20 May 2025 14:48 UTC");
+    foundMeasurement.id = 1;
+    foundMeasurement.value = 5;
+    foundMeasurement.sensor = sensor;
+
+    const startDate = new Date("2025-05-20T14:40:00.000Z");
+    const endDate = new Date("2025-05-20T14:50:00.000Z");
+
+    mockFind.mockResolvedValue([foundMeasurement]);
+
+    const result = await repo.getMeasurementByNetworkId("NET01", {sensorMacs: ["mac1", "mac2"], startDate: "2025-05-20T15:40:00+01:00", endDate:"2025-05-20T15:50:00+01:00" } );  
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(1);
+    expect(result[0]).toBeInstanceOf(MeasurementDAO);
+    expect(result[0]).toStrictEqual(foundMeasurement);
+    expect(result[0].createdAt.toISOString()).toBe("2025-05-20T14:48:00.000Z");
+
+  });
+
   it("get measurement by network with start date and end date in local time zone", async () => {
 
     const sensor = new SensorDAO();
@@ -259,7 +313,7 @@ describe("UserRepository: mocked database", () => {
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(1);
     expect(result[0]).toBeInstanceOf(MeasurementDAO);
-    expect(result[0]).toBe(foundMeasurement);
+    expect(result[0]).toStrictEqual(foundMeasurement);
 
     expect(mockFind).toHaveBeenCalledWith({
       where: { 
@@ -276,20 +330,309 @@ describe("UserRepository: mocked database", () => {
     });
   });
 
-/*
-  it("delete user", async () => {
-    const user = new UserDAO();
-    user.username = "john";
-    user.password = "pass123";
-    user.type = UserType.Admin;
+  it("get measurement by network with only start date", async () => {
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.name = "sensor1";
+    sensor.description = "description";
+    sensor.variable = "temperature";
+    sensor.unit = "C";
 
-    mockFind.mockResolvedValue([user]);
-    mockRemove.mockResolvedValue(undefined);
+    const foundMeasurement = new MeasurementDAO();
+    foundMeasurement.createdAt = new Date("20 May 2025 14:48 UTC");
+    foundMeasurement.id = 1;
+    foundMeasurement.value = 5;
+    foundMeasurement.sensor = sensor;
 
-    await repo.deleteUser("john");
+    const startDate = new Date("2025-05-20T14:40:00.000Z");
 
-    expect(mockRemove).toHaveBeenCalledWith(user);
-  });
+    mockFind.mockResolvedValue([foundMeasurement]);
+
+    const result = await repo.getMeasurementByNetworkId("NET01", { startDate: "2025-05-20T14:40:00.000Z" });
+    
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(1);
+    expect(result[0]).toBeInstanceOf(MeasurementDAO);
+    expect(result[0]).toBe(foundMeasurement);
+
+    expect(mockFind).toHaveBeenCalledWith({
+      where: { 
+        sensor: { gateway: { network: { code: "NET01" } } },
+        createdAt: MoreThanOrEqual(startDate)
+      },
+      relations: {
+        sensor: {
+          gateway: {
+            network: true,
+          },
+        },
+      }
+    });
+});
+
+it("get measurement by network with only end date", async () => {
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.name = "sensor1";
+    sensor.description = "description";
+    sensor.variable = "temperature";
+    sensor.unit = "C";
+
+    const foundMeasurement = new MeasurementDAO();
+    foundMeasurement.createdAt = new Date("20 May 2025 14:48 UTC");
+    foundMeasurement.id = 1;
+    foundMeasurement.value = 5;
+    foundMeasurement.sensor = sensor;
+
+    const endDate = new Date("2025-05-20T14:50:00.000Z");
+
+    mockFind.mockResolvedValue([foundMeasurement]);
+
+    const result = await repo.getMeasurementByNetworkId("NET01", { endDate: "2025-05-20T14:50:00.000Z" });
+    
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(1);
+    expect(result[0]).toBeInstanceOf(MeasurementDAO);
+    expect(result[0]).toBe(foundMeasurement);
+
+    expect(mockFind).toHaveBeenCalledWith({
+      where: { 
+        sensor: { gateway: { network: { code: "NET01" } } },
+        createdAt: LessThanOrEqual(endDate)
+      },
+      relations: {
+        sensor: {
+          gateway: {
+            network: true,
+          },
+        },
+      }
+    });
+});
+
+ /*
+    GET MEASUREMENTS BY SENSOR
   */
+
+ it("get measurements by sensor with no date filters", async () => {
+    const network = new NetworkDAO();
+    network.id = 1;
+    network.code = "NET01";
+    
+    const gateway = new GatewayDAO();
+    gateway.id = 1;
+    gateway.macAddress = "gmac1";
+    gateway.network = network;
+    
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.gateway = gateway;  
+  
+    const measurement = new MeasurementDAO();
+    measurement.id = 1;
+    measurement.createdAt = new Date("2025-05-20T14:48:00.000Z");
+    measurement.value = 25.5;
+    measurement.sensor = sensor;
+
+    mockFind.mockResolvedValue([measurement]);
+
+    const result = await repo.getMeasurementBySensorMac(
+      "NET01",
+      "gmac1",
+      "mac1",
+      {}
+    );
+
+    expect(result).toHaveLength(1);
+    expect(result[0].value).toBe(25.5);
+    expect(result[0].sensor.macAddress).toBe("mac1");
+  });
+
+  it("get measurements by sensor with start and end date", async () => {
+    const network = new NetworkDAO();
+    network.id = 1;
+    network.code = "NET01";
+    
+    const gateway = new GatewayDAO();
+    gateway.id = 1;
+    gateway.macAddress = "gmac1";
+    gateway.network = network;
+    
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.gateway = gateway;  
+    
+    const measurement = new MeasurementDAO();
+    measurement.id = 1;
+    measurement.createdAt = new Date("2025-05-20T14:48:00.000Z");
+    measurement.value = 25.5;
+    measurement.sensor = sensor;
+
+    mockFind.mockResolvedValue([measurement]);
+
+    const result = await repo.getMeasurementBySensorMac(
+      "NET01",
+      "gmac1",
+      "mac1",
+      {
+        startDate: "2025-05-20T00:00:00.000Z",
+        endDate: "2025-05-21T00:00:00.000Z"
+      }
+    );
+
+    expect(result).toHaveLength(1);
+    expect(mockFind).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          createdAt: expect.any(Object)
+        })
+      })
+    );
+  });
+
+  it("get measurements by sensor with only start date", async () => {
+        const network = new NetworkDAO();
+    network.id = 1;
+    network.code = "NET01";
+    
+    const gateway = new GatewayDAO();
+    gateway.id = 1;
+    gateway.macAddress = "gmac1";
+    gateway.network = network;
+    
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.gateway = gateway;  
+
+    const measurement = new MeasurementDAO();
+    measurement.id = 1;
+    measurement.createdAt = new Date("2025-05-20T14:48:00.000Z");
+    measurement.value = 25.5;
+    measurement.sensor = sensor;
+
+    mockFind.mockResolvedValue([measurement]);
+
+    const result = await repo.getMeasurementBySensorMac(
+      "NET01",
+      "gmac1",
+      "mac1",
+      {
+        startDate: "2025-05-20T00:00:00.000Z"
+      }
+    );
+
+    expect(result).toHaveLength(1);
+    expect(mockFind).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          createdAt: expect.any(Object)
+        })
+      })
+    );
+  });
+
+  it("get measurements by sensor with only end date", async () => {
+        const network = new NetworkDAO();
+    network.id = 1;
+    network.code = "NET01";
+    
+    const gateway = new GatewayDAO();
+    gateway.id = 1;
+    gateway.macAddress = "gmac1";
+    gateway.network = network;
+    
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.gateway = gateway;  
+
+    const measurement = new MeasurementDAO();
+    measurement.id = 1;
+    measurement.createdAt = new Date("2025-05-20T14:48:00.000Z");
+    measurement.value = 25.5;
+    measurement.sensor = sensor;
+
+    mockFind.mockResolvedValue([measurement]);
+
+    const result = await repo.getMeasurementBySensorMac(
+      "NET01",
+      "gmac1",
+      "mac1",
+      {
+        endDate: "2025-05-21T00:00:00.000Z"
+      }
+    );
+
+    expect(result).toHaveLength(1);
+    expect(mockFind).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          createdAt: expect.any(Object)
+        })
+      })
+    );
+  });
+
+  it("get measurements by sensor : empty array when no measurements found", async () => {
+    mockFind.mockResolvedValue([]);
+
+    const result = await repo.getMeasurementBySensorMac(
+      "NET01",
+      "gmac1",
+      "mac1",
+      //da cacciare ultimo parametro
+      {}
+    );
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("get measurements by sensor with more than one measurements", async () => {
+        const network = new NetworkDAO();
+    network.id = 1;
+    network.code = "NET01";
+    
+    const gateway = new GatewayDAO();
+    gateway.id = 1;
+    gateway.macAddress = "gmac1";
+    gateway.network = network;
+    
+    const sensor = new SensorDAO();
+    sensor.id = 1;
+    sensor.macAddress = "mac1";
+    sensor.gateway = gateway;  
+
+    const measurement1 = new MeasurementDAO();
+    measurement1.id = 1;
+    measurement1.createdAt = new Date("2025-05-20T14:48:00.000Z");
+    measurement1.value = 25.5;
+    measurement1.sensor = sensor;
+
+    const measurement2 = new MeasurementDAO();
+    measurement2.id = 2;
+    measurement2.createdAt = new Date("2025-05-20T14:48:00.000Z");
+    measurement2.value = 30.0;
+    measurement2.sensor = sensor;
+
+    mockFind.mockResolvedValue([measurement1, measurement2]);
+
+    const result = await repo.getMeasurementBySensorMac(
+      "NET01",
+      "gmac1",
+      "mac1",
+      //da cacciare ultimo parametro
+      {}
+    );
+
+    expect(result).toHaveLength(2);
+    expect(result[0].sensor.macAddress).toBe("mac1");
+    expect(result[1].sensor.macAddress).toBe("mac1");
+  });
+
 });
 
