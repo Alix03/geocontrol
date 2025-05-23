@@ -25,7 +25,7 @@ app.use(
 );
 
 
-
+app.use(openApiValidator);
 
 app.use(CONFIG.ROUTES.V1_AUTH, authenticationRouter);
 app.use(CONFIG.ROUTES.V1_USERS, userRouter);
@@ -34,6 +34,6 @@ app.use(CONFIG.ROUTES.V1_GATEWAYS, gatewayRouter);
 app.use(CONFIG.ROUTES.V1_SENSORS, sensorRouter);
 app.use(measurementRouter);
 
-app.use(openApiValidator);
+
 //This must always be the last middleware added
 app.use(errorHandler);
