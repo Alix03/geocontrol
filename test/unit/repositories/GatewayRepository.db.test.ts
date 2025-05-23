@@ -374,6 +374,54 @@ describe("GatewayRepository: SQLite in-memory", () => {
     });
   });
 
+  describe("Delete Gateway", () => {
+    it("Delete gateway: success", async () => {
+      const network = await createTestNetwork();
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Gateway to delete",
+        network
+      });
+
+      await repo.deleteGateway("TEST_NET", "AA:BB:CC:DD:EE:01");
+      
+      const deletedGateway = await gatewayRepo.findOne({
+        where: { macAddress: "AA:BB:CC:DD:EE:01" }
+      });
+      expect(deletedGateway).toBeNull();
+    });
+
+    it("should not throw error when deleting non-existent gateway", async () => {
+      await createTestNetwork();
+      
+      // Non dovrebbe lanciare errori anche se il gateway non esiste
+      await expect(
+        repo.deleteGateway("TEST_NET", "NONEXISTENT:MAC")
+      ).resolves.not.toThrow();
+    });
+
+    it("should delete gateway regardless of network (current implementation)", async () => {
+      const network1 = await createTestNetwork("NET_1");
+      const network2 = await createTestNetwork("NET_2");
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Gateway in NET_1",
+        network: network1
+      });
+
+      // La deleteGateway attuale cancella per MAC senza controllare la network
+      await repo.deleteGateway("NET_2", "AA:BB:CC:DD:EE:01");
+      
+      const deletedGateway = await gatewayRepo.findOne({
+        where: { macAddress: "AA:BB:CC:DD:EE:01" }
+      });
+      expect(deletedGateway).toBeNull();
+    });
+  });
 
  
 });
