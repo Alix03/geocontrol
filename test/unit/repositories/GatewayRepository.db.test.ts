@@ -108,5 +108,70 @@ describe("GatewayRepository: SQLite in-memory", () => {
     });
   });
 
+
+  describe("Get All Gateways", () => {
+    it("Get All Gateways: success (array vuoto)", async () => {
+      await createTestNetwork();
+      const gateways = await repo.getAllGateways("TEST_NET");
+      expect(gateways).toEqual([]);
+    });
+
+    it("Get All Gateways: success", async () => {
+      const network = await createTestNetwork();
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      // Crea gateways per la network di test
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Gateway 1",
+        description: "First gateway",
+        network
+      });
+      
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:02",
+        name: "Gateway 2",
+        description: "Second gateway",
+        network
+      });
+
+      const gateways = await repo.getAllGateways("TEST_NET");
+      expect(gateways).toHaveLength(2);
+      expect(gateways[0].macAddress).toBe("AA:BB:CC:DD:EE:01");
+      expect(gateways[1].macAddress).toBe("AA:BB:CC:DD:EE:02");
+      expect(gateways[0].network.code).toBe("TEST_NET");
+    });
+
+    it("Get All Gateways: con più reti deve ritornare solo i gateway della rete selezionata", async () => {
+      const network1 = await createTestNetwork("NET_1");
+      const network2 = await createTestNetwork("NET_2");
+      const gatewayRepo = TestDataSource.getRepository(GatewayDAO);
+      
+      // Gateway per network1
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:01",
+        name: "Gateway 1",
+        network: network1
+      });
+      
+      // Gateway per network2
+      await gatewayRepo.save({
+        macAddress: "AA:BB:CC:DD:EE:02",
+        name: "Gateway 2",
+        network: network2
+      });
+
+      const gatewaysNet1 = await repo.getAllGateways("NET_1");
+      const gatewaysNet2 = await repo.getAllGateways("NET_2");
+      
+      expect(gatewaysNet1).toHaveLength(1);
+      expect(gatewaysNet2).toHaveLength(1);
+      expect(gatewaysNet1[0].macAddress).toBe("AA:BB:CC:DD:EE:01");
+      expect(gatewaysNet2[0].macAddress).toBe("AA:BB:CC:DD:EE:02");
+      expect(gatewaysNet1[0].network.code).toBe("NET_1");
+      expect(gatewaysNet2[0].network.code).toBe("NET_2");
+    });
+  });
+
  
 });
