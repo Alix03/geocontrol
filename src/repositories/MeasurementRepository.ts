@@ -71,11 +71,9 @@ export class MeasurementRepository {
     networkCode: string,
     gatewayMac: string,
     sensorMac: string,
-    query: any
+    startDate?: Date,
+    endDate?: Date
   ): Promise<MeasurementDAO[]> {
-    const startDate = parseISODateParamToUTC(query.startDate);
-    const endDate = parseISODateParamToUTC(query.endDate);
-
     const whereCondition: any = {
       sensor: {
         macAddress: sensorMac,
