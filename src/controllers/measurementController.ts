@@ -99,6 +99,9 @@ export async function getMeasurementBySensorId(
   query?: any
 ): Promise<MeasurementsDTO> {
   const measurementRepo = new MeasurementRepository();
+
+  const startDate = parseISODateParamToUTC(query.startDate);
+  const endDate = parseISODateParamToUTC(query.endDate);
   //check se esiste il sensore
   await getSensor(networkCode, gatewayMac, sensorMac);
 
@@ -108,7 +111,8 @@ export async function getMeasurementBySensorId(
       networkCode,
       gatewayMac,
       sensorMac,
-      query
+      startDate,
+      endDate
     )) || [];
   // Calcola le statistiche per ogni gruppo di sensori
 
