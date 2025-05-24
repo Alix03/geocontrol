@@ -459,7 +459,6 @@ it("get measurement by network with only end date", async () => {
       "NET01",
       "gmac1",
       "mac1",
-      {}
     );
 
     expect(result).toHaveLength(1);
@@ -494,19 +493,18 @@ it("get measurement by network with only end date", async () => {
       "NET01",
       "gmac1",
       "mac1",
-      {
-        startDate: "2025-05-20T00:00:00.000Z",
-        endDate: "2025-05-21T00:00:00.000Z"
-      }
+      new Date( "2025-05-20T00:00:00.000Z"),
+      new Date("2025-05-21T00:00:00.000Z")
     );
 
     expect(result).toHaveLength(1);
     expect(mockFind).toHaveBeenCalledWith(
-      expect.objectContaining({
+      {
         where: expect.objectContaining({
           createdAt: expect.any(Object)
-        })
-      })
+        }),
+        relations: { sensor: { gateway: { network: true } } },
+      }
     );
   });
 
@@ -537,18 +535,19 @@ it("get measurement by network with only end date", async () => {
       "NET01",
       "gmac1",
       "mac1",
-      {
-        startDate: "2025-05-20T00:00:00.000Z"
-      }
+      
+        new Date( "2025-05-20T00:00:00.000Z")
+      
     );
 
     expect(result).toHaveLength(1);
     expect(mockFind).toHaveBeenCalledWith(
-      expect.objectContaining({
+      {
         where: expect.objectContaining({
           createdAt: expect.any(Object)
-        })
-      })
+        }),
+        relations: { sensor: { gateway: { network: true } } },
+      }
     );
   });
 
@@ -579,18 +578,19 @@ it("get measurement by network with only end date", async () => {
       "NET01",
       "gmac1",
       "mac1",
-      {
-        endDate: "2025-05-21T00:00:00.000Z"
-      }
+      
+        new Date( "2025-05-21T00:00:00.000Z")
+      
     );
 
     expect(result).toHaveLength(1);
     expect(mockFind).toHaveBeenCalledWith(
-      expect.objectContaining({
+      {
         where: expect.objectContaining({
           createdAt: expect.any(Object)
-        })
-      })
+        }),
+        relations: { sensor: { gateway: { network: true } } },
+      }
     );
   });
 
@@ -601,8 +601,7 @@ it("get measurement by network with only end date", async () => {
       "NET01",
       "gmac1",
       "mac1",
-      //da cacciare ultimo parametro
-      {}
+     
     );
 
     expect(result).toHaveLength(0);
@@ -641,13 +640,14 @@ it("get measurement by network with only end date", async () => {
       "NET01",
       "gmac1",
       "mac1",
-      //da cacciare ultimo parametro
-      {}
+    
     );
 
     expect(result).toHaveLength(2);
     expect(result[0].sensor.macAddress).toBe("mac1");
+    expect(result[0].id).toBe(1);
     expect(result[1].sensor.macAddress).toBe("mac1");
+    expect(result[1].id).toBe(2);
   });
 
 });
