@@ -138,7 +138,7 @@ describe("GatewayController", () => {
     
     describe("Get All Gateways", () => {
     it("Get all Gateways : success", async () => {
-      // Arrange
+      
       const networkCode = "NET001";
       const mockNetworkDAO: NetworkDAO = {
         id: 1,
@@ -176,6 +176,29 @@ describe("GatewayController", () => {
       expect(mockGatewayRepo.getAllGateways).toHaveBeenCalledWith(networkCode);
       expect(mockMapGatewayDAOToDTO).toHaveBeenCalledWith(mockGatewayDAO);
       expect(result).toEqual([mockGatewayDTO]);
+    });
+
+
+    it("Get All Gateways: network senza gateways ritorna array vuoto", async () => {
+      
+      const networkCode = "NET001";
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+      mockGatewayRepo.getAllGateways.mockResolvedValue([]);
+
+      
+      const result = await gatewayController.getAllGateways(networkCode);
+
+      
+      expect(result).toEqual([]);
+      expect(mockMapGatewayDAOToDTO).not.toHaveBeenCalled();
     });
 
 
