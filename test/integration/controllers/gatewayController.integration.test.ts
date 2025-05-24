@@ -70,6 +70,22 @@ describe("GatewayController", () => {
       );
     });
 
+    it("Create gateway: network inesistente", async () => {
+      
+      const networkCode = "INVALID";
+      const gatewayDTO: GatewayDTO = {
+        macAddress: "AA:BB:CC:DD:EE:FF",
+        name: "New Gateway",
+        description: "New Gateway Description"
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockRejectedValue(new Error("Network not found"));
+
+      
+      await expect(gatewayController.createGateway(networkCode, gatewayDTO)).rejects.toThrow("Network not found");
+      expect(mockGatewayRepo.createGateway).not.toHaveBeenCalled();
+    });
+
     // fine createGateway
 });
 
