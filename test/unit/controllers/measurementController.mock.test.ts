@@ -1,29 +1,18 @@
 import { MeasurementRepository } from "@repositories/MeasurementRepository";
 import { MeasurementDAO } from "@dao/MeasurementDAO";
+import { ConflictError } from "@models/errors/ConflictError";
 import { NotFoundError } from "@models/errors/NotFoundError";
 import { SensorDAO } from "@models/dao/SensorDAO";
 import { Between, In, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { GatewayDAO } from "@models/dao/GatewayDAO";
 import { NetworkDAO } from "@models/dao/NetworkDAO";
+import { SensorRepository } from "@repositories/SensorRepository";
 
-const mockFind = jest.fn();
-const mockFindOne = jest.fn();
-const mockSave = jest.fn();
-const mockRemove = jest.fn();
+jest.mock("@repositories/MeasurementRepository");
+jest.mock("@services/mapperService");
+jest.mock("@controllers/sensorController");
 
-jest.mock("@database", () => ({
-  AppDataSource: {
-    getRepository: () => ({
-      find: mockFind,
-      findOne: mockFindOne,
-      save: mockSave,
-      remove: mockRemove
-    })
-  }
-}));
-
-describe("UserRepository: mocked database", () => {
-  const repo = new MeasurementRepository();
+describe("measurementController: mocked repositories and services", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -32,30 +21,11 @@ describe("UserRepository: mocked database", () => {
   /*
     CREATE MEASUREMENT
   */
-  it("create measurement", async () => {
-    
-    const sensor = new SensorDAO();
-    sensor.id = 1;
-    sensor.macAddress = "mac1";
-    sensor.name = "sensor1";
-    sensor.description = "description";
-    sensor.variable = "temperature";
-    sensor.unit = "C";
-    
+  it("create measurement: success", async () => {
 
-    const mockDate = new Date("20 May 2025 14:48 UTC");   
-   
-    mockFindOne.mockResolvedValue(sensor);
-
-    const savedMeasurement = new MeasurementDAO();
-    savedMeasurement.id = 1;
-    savedMeasurement.createdAt = mockDate;
-    savedMeasurement.value = 5;
-    savedMeasurement.sensor = sensor;
-
-    mockSave.mockResolvedValue(savedMeasurement);
-
-    const result = await repo.createMeasurement(new Date("20 May 2025 14:48 UTC"), 5, "mac1");
+    (SensorRepository as jest.Mock).mockImplementation(() => ({
+          getSensorByMac: jest.fn().mockResolvedValue(SensorDAO)
+        }));
 
     expect(result).toBeInstanceOf(MeasurementDAO);
     expect(result).toBe(savedMeasurement);
