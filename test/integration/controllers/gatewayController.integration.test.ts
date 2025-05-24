@@ -450,6 +450,41 @@ describe("GatewayController", () => {
       );
     });
 
+    it("Update Gateway senza cambiare macAddress", async () => {
+      
+      const networkCode = "NET001";
+      const gatewayMac = "AA:BB:CC:DD:EE:FF";
+      const gatewayDTO: GatewayDTO = {
+        macAddress: gatewayMac, 
+        name: "Updated Gateway",
+        description: "Updated Gateway Description"
+      };
+
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+      mockGatewayRepo.updateGateway.mockResolvedValue(undefined);
+
+      
+      await gatewayController.updateGateway(networkCode, gatewayMac, gatewayDTO);
+
+      expect(mockNetworkRepo.getNetworkByCode).toHaveBeenCalledWith(networkCode);
+      
+      expect(mockGatewayRepo.updateGateway).toHaveBeenCalledWith(
+        networkCode,
+        gatewayMac,
+        gatewayDTO.macAddress,
+        gatewayDTO.name,
+        gatewayDTO.description
+      );
+    
+    });
     
   
     // test qui
