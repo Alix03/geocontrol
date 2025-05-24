@@ -276,10 +276,6 @@ describe("GatewayController", () => {
       expect(result).toEqual(mockGatewayDTO);
     });
     
-    
-
-
-    
     it("Get Gateway By MacAddress: network inesistente", async () => {
       // Arrange
       const networkCode = "INVALID";
@@ -289,6 +285,28 @@ describe("GatewayController", () => {
       // Act & Assert
       await expect(gatewayController.getGateway(networkCode, gatewayMac)).rejects.toThrow("Network not found");
       expect(mockGatewayRepo.getGatewayByMac).not.toHaveBeenCalled();
+    });
+
+
+    it("Get Gateway By MacAddress: gateway inesistente", async () => {
+      // Arrange
+      const networkCode = "NET001";
+      const gatewayMac = "INVALID";
+      
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+      mockGatewayRepo.getGatewayByMac.mockRejectedValue(new Error("Gateway not found"));
+
+      // Act & Assert
+      await expect(gatewayController.getGateway(networkCode, gatewayMac)).rejects.toThrow("Gateway not found");
+      expect(mockMapGatewayDAOToDTO).not.toHaveBeenCalled();
     });
     
 
