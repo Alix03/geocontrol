@@ -89,7 +89,7 @@ describe("GatewayController", () => {
 
 
     it("Create Gateway: macAddress già esistente", async () => {
-      // Arrange
+      
       const networkCode = "NET001";
       const gatewayDTO: GatewayDTO = {
         macAddress: "AA:BB:CC:DD:EE:FF",
@@ -108,8 +108,32 @@ describe("GatewayController", () => {
       mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
       mockGatewayRepo.createGateway.mockRejectedValue(new Error("Gateway already exists"));
 
-      // Act & Assert
+      
       await expect(gatewayController.createGateway(networkCode, gatewayDTO)).rejects.toThrow("Gateway already exists");
+    });
+
+    it("Create Gateway: Errore nella repository", async () => {
+      
+      const networkCode = "NET001";
+      const gatewayDTO: GatewayDTO = {
+        macAddress: "AA:BB:CC:DD:EE:FF",
+        name: "New Gateway",
+        description: "New Gateway Description"
+      };
+
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+      mockGatewayRepo.createGateway.mockRejectedValue(new Error("Database error"));
+
+      
+      await expect(gatewayController.createGateway(networkCode, gatewayDTO)).rejects.toThrow("Database error");
     });
 
     // fine createGateway
