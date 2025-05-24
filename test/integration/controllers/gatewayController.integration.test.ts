@@ -388,7 +388,29 @@ describe("GatewayController", () => {
       
       await expect(gatewayController.deleteGateway(networkCode, gatewayMac)).rejects.toThrow("Gateway not found");
     });
+
     
+
+
+    it("Delete Gateway: Errore nella repository", async () => {
+      
+      const networkCode = "NET001";
+      const gatewayMac = "AA:BB:CC:DD:EE:FF";
+
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+      mockGatewayRepo.deleteGateway.mockRejectedValue(new Error("Database error"));
+
+      
+      await expect(gatewayController.deleteGateway(networkCode, gatewayMac)).rejects.toThrow("Database error");
+    });
     // test qui
 
 });
