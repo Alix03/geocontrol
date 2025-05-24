@@ -403,6 +403,30 @@ describe("Get Gateway By MacAddress", () => {
         .rejects.toThrow("Gateway not found");
     });
 
+
+    it("Propagazione errore nella craazione di un gateway", async () => {
+      const networkCode = "NET001";
+      const gatewayDTO: GatewayDTO = {
+        macAddress: "11:22:33:44:55:66",
+        name: "Duplicate Gateway"
+      };
+      const conflictError = new Error("Gateway already exists");
+
+      const fakeNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepository.getNetworkByCode.mockResolvedValue(fakeNetworkDAO);
+      mockGatewayRepository.createGateway.mockRejectedValue(conflictError);
+
+      await expect(gatewayController.createGateway(networkCode, gatewayDTO))
+        .rejects.toThrow("Gateway already exists");
+    });
+
   });
 
 // fine describe
