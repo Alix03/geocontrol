@@ -232,8 +232,8 @@ describe("GatewayController", () => {
   });
 
 
-  describe("getGateway", () => {
-    it("should return gateway for valid network and MAC address", async () => {
+  describe("Get Gateway By MacAddress", () => {
+    it("Get Gateway By MacAddress : success", async () => {
       // Arrange
       const networkCode = "NET001";
       const gatewayMac = "AA:BB:CC:DD:EE:FF";
@@ -266,10 +266,10 @@ describe("GatewayController", () => {
       mockGatewayRepo.getGatewayByMac.mockResolvedValue(mockGatewayDAO);
       mockMapGatewayDAOToDTO.mockReturnValue(mockGatewayDTO);
 
-      // Act
+      
       const result = await gatewayController.getGateway(networkCode, gatewayMac);
 
-      // Assert
+      
       expect(mockNetworkRepo.getNetworkByCode).toHaveBeenCalledWith(networkCode);
       expect(mockGatewayRepo.getGatewayByMac).toHaveBeenCalledWith(networkCode, gatewayMac);
       expect(mockMapGatewayDAOToDTO).toHaveBeenCalledWith(mockGatewayDAO);
@@ -278,8 +278,23 @@ describe("GatewayController", () => {
     
     
 
+
     
+    it("Get Gateway By MacAddress: network inesistente", async () => {
+      // Arrange
+      const networkCode = "INVALID";
+      const gatewayMac = "AA:BB:CC:DD:EE:FF";
+      mockNetworkRepo.getNetworkByCode.mockRejectedValue(new Error("Network not found"));
+
+      // Act & Assert
+      await expect(gatewayController.getGateway(networkCode, gatewayMac)).rejects.toThrow("Network not found");
+      expect(mockGatewayRepo.getGatewayByMac).not.toHaveBeenCalled();
     });
+    
+
+    
+
+});
 
     // fine getGatewayByMac
 
