@@ -157,6 +157,28 @@ describe("GatewayController integration", () => {
       expect(result).toEqual([expectedDTO]);
     });
 
+
+    it("Get All Gateways: netwoek senza gateway (array vuoto)", async () => {
+      const networkCode = "NET001";
+      const fakeNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepository.getNetworkByCode.mockResolvedValue(fakeNetworkDAO);
+      mockGatewayRepository.getAllGateways.mockResolvedValue([]);
+
+      const result = await gatewayController.getAllGateways(networkCode);
+
+      expect(result).toEqual([]);
+    });
+
+
+    
+
     // test qui
 });
 // fine describe
