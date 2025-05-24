@@ -92,6 +92,7 @@ export class MeasurementRepository {
       where: whereCondition,
       relations: { sensor: { gateway: { network: true } } },
     });
+    console.log(JSON.stringify(measurements.map(m => m.value)));
     return measurements;
   }
 }
