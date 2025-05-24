@@ -357,9 +357,20 @@ describe("GatewayController", () => {
       expect(mockGatewayRepo.deleteGateway).toHaveBeenCalledWith(networkCode, gatewayMac);
     });
 
+    it("Delete Gateway: network inesistente", async () => {
+      
+      const networkCode = "INVALID";
+      const gatewayMac = "AA:BB:CC:DD:EE:FF";
 
+      mockNetworkRepo.getNetworkByCode.mockRejectedValue(new Error("Network not found"));
 
+      
+      await expect(gatewayController.deleteGateway(networkCode, gatewayMac)).rejects.toThrow("Network not found");
+      expect(mockGatewayRepo.deleteGateway).not.toHaveBeenCalled();
+    });
+    
     // test qui
+    
 
 });
     // fine deleteGateway
