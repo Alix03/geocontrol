@@ -69,7 +69,7 @@ describe("GatewayController integration", () => {
       );
     });
     
-    // test qui
+    
 
     
     it("Create gateway con solo campi obbligatori", async () => {
@@ -100,6 +100,64 @@ describe("GatewayController integration", () => {
     });
     
   });
+
+
+  describe("Get All Gateways", () => {
+    it("Get All Gateways: Ritorna DTO mappato correttamente per una network valida", async () => {
+      const networkCode = "NET001";
+      const fakeNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      const fakeSensorDAO: SensorDAO = {
+        id: 1,
+        macAddress: "AA:BB:CC:DD:EE:FF",
+        name: "Temperature Sensor",
+        description: "Outdoor temperature sensor",
+        variable: "temperature",
+        unit: "°C",
+        gateway: {} as GatewayDAO,
+        measurements: []
+      };
+
+      const fakeGatewayDAO: GatewayDAO = {
+        id: 1,
+        macAddress: "11:22:33:44:55:66",
+        name: "Gateway 1",
+        description: "Main gateway",
+        network: fakeNetworkDAO,
+        sensors: [fakeSensorDAO]
+      };
+
+      const expectedDTO: GatewayDTO = {
+        macAddress: fakeGatewayDAO.macAddress,
+        name: fakeGatewayDAO.name,
+        description: fakeGatewayDAO.description,
+        sensors: [{
+          macAddress: fakeSensorDAO.macAddress,
+          name: fakeSensorDAO.name,
+          description: fakeSensorDAO.description,
+          variable: fakeSensorDAO.variable,
+          unit: fakeSensorDAO.unit
+        }]
+      };
+
+      mockNetworkRepository.getNetworkByCode.mockResolvedValue(fakeNetworkDAO);
+      mockGatewayRepository.getAllGateways.mockResolvedValue([fakeGatewayDAO]);
+
+      const result = await gatewayController.getAllGateways(networkCode);
+
+      expect(mockNetworkRepository.getNetworkByCode).toHaveBeenCalledWith(networkCode);
+      expect(mockGatewayRepository.getAllGateways).toHaveBeenCalledWith(networkCode);
+      expect(result).toEqual([expectedDTO]);
+    });
+
+    // test qui
+});
 // fine describe
 
 
