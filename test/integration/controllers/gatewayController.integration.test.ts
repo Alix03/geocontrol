@@ -326,14 +326,43 @@ describe("GatewayController", () => {
         expect(mockMapGatewayDAOToDTO).not.toHaveBeenCalled();
     });
 
+    
+        });
+
 
     
 
-    
+    describe("Delete Gateway", () => {
+    it("Delete Gateway: success", async () => {
+      // Arrange
+      const networkCode = "NET001";
+      const gatewayMac = "AA:BB:CC:DD:EE:FF";
+
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+      mockGatewayRepo.deleteGateway.mockResolvedValue(undefined);
+
+      
+      await gatewayController.deleteGateway(networkCode, gatewayMac);
+
+      
+      expect(mockNetworkRepo.getNetworkByCode).toHaveBeenCalledWith(networkCode);
+      expect(mockGatewayRepo.deleteGateway).toHaveBeenCalledWith(networkCode, gatewayMac);
+    });
+
+
+
+    // test qui
 
 });
-
-    // fine getGatewayByMac
+    // fine deleteGateway
 
 });
 
