@@ -135,8 +135,55 @@ describe("GatewayController", () => {
       
       await expect(gatewayController.createGateway(networkCode, gatewayDTO)).rejects.toThrow("Database error");
     });
+    
+    describe("Get All Gateways", () => {
+    it("Get all Gateways : success", async () => {
+      // Arrange
+      const networkCode = "NET001";
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
 
-    // fine createGateway
+      const mockGatewayDAO: GatewayDAO = {
+        id: 1,
+        macAddress: "AA:BB:CC:DD:EE:FF",
+        name: "Test Gateway",
+        description: "Test Gateway Description",
+        network: mockNetworkDAO,
+        sensors: []
+      };
+
+      const mockGatewayDTO: GatewayDTO = {
+        macAddress: "AA:BB:CC:DD:EE:FF",
+        name: "Test Gateway",
+        description: "Test Gateway Description",
+        sensors: []
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+      mockGatewayRepo.getAllGateways.mockResolvedValue([mockGatewayDAO]);
+      mockMapGatewayDAOToDTO.mockReturnValue(mockGatewayDTO);
+
+      
+      const result = await gatewayController.getAllGateways(networkCode);
+
+      
+      expect(mockNetworkRepo.getNetworkByCode).toHaveBeenCalledWith(networkCode);
+      expect(mockGatewayRepo.getAllGateways).toHaveBeenCalledWith(networkCode);
+      expect(mockMapGatewayDAOToDTO).toHaveBeenCalledWith(mockGatewayDAO);
+      expect(result).toEqual([mockGatewayDTO]);
+    });
+
+
+    
+
+    // fine getAllGateways
+    });
+
 });
 
 
