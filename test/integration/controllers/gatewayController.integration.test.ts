@@ -234,7 +234,7 @@ describe("GatewayController", () => {
 
   describe("Get Gateway By MacAddress", () => {
     it("Get Gateway By MacAddress : success", async () => {
-      // Arrange
+      
       const networkCode = "NET001";
       const gatewayMac = "AA:BB:CC:DD:EE:FF";
       
@@ -277,19 +277,19 @@ describe("GatewayController", () => {
     });
     
     it("Get Gateway By MacAddress: network inesistente", async () => {
-      // Arrange
+      
       const networkCode = "INVALID";
       const gatewayMac = "AA:BB:CC:DD:EE:FF";
       mockNetworkRepo.getNetworkByCode.mockRejectedValue(new Error("Network not found"));
 
-      // Act & Assert
+      
       await expect(gatewayController.getGateway(networkCode, gatewayMac)).rejects.toThrow("Network not found");
       expect(mockGatewayRepo.getGatewayByMac).not.toHaveBeenCalled();
     });
 
 
     it("Get Gateway By MacAddress: gateway inesistente", async () => {
-      // Arrange
+      
       const networkCode = "NET001";
       const gatewayMac = "INVALID";
       
@@ -304,10 +304,29 @@ describe("GatewayController", () => {
       mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
       mockGatewayRepo.getGatewayByMac.mockRejectedValue(new Error("Gateway not found"));
 
-      // Act & Assert
+      
       await expect(gatewayController.getGateway(networkCode, gatewayMac)).rejects.toThrow("Gateway not found");
       expect(mockMapGatewayDAOToDTO).not.toHaveBeenCalled();
     });
+
+    it("Get Gateway By MacAddress: Errore nella repository", async () => {
+      
+      const networkCode = "NET001";
+      const gatewayMac = "AA:BB:CC:DD:EE:FF";
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+        mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+        mockGatewayRepo.getGatewayByMac.mockRejectedValue(new Error("Database error"));
+        await expect(gatewayController.getGateway(networkCode, gatewayMac)).rejects.toThrow("Database error");
+        expect(mockMapGatewayDAOToDTO).not.toHaveBeenCalled();
+    });
+
+
     
 
     
