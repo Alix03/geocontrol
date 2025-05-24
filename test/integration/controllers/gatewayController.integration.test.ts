@@ -202,6 +202,16 @@ describe("GatewayController", () => {
     });
 
 
+    it("Get All Gateways: network inesistente", async () => {
+      // Arrange
+      const networkCode = "INVALID";
+      mockNetworkRepo.getNetworkByCode.mockRejectedValue(new Error("Network not found"));
+
+      // Act & Assert
+      await expect(gatewayController.getAllGateways(networkCode)).rejects.toThrow("Network not found");
+      expect(mockGatewayRepo.getAllGateways).not.toHaveBeenCalled();
+    });
+  });
     
 
     // fine getAllGateways
