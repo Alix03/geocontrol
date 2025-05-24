@@ -153,6 +153,7 @@ describe("GatewayController integration", () => {
 
       expect(mockNetworkRepository.getNetworkByCode).toHaveBeenCalledWith(networkCode);
       expect(mockGatewayRepository.getAllGateways).toHaveBeenCalledWith(networkCode);
+      console.log(result);
       expect(result).toEqual([expectedDTO]);
     });
 
