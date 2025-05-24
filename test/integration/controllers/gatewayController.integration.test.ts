@@ -411,10 +411,52 @@ describe("GatewayController", () => {
       
       await expect(gatewayController.deleteGateway(networkCode, gatewayMac)).rejects.toThrow("Database error");
     });
-    // test qui
+   
 
 });
-    // fine deleteGateway
+   describe("Update Gateway", () => {
+    it("Update Gateway: success", async () => {
+      // Arrange
+      const networkCode = "NET001";
+      const oldAddress = "AA:BB:CC:DD:EE:FF";
+      const gatewayDTO: GatewayDTO = {
+        macAddress: "11:22:33:44:55:66",
+        name: "Updated Gateway",
+        description: "Updated Gateway Description"
+      };
+
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+      mockGatewayRepo.updateGateway.mockResolvedValue(undefined);
+
+      // Act
+      await gatewayController.updateGateway(networkCode, oldAddress, gatewayDTO);
+
+      // Assert
+      expect(mockNetworkRepo.getNetworkByCode).toHaveBeenCalledWith(networkCode);
+      expect(mockGatewayRepo.updateGateway).toHaveBeenCalledWith(
+        networkCode,
+        oldAddress,
+        gatewayDTO.macAddress,
+        gatewayDTO.name,
+        gatewayDTO.description
+      );
+    });
+
+    
+  
+    // test qui
+  
+  });
+
+// fine updateGateway
 
 });
 
