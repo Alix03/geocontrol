@@ -158,7 +158,7 @@ describe("GatewayController integration", () => {
     });
 
 
-    it("Get All Gateways: netwoek senza gateway (array vuoto)", async () => {
+    it("Get All Gateways: network senza gateway (array vuoto)", async () => {
       const networkCode = "NET001";
       const fakeNetworkDAO: NetworkDAO = {
         id: 1,
@@ -176,11 +176,51 @@ describe("GatewayController integration", () => {
       expect(result).toEqual([]);
     });
 
+});
+describe("Get Gateway By MacAddress", () => {
+    it("Get Gateway By MacAddress: Ritorna DTO mappato correttamente per una network valida e un gateway validi", async () => {
+      const networkCode = "NET001";
+      const gatewayMac = "11:22:33:44:55:66";
+      
+      const fakeNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
 
-    
+      const fakeGatewayDAO: GatewayDAO = {
+        id: 1,
+        macAddress: gatewayMac,
+        name: "Test Gateway",
+        description: "Test gateway description",
+        network: fakeNetworkDAO,
+        sensors: []
+      };
+
+      const expectedDTO: GatewayDTO = {
+        macAddress: fakeGatewayDAO.macAddress,
+        name: fakeGatewayDAO.name,
+        description: fakeGatewayDAO.description,
+        sensors: []
+      };
+
+      mockNetworkRepository.getNetworkByCode.mockResolvedValue(fakeNetworkDAO);
+      mockGatewayRepository.getGatewayByMac.mockResolvedValue(fakeGatewayDAO);
+
+      const result = await gatewayController.getGateway(networkCode, gatewayMac);
+
+      expect(mockNetworkRepository.getNetworkByCode).toHaveBeenCalledWith(networkCode);
+      expect(mockGatewayRepository.getGatewayByMac).toHaveBeenCalledWith(networkCode, gatewayMac);
+      
+      expect(result).toEqual(expectedDTO);
+    });
+
 
     // test qui
-});
+
+  });
 // fine describe
 
 
