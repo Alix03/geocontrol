@@ -36,7 +36,7 @@ describe("GatewayController", () => {
     (NetworkRepository as jest.Mock).mockImplementation(() => mockNetworkRepo);
   });
 
-  describe("Create Gateway: integration", () => {
+  describe("Create Gateway", () => {
     it("Create Gateway: success ", async () => {
       
       const networkCode = "NET001";
