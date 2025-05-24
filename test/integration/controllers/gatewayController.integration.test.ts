@@ -220,6 +220,60 @@ describe("Get Gateway By MacAddress", () => {
 
     // test qui
 
+    it("Get Gateway By MacAddress: Gateway con più sensori", async () => {
+      const networkCode = "NET001";
+      const gatewayMac = "11:22:33:44:55:66";
+      
+      const fakeNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      const fakeSensors: SensorDAO[] = [
+        {
+          id: 1,
+          macAddress: "AA:BB:CC:DD:EE:01",
+          name: "Temperature Sensor",
+          description: "Temperature sensor",
+          variable: "temperature",
+          unit: "°C",
+          gateway: {} as GatewayDAO,
+          measurements: []
+        },
+        {
+          id: 2,
+          macAddress: "AA:BB:CC:DD:EE:02",
+          name: "Humidity Sensor",
+          description: "Humidity sensor",
+          variable: "humidity",
+          unit: "%",
+          gateway: {} as GatewayDAO,
+          measurements: []
+        }
+      ];
+
+      const fakeGatewayDAO: GatewayDAO = {
+        id: 1,
+        macAddress: gatewayMac,
+        name: "Multi-sensor Gateway",
+        description: "Gateway with multiple sensors",
+        network: fakeNetworkDAO,
+        sensors: fakeSensors
+      };
+
+      mockNetworkRepository.getNetworkByCode.mockResolvedValue(fakeNetworkDAO);
+      mockGatewayRepository.getGatewayByMac.mockResolvedValue(fakeGatewayDAO);
+
+      const result = await gatewayController.getGateway(networkCode, gatewayMac);
+
+      expect(result.sensors).toHaveLength(2);
+      expect(result.sensors![0].macAddress).toBe("AA:BB:CC:DD:EE:01");
+      expect(result.sensors![1].macAddress).toBe("AA:BB:CC:DD:EE:02");
+    });
+
   });
 // fine describe
 
