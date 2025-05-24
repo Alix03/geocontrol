@@ -68,13 +68,36 @@ describe("GatewayController integration", () => {
         gatewayDTO.description
       );
     });
-
     
-
-
-
     // test qui
 
+    
+    it("Create gateway con solo campi obbligatori", async () => {
+      const networkCode = "NET001";
+      const gatewayDTO: GatewayDTO = {
+        macAddress: "11:22:33:44:55:66"
+      };
+
+      const fakeNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepository.getNetworkByCode.mockResolvedValue(fakeNetworkDAO);
+      mockGatewayRepository.createGateway.mockResolvedValue({} as GatewayDAO);
+
+      await gatewayController.createGateway(networkCode, gatewayDTO);
+
+      expect(mockGatewayRepository.createGateway).toHaveBeenCalledWith(
+        networkCode,
+        gatewayDTO.macAddress,
+        undefined,
+        undefined
+      );
+    });
     
   });
 // fine describe
