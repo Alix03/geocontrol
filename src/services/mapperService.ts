@@ -76,7 +76,7 @@ export function createNetworkDTO(
   code: string,
   name: string,
   description: string,
-  gateways: GatewayDAO[]
+  gateways: GatewayDTO[]
 ): NetworkDTO {
   return removeNullAttributes({
     code,
@@ -91,7 +91,7 @@ export function mapNetworkDAOToDTO(networkDAO: NetworkDAO): NetworkDTO {
     networkDAO.code,
     networkDAO.name,
     networkDAO.description,
-    networkDAO.gateways
+    networkDAO.gateways.map(g => mapGatewayDAOToDTO(g))
   );
 }
 export function createMeasurementsDTO(
