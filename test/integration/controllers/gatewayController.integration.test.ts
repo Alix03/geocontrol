@@ -485,6 +485,24 @@ describe("GatewayController", () => {
       );
     
     });
+
+    it("Update Gateway: network inesistente", async () => {
+      
+      const networkCode = "INVALID";
+      const oldAddress = "AA:BB:CC:DD:EE:FF";
+      const gatewayDTO: GatewayDTO = {
+        macAddress: "11:22:33:44:55:66",
+        name: "Updated Gateway",
+        description: "Updated Gateway Description"
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockRejectedValue(new Error("Network not found"));
+
+      
+      await expect(gatewayController.updateGateway(networkCode, oldAddress, gatewayDTO)).rejects.toThrow("Network not found");
+      expect(mockGatewayRepo.updateGateway).not.toHaveBeenCalled();
+
+    });
     
   
     // test qui
