@@ -218,7 +218,7 @@ describe("Get Gateway By MacAddress", () => {
     });
 
 
-    // test qui
+    
 
     it("Get Gateway By MacAddress: Gateway con più sensori", async () => {
       const networkCode = "NET001";
@@ -274,7 +274,34 @@ describe("Get Gateway By MacAddress", () => {
       expect(result.sensors![1].macAddress).toBe("AA:BB:CC:DD:EE:02");
     });
 
+    
+
   });
+
+
+  describe("Delete gateway", () => {
+    it("Delete gateway: success", async () => {
+      const networkCode = "NET001";
+      const gatewayMac = "11:22:33:44:55:66";
+
+      const fakeNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepository.getNetworkByCode.mockResolvedValue(fakeNetworkDAO);
+      mockGatewayRepository.deleteGateway.mockResolvedValue();
+
+      await gatewayController.deleteGateway(networkCode, gatewayMac);
+
+      expect(mockNetworkRepository.getNetworkByCode).toHaveBeenCalledWith(networkCode);
+      expect(mockGatewayRepository.deleteGateway).toHaveBeenCalledWith(networkCode, gatewayMac);
+    });
+  });
+
 // fine describe
 
 
