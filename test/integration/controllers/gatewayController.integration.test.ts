@@ -211,10 +211,6 @@ describe("GatewayController", () => {
       await expect(gatewayController.getAllGateways(networkCode)).rejects.toThrow("Network not found");
       expect(mockGatewayRepo.getAllGateways).not.toHaveBeenCalled();
     });
-  });
-
-
-
     it("Get All Gateways: Errore nella repository", async () => {
       
       const networkCode = "NET001";
@@ -233,10 +229,59 @@ describe("GatewayController", () => {
       await expect(gatewayController.getAllGateways(networkCode)).rejects.toThrow("Database error");
     });
 
+  });
+
+
+  describe("getGateway", () => {
+    it("should return gateway for valid network and MAC address", async () => {
+      // Arrange
+      const networkCode = "NET001";
+      const gatewayMac = "AA:BB:CC:DD:EE:FF";
+      
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      const mockGatewayDAO: GatewayDAO = {
+        id: 1,
+        macAddress: gatewayMac,
+        name: "Test Gateway",
+        description: "Test Gateway Description",
+        network: mockNetworkDAO,
+        sensors: []
+      };
+
+      const mockGatewayDTO: GatewayDTO = {
+        macAddress: gatewayMac,
+        name: "Test Gateway",
+        description: "Test Gateway Description",
+        sensors: []
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+      mockGatewayRepo.getGatewayByMac.mockResolvedValue(mockGatewayDAO);
+      mockMapGatewayDAOToDTO.mockReturnValue(mockGatewayDTO);
+
+      // Act
+      const result = await gatewayController.getGateway(networkCode, gatewayMac);
+
+      // Assert
+      expect(mockNetworkRepo.getNetworkByCode).toHaveBeenCalledWith(networkCode);
+      expect(mockGatewayRepo.getGatewayByMac).toHaveBeenCalledWith(networkCode, gatewayMac);
+      expect(mockMapGatewayDAOToDTO).toHaveBeenCalledWith(mockGatewayDAO);
+      expect(result).toEqual(mockGatewayDTO);
+    });
+    
     
 
-    // fine getAllGateways
+    
     });
+
+    // fine getGatewayByMac
 
 });
 
