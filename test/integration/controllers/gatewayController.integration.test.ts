@@ -335,7 +335,38 @@ describe("Get Gateway By MacAddress", () => {
         gatewayDTO.description
       );
     });
-    
+
+
+    it("Update Gateways: aggiorna solo alcuni campi ", async () => {
+      const networkCode = "NET001";
+      const oldAddress = "11:22:33:44:55:66";
+      const gatewayDTO: GatewayDTO = {
+        macAddress: "11:22:33:44:55:66",
+        name: "Updated Name Only"
+      };
+
+      const fakeNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepository.getNetworkByCode.mockResolvedValue(fakeNetworkDAO);
+      mockGatewayRepository.updateGateway.mockResolvedValue({} as GatewayDAO);
+
+      await gatewayController.updateGateway(networkCode, oldAddress, gatewayDTO);
+
+      expect(mockGatewayRepository.updateGateway).toHaveBeenCalledWith(
+        networkCode,
+        oldAddress,
+        gatewayDTO.macAddress,
+        gatewayDTO.name,
+        undefined
+      );
+    });
+    // test qui
   });
 
 // fine describe
