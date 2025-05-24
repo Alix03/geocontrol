@@ -530,9 +530,60 @@ describe("GatewayController", () => {
       await expect(gatewayController.updateGateway(networkCode, oldAddress, gatewayDTO)).rejects.toThrow("Gateway not found");
     });
     
+
   
-    // test qui
+    
   
+  });
+
+describe("Gateway Mapping", () => {
+  it("Map GatewayDAO to GatewayDTO: success", async () => {
+      
+      const networkCode = "NET001";
+      const gatewayMac = "AA:BB:CC:DD:EE:FF";
+      
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      const mockGatewayDAO: GatewayDAO = {
+        id: 1,
+        macAddress: gatewayMac,
+        name: "Test Gateway",
+        description: "Test Gateway Description",
+        network: mockNetworkDAO,
+        sensors: []
+      };
+
+      
+      jest.unmock("@services/mapperService");
+      const actualMapperService = await import("@services/mapperService");
+
+      mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+      mockGatewayRepo.getGatewayByMac.mockResolvedValue(mockGatewayDAO);
+
+      
+      const expectedDTO: GatewayDTO = {
+        macAddress: gatewayMac,
+        name: "Test Gateway",
+        description: "Test Gateway Description",
+        sensors: []
+      };
+
+      jest.spyOn(actualMapperService, 'mapGatewayDAOToDTO').mockReturnValue(expectedDTO);
+
+      
+      const result = await gatewayController.getGateway(networkCode, gatewayMac);
+
+      
+      expect(result).toEqual(expectedDTO);
+      expect(result).not.toHaveProperty('id');
+      expect(result).not.toHaveProperty('network');
+    });
   });
 
 // fine updateGateway
