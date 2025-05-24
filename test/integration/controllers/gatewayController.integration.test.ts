@@ -203,15 +203,36 @@ describe("GatewayController", () => {
 
 
     it("Get All Gateways: network inesistente", async () => {
-      // Arrange
+      
       const networkCode = "INVALID";
       mockNetworkRepo.getNetworkByCode.mockRejectedValue(new Error("Network not found"));
 
-      // Act & Assert
+      
       await expect(gatewayController.getAllGateways(networkCode)).rejects.toThrow("Network not found");
       expect(mockGatewayRepo.getAllGateways).not.toHaveBeenCalled();
     });
   });
+
+
+
+    it("Get All Gateways: Errore nella repository", async () => {
+      
+      const networkCode = "NET001";
+      const mockNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepo.getNetworkByCode.mockResolvedValue(mockNetworkDAO);
+      mockGatewayRepo.getAllGateways.mockRejectedValue(new Error("Database error"));
+
+      
+      await expect(gatewayController.getAllGateways(networkCode)).rejects.toThrow("Database error");
+    });
+
     
 
     // fine getAllGateways
