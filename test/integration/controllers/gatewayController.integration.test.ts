@@ -366,7 +366,43 @@ describe("Get Gateway By MacAddress", () => {
         undefined
       );
     });
-    // test qui
+    
+  });
+
+
+  describe("Propagazione errori", () => {
+    it("Propagazione errore network inesistente", async () => {
+      const networkCode = "INVALID";
+      const error = new Error("Network not found");
+
+      mockNetworkRepository.getNetworkByCode.mockRejectedValue(error);
+
+      await expect(gatewayController.getAllGateways(networkCode))
+        .rejects.toThrow("Network not found");
+
+      expect(mockGatewayRepository.getAllGateways).not.toHaveBeenCalled();
+    });
+
+    it("Propagazione errore gateway inesistente", async () => {
+      const networkCode = "NET001";
+      const gatewayMac = "INVALID:MAC";
+      const networkError = new Error("Gateway not found");
+
+      const fakeNetworkDAO: NetworkDAO = {
+        id: 1,
+        code: networkCode,
+        name: "Test Network",
+        description: "Test Description",
+        gateways: []
+      };
+
+      mockNetworkRepository.getNetworkByCode.mockResolvedValue(fakeNetworkDAO);
+      mockGatewayRepository.getGatewayByMac.mockRejectedValue(networkError);
+
+      await expect(gatewayController.getGateway(networkCode, gatewayMac))
+        .rejects.toThrow("Gateway not found");
+    });
+
   });
 
 // fine describe
