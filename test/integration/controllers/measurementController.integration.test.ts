@@ -14,6 +14,7 @@ import { NetworkRepository } from "@repositories/NetworkRepository";
 import { computeStats, createMeasurementsDTO, groupMeasurementBySensor, setOUtliers } from "@services/mapperService";
 import { Stats } from "@models/dto/Stats";
 import { Measurements } from "@models/dto/Measurements";
+import * as mapperService from "@services/mapperService";
 
 jest.mock("@repositories/MeasurementRepository");
 jest.mock("@repositories/NetworkRepository");
@@ -24,6 +25,52 @@ jest.mock("@controllers/sensorController");
 describe("measurementController: mocked repositories", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+// Aggiungi gli spyOn per le funzioni del mapperService
+    jest.spyOn(mapperService, 'groupMeasurementBySensor').mockReturnValue(
+      new Map([[testSensorDAO.macAddress, [{
+        createdAt: new Date("2025-05-20T14:48:00.000Z"),
+        value: 5
+      }]]])
+    );
+
+    jest.spyOn(mapperService, 'computeStats').mockReturnValue({
+      mean: 5,
+      variance: 0,
+      upperThreshold: 5,
+      lowerThreshold: 5
+    });
+
+    jest.spyOn(mapperService, 'createMeasurementsDTO').mockReturnValue({
+      sensorMacAddress: testSensorDAO.macAddress,
+      stats: {
+        mean: 5,
+        variance: 0,
+        upperThreshold: 5,
+        lowerThreshold: 5
+      },
+      measurements: [{
+        createdAt: new Date("2025-05-20T14:48:00.000Z"),
+        value: 5,
+        isOutlier: false
+      }]
+    });
+
+    jest.spyOn(mapperService, 'setOUtliers').mockReturnValue({
+      sensorMacAddress: testSensorDAO.macAddress,
+      stats: {
+        mean: 5,
+        variance: 0,
+        upperThreshold: 5,
+        lowerThreshold: 5
+      },
+      measurements: [{
+        createdAt: new Date("2025-05-20T14:48:00.000Z"),
+        value: 5,
+        isOutlier: false
+      }]
+    });
+
   });
 
   const testNetworkDAO = new NetworkDAO();
@@ -329,7 +376,6 @@ describe("measurementController: mocked repositories", () => {
     );
 
     expect(groupMeasurementBySensor).toHaveBeenCalledWith([testMeasurement]);
-
 
     const measurementDTO: Measurement = {
       createdAt: new Date("2025-05-20T14:48:00.000Z"),
