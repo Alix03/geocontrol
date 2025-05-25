@@ -299,10 +299,142 @@ describe("Get Gateway By MacAddress", () => {
       expect(response.body.name).toBe("NotFoundError");
       expect(response.body.message).toMatch(/Entity not found/);
     });
+    
+
+});
+
+describe("Update Gateway", () => {
+    const updatedGateway: GatewayDTO = {
+      macAddress: "00:11:22:33:44:66", // Changed MAC
+      name: "Updated Gateway Name",
+      description: "Updated description",
+      sensors: [mockSensor]
+    };
+
+    it("Update Gateway: success (admin user)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.updateGateway as jest.Mock).mockResolvedValue(undefined);
+
+      const response = await request(app)
+        .patch(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}`)
+        .set("Authorization", token)
+        .send(updatedGateway);
+
+      expect(response.status).toBe(204);
+      expect(authService.processToken).toHaveBeenCalledWith(token, [
+        UserType.Admin,
+        UserType.Operator
+      ]);
+      expect(gatewayController.updateGateway).toHaveBeenCalledWith(
+        networkCode,
+        gatewayMac,
+        updatedGateway
+      );
+      
+      
+    });
+    it("Update Gateway: success (operator user)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.updateGateway as jest.Mock).mockResolvedValue(undefined);
+
+      const response = await request(app)
+        .patch(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}`)
+        .set("Authorization", token)
+        .send(updatedGateway);
+
+      expect(response.status).toBe(204);
+    });
+
+    it("Update Gateway: 401 UnauthorizedError", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new UnauthorizedError("Unauthorized: Invalid token format");
+      });
+
+      const response = await request(app)
+        .patch(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}`)
+        .set("Authorization", "Bearer invalid")
+        .send(updatedGateway);
+
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe(401);
+      expect(response.body.name).toBe("UnauthorizedError");
+      expect(response.body.message).toMatch(/Unauthorized/);
+    });
+
+
+    it("Update Gateway: 403 InsufficientRightsError", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new InsufficientRightsError("Forbidden: Insufficient rights");
+      });
+
+      const response = await request(app)
+        .patch(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}`)
+        .set("Authorization", token)
+        .send(updatedGateway);
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe(403);
+      expect(response.body.name).toBe("InsufficientRightsError");
+      expect(response.body.message).toMatch(/Insufficient rights/);
+    });
+
+
+     it("Update Gateway: 404 NotFound (network inesistente)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.updateGateway as jest.Mock).mockRejectedValue(
+        new NotFoundError("Entity not found")
+      );
+
+      const response = await request(app)
+        .patch("/api/v1/networks/NONEXISTENT/gateways/00:11:22:33:44:55")
+        .set("Authorization", token)
+        .send(updatedGateway);
+
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe(404);
+      expect(response.body.name).toBe("NotFoundError");
+      expect(response.body.message).toMatch(/Entity not found/);
+    });
+
+
+    it("Update Gateway: 404 NotFound (macAdrress inesistente)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.updateGateway as jest.Mock).mockRejectedValue(
+        new NotFoundError("Entity not found")
+      );
+
+      const response = await request(app)
+        .patch(`/api/v1/networks/${networkCode}/gateways/FF:FF:FF:FF:FF:FF`)
+        .set("Authorization", token)
+        .send(updatedGateway);
+
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe(404);
+      expect(response.body.name).toBe("NotFoundError");
+      expect(response.body.message).toMatch(/Entity not found/);
+    });
+
+
+    it("Update Gateway: 409 ConflictError (macAddress esistente) ", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.updateGateway as jest.Mock).mockRejectedValue(
+        new ConflictError("Entity with code 00:11:22:33:44:66 already exists")
+      );
+
+      const response = await request(app)
+        .patch(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}`)
+        .set("Authorization", token)
+        .send(updatedGateway);
+
+      expect(response.status).toBe(409);
+      expect(response.body.code).toBe(409);
+      expect(response.body.name).toBe("ConflictError");
+      expect(response.body.message).toMatch(/already exists/);
+    });
     // test qui
 
 
-   // fine get specific gateway 
+    // fine update gateway
   });
   // fine
 });
