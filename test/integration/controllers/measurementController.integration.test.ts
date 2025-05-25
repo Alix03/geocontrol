@@ -11,67 +11,77 @@ import {
   getMeasurementByNetworkId,
 } from "@controllers/measurementController";
 import { NetworkRepository } from "@repositories/NetworkRepository";
-import { computeStats, createMeasurementsDTO, groupMeasurementBySensor, setOUtliers } from "@services/mapperService";
+import {
+  computeStats,
+  createMeasurementsDTO,
+  groupMeasurementBySensor,
+  setOUtliers,
+} from "@services/mapperService";
 import { Stats } from "@models/dto/Stats";
 import { Measurements } from "@models/dto/Measurements";
 import * as mapperService from "@services/mapperService";
+import * as utils from "@utils";
+import * as MeasurementsDTO from "@models/dto/Measurements";
+import * as StatsDTO from "@models/dto/Stats";
 
 jest.mock("@repositories/MeasurementRepository");
 jest.mock("@repositories/NetworkRepository");
 jest.mock("@repositories/SensorRepository");
-jest.mock("@services/mapperService");
-jest.mock("@controllers/sensorController");
 
 describe("measurementController: mocked repositories", () => {
+  let mockNetworkRepository: jest.Mocked<NetworkRepository>;
+  let mockSensorRepository: jest.Mocked<SensorRepository>;
+  let mockMeasurementRepository: jest.Mocked<MeasurementRepository>;
+
   beforeEach(() => {
     jest.clearAllMocks();
 
-// Aggiungi gli spyOn per le funzioni del mapperService
-    jest.spyOn(mapperService, 'groupMeasurementBySensor').mockReturnValue(
-      new Map([[testSensorDAO.macAddress, [{
-        createdAt: new Date("2025-05-20T14:48:00.000Z"),
-        value: 5
-      }]]])
+    mockNetworkRepository = {
+      getNetworkByCode: jest.fn(),
+      getAllNetworks: jest.fn(),
+      createNetwork: jest.fn(),
+      deleteNetwork: jest.fn(),
+      updateNetwork: jest.fn(),
+    } as any;
+
+    mockSensorRepository = {
+      getSensorByMac: jest.fn(),
+      getSensorsByNetwork: jest.fn(),
+    } as any;
+
+    mockMeasurementRepository = {
+      createMeasurement: jest.fn(),
+      getMeasurementByNetworkId: jest.fn(),
+      getMeasurementBySensorMac: jest.fn(),
+    } as any;
+
+    (NetworkRepository as jest.Mock).mockImplementation(
+      () => mockNetworkRepository
+    );
+    (SensorRepository as jest.Mock).mockImplementation(
+      () => mockSensorRepository
+    );
+    (MeasurementRepository as jest.Mock).mockImplementation(
+      () => mockMeasurementRepository
     );
 
-    jest.spyOn(mapperService, 'computeStats').mockReturnValue({
-      mean: 5,
-      variance: 0,
-      upperThreshold: 5,
-      lowerThreshold: 5
-    });
+    // Aggiungi gli spyOn per le funzioni del mapperService
+    jest.spyOn(mapperService, "groupMeasurementBySensor");
 
-    jest.spyOn(mapperService, 'createMeasurementsDTO').mockReturnValue({
-      sensorMacAddress: testSensorDAO.macAddress,
-      stats: {
-        mean: 5,
-        variance: 0,
-        upperThreshold: 5,
-        lowerThreshold: 5
-      },
-      measurements: [{
-        createdAt: new Date("2025-05-20T14:48:00.000Z"),
-        value: 5,
-        isOutlier: false
-      }]
-    });
+    jest.spyOn(mapperService, "computeStats");
 
-    jest.spyOn(mapperService, 'setOUtliers').mockReturnValue({
-      sensorMacAddress: testSensorDAO.macAddress,
-      stats: {
-        mean: 5,
-        variance: 0,
-        upperThreshold: 5,
-        lowerThreshold: 5
-      },
-      measurements: [{
-        createdAt: new Date("2025-05-20T14:48:00.000Z"),
-        value: 5,
-        isOutlier: false
-      }]
-    });
+    jest.spyOn(mapperService, "createMeasurementsDTO");
 
-  });
+    jest.spyOn(mapperService, "setOUtliers");
+
+    jest.spyOn(utils, "parseISODateParamToUTC" );
+
+    jest.spyOn(utils, "parseStringArrayParam");
+
+    jest.spyOn(MeasurementsDTO, "MeasurementsToJSON");
+
+    jest.spyOn(StatsDTO, "StatsToJSON");
+  }); 
 
   const testNetworkDAO = new NetworkDAO();
   testNetworkDAO.id = 1;
@@ -108,19 +118,17 @@ describe("measurementController: mocked repositories", () => {
     CREATE MEASUREMENT
   */
   it("create measurement: success", async () => {
-    (SensorRepository as jest.Mock).mockImplementation(() => ({
-      getSensorByMac: jest.fn().mockResolvedValue(testSensorDAO),
-    }));
+    mockSensorRepository.getSensorByMac.mockResolvedValue(testSensorDAO);
+    mockMeasurementRepository.createMeasurement.mockResolvedValue(
+      testMeasurement
+    );
 
-    (MeasurementRepository as jest.Mock).mockImplementation(() => ({
-      createMeasurement: jest.fn().mockResolvedValue(testMeasurement),
-    }));
     const measurementDTO: Measurement = {
       createdAt: new Date("2025-05-20T14:48:00.000Z"),
       value: 5,
     };
-    const result = createMeasurement("NET01", "gw1", "mac1", [measurementDTO]);
-    expect(result).toBeUndefined();
+    const result = await createMeasurement("NET01", "gw1", "mac1", [measurementDTO]);
+
     // Verifica che la funzione sia stata chiamata con i parametri corretti
     const measurementRepo = new MeasurementRepository();
     expect(measurementRepo.createMeasurement).toHaveBeenCalledWith(
@@ -140,11 +148,10 @@ describe("measurementController: mocked repositories", () => {
 
   it("create measurement: invalid network code/ gateway mac/ sensor mac", async () => {
     // Mock getSensorByMac per far lanciare NotFoundError
-    (SensorRepository as jest.Mock).mockImplementation(() => ({
-      getSensorByMac: jest
-        .fn()
-        .mockRejectedValue(new NotFoundError("Entity not found")),
-    }));
+
+    mockSensorRepository.getSensorByMac.mockRejectedValue(
+      new NotFoundError("Entity not found")
+    );
 
     const measurementDTO: Measurement = {
       createdAt: new Date("2025-05-20T14:48:00.000Z"),
@@ -174,35 +181,38 @@ describe("measurementController: mocked repositories", () => {
   */
 
   it("getMeasurementByNetwork without query", async () => {
-    (NetworkRepository as jest.Mock).mockImplementation(() => ({
-      getNetworkByCode: jest.fn().mockResolvedValue(testNetworkDAO),
-    }));
+    mockNetworkRepository.getNetworkByCode.mockResolvedValue(testNetworkDAO);
+    mockSensorRepository.getSensorsByNetwork.mockResolvedValue([testSensorDAO]);
+    mockMeasurementRepository.getMeasurementByNetworkId.mockResolvedValue([
+      testMeasurement,
+    ]);
 
-    (SensorRepository as jest.Mock).mockImplementation(() => ({
-      getSensorByNetwork: jest.fn().mockResolvedValue([testSensorDAO]),
-    }));
-
-    (MeasurementRepository as jest.Mock).mockImplementation(() => ({
-      getMeasurementByNetworkId: jest.fn().mockResolvedValue([testMeasurement]),
-    }));
-
-    const result = getMeasurementByNetworkId("NET01");
-    expect(result).toEqual([{
+    const query ={
+      startDate: undefined,
+      endDate: undefined
+    }
+    const result = await getMeasurementByNetworkId("NET01", query);
+    expect(result).toEqual([
+      {
         sensorMacAddress: "mac1",
         stats: {
           mean: 5,
           variance: 0,
           upperThreshold: 5,
-          lowerThreshold: 5
+          lowerThreshold: 5,
         },
         measurements: [
           {
             createdAt: new Date("2025-05-20T14:48:00.000Z"),
             value: 5,
-            isOutlier: false
-          }
-        ]
-      }]);
+            isOutlier: false,
+          },
+        ],
+      },
+    ]);
+  expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(1,query.startDate);
+  expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(2,query.endDate);
+  
 
     // Verifica che i sensori siano stati cercati (caso senza sensorArray)
     const sensorRepo = new SensorRepository();
@@ -219,9 +229,9 @@ describe("measurementController: mocked repositories", () => {
 
     expect(groupMeasurementBySensor).toHaveBeenCalledWith([testMeasurement]);
 
-
     const measurementDTO: Measurement = {
       createdAt: new Date("2025-05-20T14:48:00.000Z"),
+      isOutlier: false,
       value: 5,
     };
 
@@ -231,8 +241,8 @@ describe("measurementController: mocked repositories", () => {
       mean: 5,
       variance: 0,
       upperThreshold: 5,
-      lowerThreshold: 5
-    }
+      lowerThreshold: 5,
+    };
 
     expect(createMeasurementsDTO).toHaveBeenCalledWith(
       testSensorDAO.macAddress,
@@ -243,49 +253,44 @@ describe("measurementController: mocked repositories", () => {
     const measurementsDTO: Measurements = {
       sensorMacAddress: testSensorDAO.macAddress,
       stats: statsDTO,
-      measurements: [measurementDTO]
-    }
+      measurements: [measurementDTO],
+    };
     //expect(createMeasurementsDTO).toHaveReturned();
-    expect(setOUtliers).toHaveBeenCalledWith(
-      measurementsDTO
-    );
-
+    expect(setOUtliers).toHaveBeenCalledWith(measurementsDTO);
   });
 
-    it("getMeasurementByNetwork with sensorMacs", async () => {
-    (NetworkRepository as jest.Mock).mockImplementation(() => ({
-      getNetworkByCode: jest.fn().mockResolvedValue(testNetworkDAO),
-    }));
+  it("getMeasurementByNetwork with sensorMacs", async () => {
+    mockNetworkRepository.getNetworkByCode.mockResolvedValue(testNetworkDAO);
+    mockSensorRepository.getSensorsByNetwork.mockResolvedValue([testSensorDAO]);
+    mockMeasurementRepository.getMeasurementByNetworkId.mockResolvedValue([
+      testMeasurement,
+    ]);
 
-    (SensorRepository as jest.Mock).mockImplementation(() => ({
-      getSensorByNetwork: jest.fn().mockResolvedValue([testSensorDAO]),
-    }));
-
-    (MeasurementRepository as jest.Mock).mockImplementation(() => ({
-      getMeasurementByNetworkId: jest.fn().mockResolvedValue([testMeasurement]),
-    }));
-
-    const result = getMeasurementByNetworkId("NET01", {sensorMacs:"mac1"});
-    expect(result).toEqual([{
+    const result = await getMeasurementByNetworkId("NET01", { sensorMacs: "mac1" });
+    expect(result).toEqual([
+      {
         sensorMacAddress: "mac1",
         stats: {
           mean: 5,
           variance: 0,
           upperThreshold: 5,
-          lowerThreshold: 5
+          lowerThreshold: 5,
         },
         measurements: [
           {
             createdAt: new Date("2025-05-20T14:48:00.000Z"),
             value: 5,
-            isOutlier: false
-          }
-        ]
-      }]);
+            isOutlier: false,
+          },
+        ],
+      },
+    ]);
 
     // Verifica che i sensori siano stati cercati (caso con sensorArray)
     const sensorRepo = new SensorRepository();
-    expect(sensorRepo.getSensorsByNetwork).toHaveBeenCalledWith("NET01", ["mac1"]);
+    expect(sensorRepo.getSensorsByNetwork).toHaveBeenCalledWith("NET01", [
+      "mac1",
+    ]);
 
     // Verifica che la funzione sia stata chiamata con i parametri corretti
     const measurementRepo = new MeasurementRepository();
@@ -298,9 +303,9 @@ describe("measurementController: mocked repositories", () => {
 
     expect(groupMeasurementBySensor).toHaveBeenCalledWith([testMeasurement]);
 
-
     const measurementDTO: Measurement = {
       createdAt: new Date("2025-05-20T14:48:00.000Z"),
+      isOutlier: false,
       value: 5,
     };
 
@@ -310,8 +315,8 @@ describe("measurementController: mocked repositories", () => {
       mean: 5,
       variance: 0,
       upperThreshold: 5,
-      lowerThreshold: 5
-    }
+      lowerThreshold: 5,
+    };
 
     expect(createMeasurementsDTO).toHaveBeenCalledWith(
       testSensorDAO.macAddress,
@@ -322,45 +327,41 @@ describe("measurementController: mocked repositories", () => {
     const measurementsDTO: Measurements = {
       sensorMacAddress: testSensorDAO.macAddress,
       stats: statsDTO,
-      measurements: [measurementDTO]
-    }
+      measurements: [measurementDTO],
+    };
     //expect(createMeasurementsDTO).toHaveReturned();
-    expect(setOUtliers).toHaveBeenCalledWith(
-      measurementsDTO
-    );
-
+    expect(setOUtliers).toHaveBeenCalledWith(measurementsDTO);
   });
 
-      it("getMeasurementByNetwork with startDate and endDate", async () => {
-    (NetworkRepository as jest.Mock).mockImplementation(() => ({
-      getNetworkByCode: jest.fn().mockResolvedValue(testNetworkDAO),
-    }));
+  it("getMeasurementByNetwork with startDate and endDate", async () => {
+    mockNetworkRepository.getNetworkByCode.mockResolvedValue(testNetworkDAO);
+    mockSensorRepository.getSensorsByNetwork.mockResolvedValue([testSensorDAO]);
+    mockMeasurementRepository.getMeasurementByNetworkId.mockResolvedValue([
+      testMeasurement,
+    ]);
 
-    (SensorRepository as jest.Mock).mockImplementation(() => ({
-      getSensorByNetwork: jest.fn().mockResolvedValue([testSensorDAO]),
-    }));
-
-    (MeasurementRepository as jest.Mock).mockImplementation(() => ({
-      getMeasurementByNetworkId: jest.fn().mockResolvedValue([testMeasurement]),
-    }));
-
-    const result = getMeasurementByNetworkId("NET01", {startDate: "2025-05-20T14:40:00.000Z", endDate: "2025-05-20T14:50:00.000Z"});
-    expect(result).toEqual([{
+    const result =  await getMeasurementByNetworkId("NET01", {
+      startDate: "2025-05-20T14:40:00.000Z",
+      endDate: "2025-05-20T14:50:00.000Z",
+    });
+    expect(result).toEqual([
+      {
         sensorMacAddress: "mac1",
         stats: {
           mean: 5,
           variance: 0,
           upperThreshold: 5,
-          lowerThreshold: 5
+          lowerThreshold: 5,
         },
         measurements: [
           {
             createdAt: new Date("2025-05-20T14:48:00.000Z"),
             value: 5,
-            isOutlier: false
-          }
-        ]
-      }]);
+            isOutlier: false,
+          },
+        ],
+      },
+    ]);
 
     // Verifica che i sensori siano stati cercati (caso senza sensorArray)
     const sensorRepo = new SensorRepository();
@@ -379,6 +380,7 @@ describe("measurementController: mocked repositories", () => {
 
     const measurementDTO: Measurement = {
       createdAt: new Date("2025-05-20T14:48:00.000Z"),
+      isOutlier: false,
       value: 5,
     };
 
@@ -388,8 +390,8 @@ describe("measurementController: mocked repositories", () => {
       mean: 5,
       variance: 0,
       upperThreshold: 5,
-      lowerThreshold: 5
-    }
+      lowerThreshold: 5,
+    };
 
     expect(createMeasurementsDTO).toHaveBeenCalledWith(
       testSensorDAO.macAddress,
@@ -400,13 +402,10 @@ describe("measurementController: mocked repositories", () => {
     const measurementsDTO: Measurements = {
       sensorMacAddress: testSensorDAO.macAddress,
       stats: statsDTO,
-      measurements: [measurementDTO]
-    }
+      measurements: [measurementDTO],
+    };
     //expect(createMeasurementsDTO).toHaveReturned();
-    expect(setOUtliers).toHaveBeenCalledWith(
-      measurementsDTO
-    );
-
+    expect(setOUtliers).toHaveBeenCalledWith(measurementsDTO);
   });
-
 });
+

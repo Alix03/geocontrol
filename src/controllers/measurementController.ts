@@ -20,16 +20,19 @@ import { Stats as StatsDTO, StatsToJSON } from "@models/dto/Stats";
 import { parseStringArrayParam, parseISODateParamToUTC } from "@utils";
 import { AppDataSource } from "@database";
 import { In } from "typeorm";
+import { NetworkRepository } from "@repositories/NetworkRepository";
 
 export async function getMeasurementByNetworkId(
   networkCode: string,
-  query?: any
+  query: any
 ): Promise<MeasurementsDTO[]> {
+  console.log(query);
   const measurementRepo = new MeasurementRepository();
   const sensorRepo = new SensorRepository();
 
   // Check se esiste il network
-  await getNetwork(networkCode);
+  const networkRepo = new NetworkRepository();
+  await networkRepo.getNetworkByCode(networkCode);
 
   const startDate = parseISODateParamToUTC(query.startDate);
   const endDate = parseISODateParamToUTC(query.endDate);
@@ -265,7 +268,8 @@ export async function createMeasurement(
   const measurementRepo = new MeasurementRepository();
 
   //verifico che il sensore sia correttamente associato alla rete
-  await getSensor(networkCode, gatewayMac, sensorMac); // Controlla che il sensore appartenga al gateway e al network
+  const sensorRepo = new SensorRepository();
+  await sensorRepo.getSensorByMac(networkCode, gatewayMac, sensorMac); // Controlla che il sensore appartenga al gateway e al network
 
   for (const measurement of measurements) {
     // Call the repository method with all required parameters
