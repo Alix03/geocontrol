@@ -212,6 +212,22 @@ describe("Get All Gateways", () => {
       expect(response.body.message).toMatch(/Unauthorized/);
     });
 
+    it("Get All Gateways: 404 Not Found Error", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.getAllGateways as jest.Mock).mockRejectedValue(
+        new NotFoundError("Entity not found")
+      );
+
+      const response = await request(app)
+        .get("/api/v1/networks/NONEXISTENT/gateways")
+        .set("Authorization", token);
+
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe(404);
+      expect(response.body.name).toBe("NotFoundError");
+      expect(response.body.message).toMatch(/Entity not found/);
+    });
+
     // test qui
 
 
