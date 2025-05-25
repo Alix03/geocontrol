@@ -177,7 +177,97 @@ describe("POST /networks/{networkCode}/gateways", () => {
       });
     });
 
-    // qui
+    describe("Casi di errore", () => {
+      it("400 Invalid input data: macAddress non presente", async () => {
+        const gatewayData = {
+          name: "Gateway without MAC",
+          description: "This should fail"
+        };
+
+        const res = await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(gatewayData);
+
+        expect(res.status).toBe(400);
+        expect(res.body.code).toBe(400);
+      });
+
+      it("400 Invalid input data: macAddress stringa vuota", async () => {
+        const gatewayData = {
+          macAddress: "",
+          name: "Gateway with empty MAC"
+        };
+
+        const res = await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(gatewayData);
+
+        expect(res.status).toBe(400);
+        expect(res.body.code).toBe(400);
+      });
+
+      it("401 UnauthorizedError: token non presente", async () => {
+        const gatewayData = {
+          macAddress: "new:gateway:mac"
+        };
+
+        const res = await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .send(gatewayData);
+
+        expect(res.status).toBe(401);
+        expect(res.body.code).toBe(401);
+        expect(res.body.name).toBe("UnauthorizedError");
+      });
+
+      it("403 InsufficientRightsError: viewer prova a creare un network", async () => {
+        const gatewayData = {
+          macAddress: "viewer:cannot:create"
+        };
+
+        const res = await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${viewerToken}`)
+          .send(gatewayData);
+
+        expect(res.status).toBe(403);
+        expect(res.body.code).toBe(403);
+        expect(res.body.name).toBe("InsufficientRightsError");
+      });
+
+      it("404 NotFoundError: network inesistente", async () => {
+        const gatewayData = {
+          macAddress: "network:not:found"
+        };
+
+        const res = await request(app)
+          .post(`/api/v1/networks/${nonExistentNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(gatewayData);
+
+        expect(res.status).toBe(404);
+        expect(res.body.code).toBe(404);
+        expect(res.body.name).toBe("NotFoundError");
+      });
+
+      it("409 ConflictError: macAddress già in uso", async () => {
+        const gatewayData = {
+          macAddress: testGatewayMac, // This MAC was already created in success tests
+          name: "Duplicate Gateway"
+        };
+
+        const res = await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(gatewayData);
+
+        expect(res.status).toBe(409);
+        expect(res.body.code).toBe(409);
+        expect(res.body.name).toBe("ConflictError");
+      });
+    });
 
 
   });
