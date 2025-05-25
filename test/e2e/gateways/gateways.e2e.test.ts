@@ -510,7 +510,60 @@ describe("POST /networks/{networkCode}/gateways", () => {
 
   });
 
+  // delete Gateway
+  describe("DELETE /networks/{networkCode}/gateways/{gatewayMac}", () => {
+    describe("Casi di successo", () => {
+      it("Delete gateway: success (admin user)", async () => {
+        // Creo un gateway da eliminare
+        const gatewayToDelete = "delete:me:admin";
+        await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send({
+            macAddress: gatewayToDelete,
+            name: "Gateway to Delete"
+          });
 
-  
+        const res = await request(app)
+          .delete(`/api/v1/networks/${testNetworkCode}/gateways/${gatewayToDelete}`)
+          .set("Authorization", `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(204);
+
+        // Verifico che il gateway sia stato eliminato
+        const getRes = await request(app)
+          .get(`/api/v1/networks/${testNetworkCode}/gateways/${gatewayToDelete}`)
+          .set("Authorization", `Bearer ${adminToken}`);
+
+        expect(getRes.status).toBe(404);
+      });
+
+      it("Delete Gateway: success (operator user)", async () => {
+        // Creo un gateway da eliminare
+        const gatewayToDelete = "delete:me:operator";
+        await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send({
+            macAddress: gatewayToDelete,
+            name: "Gateway to Delete by Operator"
+          });
+
+        const res = await request(app)
+          .delete(`/api/v1/networks/${testNetworkCode}/gateways/${gatewayToDelete}`)
+          .set("Authorization", `Bearer ${operatorToken}`);
+
+        expect(res.status).toBe(204);
+      });
+    });
+
+
+
+
+
+  });
+
+
+
 // fine 
 });
