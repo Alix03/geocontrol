@@ -418,8 +418,99 @@ describe("POST /networks/{networkCode}/gateways", () => {
       });
     });
 
-    // qui
+   
+    describe("Casi di errore", () => {
+      it("401 UnauthorizedError: token non presente", async () => {
+        const updateData = {
+          macAddress: "FF:EE:DD:CC:BB:AA",
+          name: "Unauthorized Update"
+        };
+
+        const res = await request(app)
+          .patch(`/api/v1/networks/${testNetworkCode}/gateways/FF:EE:DD:CC:BB:AA`)
+          .send(updateData);
+
+        expect(res.status).toBe(401);
+        expect(res.body.code).toBe(401);
+        expect(res.body.name).toBe("UnauthorizedError");
+      });
+
+      it("403 InsufficientRightsError: viewer prova ad aggiornare un gateway", async () => {
+        const updateData = {
+          macAddress: "FF:EE:DD:CC:BB:AA",
+          name: "Viewer Cannot Update"
+        };
+
+        const res = await request(app)
+          .patch(`/api/v1/networks/${testNetworkCode}/gateways/FF:EE:DD:CC:BB:AA`)
+          .set("Authorization", `Bearer ${viewerToken}`)
+          .send(updateData);
+
+        expect(res.status).toBe(403);
+        expect(res.body.code).toBe(403);
+        expect(res.body.name).toBe("InsufficientRightsError");
+      });
+
+      it("404 NotFoundError: network inesistente", async () => {
+        const updateData = {
+          macAddress: "FF:EE:DD:CC:BB:AA",
+          name: "Network Not Found"
+        };
+
+        const res = await request(app)
+          .patch(`/api/v1/networks/${nonExistentNetworkCode}/gateways/FF:EE:DD:CC:BB:AA`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(updateData);
+
+        expect(res.status).toBe(404);
+        expect(res.body.code).toBe(404);
+        expect(res.body.name).toBe("NotFoundError");
+      });
+
+      it("404 NotFoundError: gateway inesistente", async () => {
+        const updateData = {
+          macAddress: nonExistentGatewayMac,
+          name: "Gateway Not Found"
+        };
+
+        const res = await request(app)
+          .patch(`/api/v1/networks/${testNetworkCode}/gateways/${nonExistentGatewayMac}`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(updateData);
+
+        expect(res.status).toBe(404);
+        expect(res.body.code).toBe(404);
+        expect(res.body.name).toBe("NotFoundError");
+      });
+
+      it("409 ConflictError: macAddress già esistente", async () => {
+        // Creo un gatway
+        await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send({
+            macAddress: "conflict:test:mac"
+          });
+
+        // Aggiorno gateway con un macAddress già esistente
+        const updateData = {
+          macAddress: "conflict:test:mac"
+        };
+
+        const res = await request(app)
+          .patch(`/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac2}`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(updateData);
+
+        expect(res.status).toBe(409);
+        expect(res.body.code).toBe(409);
+        expect(res.body.name).toBe("ConflictError");
+      });
+    });
 
   });
+
+
+  
 // fine 
 });
