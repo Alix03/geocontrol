@@ -1,0 +1,301 @@
+import request from "supertest";
+import { app } from "@app";
+import * as authService from "@services/authService";
+import * as sensorController from "@controllers/SensorController";
+import { Sensor as SensorDTO } from "@dto/Sensor";
+import { UnauthorizedError } from "@models/errors/UnauthorizedError";
+import { NotFoundError } from "@models/errors/NotFoundError";
+import { ConflictError } from "@models/errors/ConflictError";
+import { InsufficientRightsError } from "@models/errors/InsufficientRightsError";
+import { UserType } from "@models/UserType";
+
+jest.mock("@services/authService");
+jest.mock("@controllers/SensorController");
+
+describe("SensorRoutes integration", () => {
+  const token = "Bearer faketoken";
+  const networkCode = "NET001";
+  const gatewayMac = "00:11:22:33:44:55";
+
+  const mockSensor: SensorDTO = {
+    macAddress: "AA:BB:CC:DD:EE:FF",
+    name: "Temperature Sensor",
+    description: "Outdoor temperature sensor",
+    variable: "temperature",
+    unit: "°C",
+  };
+
+  const mockSensors: SensorDTO[] = [
+    mockSensor,
+    {
+      macAddress: "11:22:33:44:55:66",
+      name: "Humidity Sensor",
+      description: "Indoor humidity sensor",
+      variable: "humidity",
+      unit: "%",
+    },
+  ];
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe("Create Sensor", () => {
+    const newSensor: SensorDTO = {
+      macAddress: "AA:BB:CC:DD:EE:FF",
+      name: "New Sensor",
+      description: "Newly created sensor",
+      variable: "temperature",
+      unit: "°C",
+    };
+
+    it("Create Sensor: success (Admin user)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (sensorController.createSensor as jest.Mock).mockResolvedValue(undefined);
+
+      const response = await request(app)
+        .post(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}/sensors`)
+        .set("Authorization", token)
+        .send(newSensor);
+
+      expect(response.status).toBe(201);
+      expect(authService.processToken).toHaveBeenCalledWith(token, [
+        UserType.Admin,
+        UserType.Operator,
+      ]);
+      expect(sensorController.createSensor).toHaveBeenCalledWith(
+        networkCode,
+        gatewayMac,
+        newSensor
+      );
+    });
+
+    it("Create Sensor: success (Operator user)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (sensorController.createSensor as jest.Mock).mockResolvedValue(undefined);
+
+      const response = await request(app)
+        .post(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}/sensors`)
+        .set("Authorization", token)
+        .send(newSensor);
+
+      expect(response.status).toBe(201);
+      expect(authService.processToken).toHaveBeenCalledWith(token, [
+        UserType.Admin,
+        UserType.Operator,
+      ]);
+    });
+
+    it("Create Sensor: unauthorized user (invalid token, 401 error)", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new UnauthorizedError("Unauthorized: Invalid token format");
+      });
+
+      const response = await request(app)
+        .post(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}/sensors`)
+        .set("Authorization", "Bearer invalid")
+        .send(newSensor);
+
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe(401);
+      expect(response.body.name).toBe("UnauthorizedError");
+      expect(response.body.message).toMatch(/Unauthorized/);
+    });
+
+    it("Create Sensor: 403 Insufficient rights", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new InsufficientRightsError("Forbidden: Insufficient rights");
+      });
+
+      const response = await request(app)
+        .post(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}/sensors`)
+        .set("Authorization", token)
+        .send(newSensor);
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe(403);
+      expect(response.body.name).toBe("InsufficientRightsError");
+      expect(response.body.message).toMatch(/Insufficient rights/);
+    });
+
+    it("Create Sensor: 404 Not Found", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (sensorController.createSensor as jest.Mock).mockRejectedValue(
+        new NotFoundError("Entity not found")
+      );
+
+      const response = await request(app)
+        .post(`/api/v1/networks/NONEXISTENT/gateways/${gatewayMac}/sensors`)
+        .set("Authorization", token)
+        .send(newSensor);
+
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe(404);
+      expect(response.body.name).toBe("NotFoundError");
+      expect(response.body.message).toMatch(/Entity not found/);
+    });
+
+    it("Create Sensor: 409 Conflict (macAddress already in use)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (sensorController.createSensor as jest.Mock).mockRejectedValue(
+        new ConflictError(
+          "Sensor with macAddress AA:BB:CC:DD:EE:FF already exists"
+        )
+      );
+
+      const response = await request(app)
+        .post(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}/sensors`)
+        .set("Authorization", token)
+        .send(newSensor);
+
+      expect(response.status).toBe(409);
+      expect(response.body.code).toBe(409);
+      expect(response.body.name).toBe("ConflictError");
+      expect(response.body.message).toMatch(/already exists/);
+    });
+  });
+
+  describe("Get All Sensors", () => {
+    it("Get All Sensors: success (authenticated user)", async () => {
+      // Arrange
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (sensorController.getAllSensors as jest.Mock).mockResolvedValue(
+        mockSensors
+      );
+
+      // Act
+      const response = await request(app)
+        .get(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}/sensors`)
+        .set("Authorization", token);
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockSensors);
+      expect(authService.processToken).toHaveBeenCalledWith(token, [
+        UserType.Admin,
+        UserType.Operator,
+        UserType.Viewer,
+      ]);
+      expect(sensorController.getAllSensors).toHaveBeenCalledWith(
+        networkCode,
+        gatewayMac
+      );
+    });
+
+    it("Get All Sensors: 401 UnauthorizedError", async () => {
+      // Arrange
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new UnauthorizedError("Unauthorized: Invalid token format");
+      });
+
+      // Act
+      const response = await request(app)
+        .get(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}/sensors`)
+        .set("Authorization", "Bearer invalid");
+
+      // Assert
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe(401);
+      expect(response.body.name).toBe("UnauthorizedError");
+      expect(response.body.message).toMatch(/Unauthorized/);
+    });
+
+    it("Get All Sensors: 404 Not Found Error", async () => {
+      // Arrange
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (sensorController.getAllSensors as jest.Mock).mockRejectedValue(
+        new NotFoundError("Entity not found")
+      );
+
+      // Act
+      const response = await request(app)
+        .get(`/api/v1/networks/NONEXISTENT/gateways/${gatewayMac}/sensors`)
+        .set("Authorization", token);
+
+      // Assert
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe(404);
+      expect(response.body.name).toBe("NotFoundError");
+      expect(response.body.message).toMatch(/Entity not found/);
+    });
+  });
+
+  //////////////////////////////////// FINIRE GET SENSOR, PATCH SENSOR, DELETE SENSOR ////////////////////////////////////
+
+  describe("GET /:networkCode/:gatewayMac/sensors/:sensorMac", () => {
+    it("should return a specific sensor", async () => {
+      // Arrange
+      const sensorMac = mockSensor.macAddress;
+      (sensorController.getSensor as jest.Mock).mockResolvedValue(mockSensor);
+
+      // Act
+      const response = await request(app)
+        .get(`/${networkCode}/${gatewayMac}/sensors/${sensorMac}`)
+        .set("Authorization", token);
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockSensor);
+      expect(sensorController.getSensor).toHaveBeenCalledWith(
+        networkCode,
+        gatewayMac,
+        sensorMac
+      );
+    });
+
+    it("should return 404 if the sensor does not exist", async () => {
+      // Arrange
+      const sensorMac = "INVALID_MAC";
+      (sensorController.getSensor as jest.Mock).mockRejectedValue(
+        new NotFoundError("Sensor not found")
+      );
+
+      // Act
+      const response = await request(app)
+        .get(`/${networkCode}/${gatewayMac}/sensors/${sensorMac}`)
+        .set("Authorization", token);
+
+      // Assert
+      expect(response.status).toBe(404);
+      expect(response.body.message).toBe("Sensor not found");
+    });
+  });
+
+  describe("DELETE /:networkCode/:gatewayMac/sensors/:sensorMac", () => {
+    it("should delete a sensor", async () => {
+      // Arrange
+      const sensorMac = mockSensor.macAddress;
+      (sensorController.deleteSensor as jest.Mock).mockResolvedValue(undefined);
+
+      // Act
+      const response = await request(app)
+        .delete(`/${networkCode}/${gatewayMac}/sensors/${sensorMac}`)
+        .set("Authorization", token);
+
+      // Assert
+      expect(response.status).toBe(204);
+      expect(sensorController.deleteSensor).toHaveBeenCalledWith(
+        networkCode,
+        gatewayMac,
+        sensorMac
+      );
+    });
+
+    it("should return 404 if the sensor does not exist", async () => {
+      // Arrange
+      const sensorMac = "INVALID_MAC";
+      (sensorController.deleteSensor as jest.Mock).mockRejectedValue(
+        new NotFoundError("Sensor not found")
+      );
+
+      // Act
+      const response = await request(app)
+        .delete(`/${networkCode}/${gatewayMac}/sensors/${sensorMac}`)
+        .set("Authorization", token);
+
+      // Assert
+      expect(response.status).toBe(404);
+      expect(response.body.message).toBe("Sensor not found");
+    });
+  });
+});
