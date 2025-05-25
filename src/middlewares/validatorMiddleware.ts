@@ -7,5 +7,5 @@ export const openApiValidator =  OpenApiValidator.middleware({
     apiSpec: CONFIG.SWAGGER_V1_FILE_PATH, 
     validateRequests: true,              // Valida richieste
     validateResponses: true,            // Opzionale: valida risposte
-    validateApiSpec : true 
+    validateApiSpec : true ,
   });  

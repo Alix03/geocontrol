@@ -38,7 +38,7 @@ describe("Gateway API (e2e)", () => {
 
   describe("GET /networks/{networkCode}/gateways", () => {
     // getAll gateways for a network
-    describe("Success cases", () => {
+    describe("Casi di successo", () => {
       it("Ritorna un array vuoto quando un network non ha gateways (admin user)", async () => {
         const res = await request(app)
           .get(`/api/v1/networks/${testNetworkCode}/gateways`)
@@ -66,7 +66,50 @@ describe("Gateway API (e2e)", () => {
         expect(res.body).toEqual([]);
       });
     
-});
+
+    });
+
+    describe("Casi di errore", () => {
+      it("401 UnauthorizedError: token non presente", async () => {
+        const res = await request(app)
+          .get(`/api/v1/networks/${testNetworkCode}/gateways`);
+
+        expect(res.status).toBe(401);
+        expect(res.body.code).toBe(401);
+        expect(res.body.name).toBe("UnauthorizedError");
+      });
+
+      it("401 UnauthorizedError: token non valido", async () => {
+        const res = await request(app)
+          .get(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", "Bearer invalid_token");
+
+        expect(res.status).toBe(401);
+        expect(res.body.code).toBe(401);
+        expect(res.body.name).toBe("UnauthorizedError");
+      });
+
+      it("401 UnauthorizedError: formato del token non valido", async () => {
+        const res = await request(app)
+          .get(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", "InvalidFormat token");
+
+        expect(res.status).toBe(401);
+        expect(res.body.code).toBe(401);
+        expect(res.body.name).toBe("UnauthorizedError");
+      });
+
+      it("404 NotFoundError: network inestente", async () => {
+        const res = await request(app)
+          .get(`/api/v1/networks/${nonExistentNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(404);
+        expect(res.body.code).toBe(404);
+        expect(res.body.name).toBe("NotFoundError");
+      });
+    });
+  
 
 
 
