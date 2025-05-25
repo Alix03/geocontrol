@@ -344,5 +344,82 @@ describe("POST /networks/{networkCode}/gateways", () => {
 
 
   });
+
+
+  // update Gateway
+  describe("PATCH /networks/{networkCode}/gateways/{gatewayMac}", () => {
+    describe("Casi di successo", () => {
+      it("Aggiorna nome e descrizione di un gateway (admin operator)", async () => {
+        const updateData = {
+          macAddress: testGatewayMac,
+          name: "Updated Gateway Name",
+          description: "Updated gateway description"
+        };
+
+        const res = await request(app)
+          .patch(`/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(updateData);
+
+        expect(res.status).toBe(204);
+
+        // Verify the update
+        const getRes = await request(app)
+          .get(`/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}`)
+          .set("Authorization", `Bearer ${adminToken}`);
+
+        expect(getRes.body.name).toBe("Updated Gateway Name");
+        expect(getRes.body.description).toBe("Updated gateway description");
+      });
+
+      it("Aggiorna il macAddress di un gateway (operator user)", async () => {
+        const newMacAddress = "FF:EE:DD:CC:BB:AA";
+        const updateData = {
+          macAddress: newMacAddress,
+          name: "Gateway with New MAC",
+          description: "MAC address updated"
+        };
+
+        const res = await request(app)
+          .patch(`/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}`)
+          .set("Authorization", `Bearer ${operatorToken}`)
+          .send(updateData);
+
+        expect(res.status).toBe(204);
+
+        // Verify the update with new MAC address
+        const getRes = await request(app)
+          .get(`/api/v1/networks/${testNetworkCode}/gateways/${newMacAddress}`)
+          .set("Authorization", `Bearer ${adminToken}`);
+
+        expect(getRes.body.macAddress).toBe(newMacAddress);
+        expect(getRes.body.name).toBe("Gateway with New MAC");
+      });
+
+      it("Aggiorna un gateway ignorando sensori annidati", async () => {
+        const updateData = {
+          macAddress: "FF:EE:DD:CC:BB:AA",
+          name: "Gateway with Ignored Sensors",
+          description: "Sensors should be ignored",
+          sensors: [
+            {
+              macAddress: "ignored:sensor",
+              name: "This should be ignored"
+            }
+          ]
+        };
+
+        const res = await request(app)
+          .patch(`/api/v1/networks/${testNetworkCode}/gateways/FF:EE:DD:CC:BB:AA`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(updateData);
+
+        expect(res.status).toBe(204);
+      });
+    });
+
+    // qui
+
+  });
 // fine 
 });
