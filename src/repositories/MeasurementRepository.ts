@@ -20,7 +20,7 @@ export class MeasurementRepository {
     createdAt: Date,
     value: number,
     sensorMac: string
-  ): Promise<MeasurementDAO> {
+  ): Promise<void> {
     // Verifica che il sensore esista e sia associato al networkCode e gatewayMac
     //se ci sono li filtriamo e tornanomo solo quelli validi per quel network
     const sensor = await AppDataSource.getRepository(SensorDAO).findOne({
@@ -34,7 +34,7 @@ export class MeasurementRepository {
       );
     }
     // Salva la misurazione
-    return this.repo.save({
+    await this.repo.save({
       createdAt: createdAt,
       value: value,
       sensor: sensor, // Associa il sensore

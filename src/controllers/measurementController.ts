@@ -274,7 +274,19 @@ export async function createMeasurement(
   sensorMac: string,
   measurements: MeasurementDTO[]
 ): Promise<void> {
+  //verifico i campi obbligatori
+  if (
+    !networkCode ||
+    !gatewayMac ||
+    !sensorMac ||
+    !measurements ||
+    measurements.length === 0
+  ) {
+    throw new Error("Entity Not Found: Missing required parameters");
+  }
+
   const measurementRepo = new MeasurementRepository();
+
   //verifico che il sensore sia correttamente associato alla rete
   await getSensor(networkCode, gatewayMac, sensorMac); // Controlla che il sensore appartenga al gateway e al network
 
@@ -285,7 +297,6 @@ export async function createMeasurement(
       measurement.createdAt,
       measurement.value,
       sensorMac
-      //measurement.isOutlier ?? false
     );
   }
 }
