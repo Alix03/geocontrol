@@ -228,12 +228,35 @@ describe("Get All Gateways", () => {
       expect(response.body.message).toMatch(/Entity not found/);
     });
 
+
+  });
+
+describe("Get Gateway By MacAddress", () => {
+    it("Get Gateway By MacAddress: success (user autenticato)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.getGateway as jest.Mock).mockResolvedValue(mockGateway);
+
+      const response = await request(app)
+        .get(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}`)
+        .set("Authorization", token);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockGateway);
+      expect(authService.processToken).toHaveBeenCalledWith(token, [
+        UserType.Admin,
+        UserType.Operator,
+        UserType.Viewer
+      ]);
+      expect(gatewayController.getGateway).toHaveBeenCalledWith(
+        networkCode,
+        gatewayMac
+      );
+    });
+
     // test qui
 
 
-    // fine createGateway
+   // fine get specific gateway 
   });
-
-
   // fine
 });
