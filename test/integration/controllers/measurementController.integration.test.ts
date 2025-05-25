@@ -12,7 +12,7 @@ jest.mock("@repositories/MeasurementRepository");
 jest.mock("@services/mapperService");
 jest.mock("@controllers/sensorController");
 
-describe("measurementController: mocked repositories and services", () => {
+describe("measurementController: mocked repositories", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
