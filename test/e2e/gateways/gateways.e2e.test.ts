@@ -36,8 +36,8 @@ describe("Gateway API (e2e)", () => {
     await afterAllE2e();
   });
 
+  // getAll gateways per un network
   describe("GET /networks/{networkCode}/gateways", () => {
-    // getAll gateways for a network
     describe("Casi di successo", () => {
       it("Ritorna un array vuoto quando un network non ha gateways (admin user)", async () => {
         const res = await request(app)
@@ -109,6 +109,9 @@ describe("Gateway API (e2e)", () => {
         expect(res.body.name).toBe("NotFoundError");
       });
     });
+
+
+
   
 
 
@@ -118,7 +121,66 @@ describe("Gateway API (e2e)", () => {
 });
 
 
+// Create gateway
+describe("POST /networks/{networkCode}/gateways", () => {
+    describe("Casi di successo", () => {
+      it("Crea un gateway con tutti i campi (admin user)", async () => {
+        const gatewayData = {
+          macAddress: testGatewayMac,
+          name: "Test Gateway",
+          description: "Gateway for testing purposes"
+        };
 
+        const res = await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(gatewayData);
+
+        expect(res.status).toBe(201);
+      });
+
+      it("Crea un gateway con solo i campi obbligatori (operator user)", async () => {
+        const gatewayData = {
+          macAddress: testGatewayMac2
+        };
+
+        const res = await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${operatorToken}`)
+          .send(gatewayData);
+
+        expect(res.status).toBe(201);
+      });
+
+      it("Crea un gateway ignorando eventuali sensori annidati", async () => {
+        const gatewayData = {
+          macAddress: "11:22:33:44:55:66",
+          name: "Gateway with Sensors",
+          description: "This gateway has nested sensors that should be ignored",
+          sensors: [
+            {
+              macAddress: "sensor1",
+              name: "Temperature Sensor",
+              description: "Measures temperature",
+              variable: "temperature",
+              unit: "°C"
+            }
+          ]
+        };
+
+        const res = await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(gatewayData);
+
+        expect(res.status).toBe(201);
+      });
+    });
+
+    // qui
+
+
+  });
 
 // fine 
 });
