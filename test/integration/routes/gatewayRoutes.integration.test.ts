@@ -253,6 +253,52 @@ describe("Get Gateway By MacAddress", () => {
       );
     });
 
+    it("Get Gateway By MacAddress: 401 UnauthorizedError ", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new UnauthorizedError("Unauthorized: Invalid token format");
+      });
+
+      const response = await request(app)
+        .get(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}`)
+        .set("Authorization", "Bearer expired");
+
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe(401);
+      expect(response.body.name).toBe("UnauthorizedError");
+      expect(response.body.message).toMatch(/Unauthorized/);
+    });
+
+    it("Get Gateway By MacAddress:  404 NotFoundError (network inesistente)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.getGateway as jest.Mock).mockRejectedValue(
+        new NotFoundError("Entity not found")
+      );
+
+      const response = await request(app)
+        .get("/api/v1/networks/NONEXISTENT/gateways/00:11:22:33:44:55")
+        .set("Authorization", token);
+
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe(404);
+      expect(response.body.name).toBe("NotFoundError");
+      expect(response.body.message).toMatch(/Entity not found/);
+    });
+
+    it("Get Gateway By MacAddress:  404 NotFoundError (macAddress inesistente)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.getGateway as jest.Mock).mockRejectedValue(
+        new NotFoundError("Entity not found")
+      );
+
+      const response = await request(app)
+        .get(`/api/v1/networks/${networkCode}/gateways/FF:FF:FF:FF:FF:FF`)
+        .set("Authorization", token);
+
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe(404);
+      expect(response.body.name).toBe("NotFoundError");
+      expect(response.body.message).toMatch(/Entity not found/);
+    });
     // test qui
 
 
