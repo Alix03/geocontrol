@@ -304,6 +304,41 @@ describe("POST /networks/{networkCode}/gateways", () => {
         expect(res.body.macAddress).toBe(testGatewayMac);
       });
     });
+    
+     describe("Casi di errore", () => {
+      it("401 UnauthorizedError: token non presente", async () => {
+        const res = await request(app)
+          .get(`/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}`);
+
+        expect(res.status).toBe(401);
+        expect(res.body.code).toBe(401);
+        expect(res.body.name).toBe("UnauthorizedError");
+      });
+
+      it("404 NotFoundError: network inesistente", async () => {
+        const res = await request(app)
+          .get(`/api/v1/networks/${nonExistentNetworkCode}/gateways/${testGatewayMac}`)
+          .set("Authorization", `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(404);
+        expect(res.body.code).toBe(404);
+        expect(res.body.name).toBe("NotFoundError");
+      });
+
+      it("404 NotFoundError: gateway inesistente", async () => {
+        const res = await request(app)
+          .get(`/api/v1/networks/${testNetworkCode}/gateways/${nonExistentGatewayMac}`)
+          .set("Authorization", `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(404);
+        expect(res.body.code).toBe(404);
+        expect(res.body.name).toBe("NotFoundError");
+      });
+    });
+
+    
+
+    
 
 
 
