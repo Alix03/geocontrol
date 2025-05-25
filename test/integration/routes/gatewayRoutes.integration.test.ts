@@ -10,6 +10,7 @@ import { InsufficientRightsError } from "@models/errors/InsufficientRightsError"
 import { NotFoundError } from "@models/errors/NotFoundError";
 import { ConflictError } from "@models/errors/ConflictError";
 
+
 jest.mock("@services/authService");
 jest.mock("@controllers/gatewayController");
 
@@ -90,6 +91,24 @@ describe("Create Gateway", () => {
         UserType.Operator
       ]);
     });
+
+    it("Create Gateway: utente non autorizzato (token non valido, 401 error)", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new UnauthorizedError("Unauthorized: Invalid token format");
+      });
+
+      const response = await request(app)
+        .post(`/api/v1/networks/${networkCode}/gateways`)
+        .set("Authorization", "Bearer invalid")
+        .send(newGateway);
+
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe("401");
+      expect(response.body.name).toBe("UnauthorizedError");
+      expect(response.body.message).toMatch(/Unauthorized/);
+    });
+
+    
     // test qui
 
 
