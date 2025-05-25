@@ -15,6 +15,7 @@ import {
 import { getNetwork } from "@controllers/networkController";
 import { getSensor } from "@controllers/SensorController";
 import { SensorDAO } from "@models/dao/SensorDAO";
+import { SensorRepository } from "@repositories/SensorRepository";
 import { Stats as StatsDTO, StatsToJSON } from "@models/dto/Stats";
 import { parseStringArrayParam, parseISODateParamToUTC } from "@utils";
 import { AppDataSource } from "@database";
@@ -25,6 +26,8 @@ export async function getMeasurementByNetworkId(
   query?: any
 ): Promise<MeasurementsDTO[]> {
   const measurementRepo = new MeasurementRepository();
+  const sensorRepo = new SensorRepository();
+
   // Check se esiste il network
   await getNetwork(networkCode);
 
@@ -38,26 +41,14 @@ export async function getMeasurementByNetworkId(
   if (sensorMacs !== undefined && sensorMacs !== "") {
     sensorArray = parseStringArrayParam(sensorMacs);
     //Array di sensori appartenenti al network
-    filterSensor = await AppDataSource.getRepository(SensorDAO).find({
-      where: {
-        macAddress: In(sensorArray),
-        gateway: {
-          network: {
-            code: networkCode,
-          },
-        },
-      },
-    });
+    // Usa il metodo del repository per ottenere i sensori
+    filterSensor = await sensorRepo.getSensorsByNetwork(
+      networkCode,
+      sensorArray
+    );
   } else {
-    filterSensor = await AppDataSource.getRepository(SensorDAO).find({
-      where: {
-        gateway: {
-          network: {
-            code: networkCode,
-          },
-        },
-      },
-    });
+    // Usa il metodo del repository per ottenere tutti i sensori della rete
+    filterSensor = await sensorRepo.getSensorsByNetwork(networkCode);
   }
 
   sensorArray = filterSensor.map((sensor: SensorDAO) => sensor.macAddress);
@@ -134,6 +125,7 @@ export async function getStatsByNetworkId(
   query: any
 ): Promise<MeasurementsDTO[]> {
   const measurementRepo = new MeasurementRepository();
+  const sensorRepo = new SensorRepository();
   // Check se esiste il network
   const startDate = parseISODateParamToUTC(query.startDate);
   const endDate = parseISODateParamToUTC(query.endDate);
@@ -145,26 +137,12 @@ export async function getStatsByNetworkId(
   if (sensorMacs !== undefined && sensorMacs !== "") {
     sensorArray = parseStringArrayParam(sensorMacs);
     //Array di sensori appartenenti al network
-    filterSensor = await AppDataSource.getRepository(SensorDAO).find({
-      where: {
-        macAddress: In(sensorArray),
-        gateway: {
-          network: {
-            code: networkCode,
-          },
-        },
-      },
-    });
+    filterSensor = await sensorRepo.getSensorsByNetwork(
+      networkCode,
+      sensorArray
+    );
   } else {
-    filterSensor = await AppDataSource.getRepository(SensorDAO).find({
-      where: {
-        gateway: {
-          network: {
-            code: networkCode,
-          },
-        },
-      },
-    });
+    filterSensor = await sensorRepo.getSensorsByNetwork(networkCode);
   }
 
   sensorArray = filterSensor.map((sensor: SensorDAO) => sensor.macAddress);
