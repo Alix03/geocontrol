@@ -558,6 +558,47 @@ describe("POST /networks/{networkCode}/gateways", () => {
     });
 
 
+    describe("Casi di errore", () => {
+      it("401 UnauthorizedError: token non presente", async () => {
+        const res = await request(app)
+          .delete(`/api/v1/networks/${testNetworkCode}/gateways/some:gateway:mac`);
+
+        expect(res.status).toBe(401);
+        expect(res.body.code).toBe(401);
+        expect(res.body.name).toBe("UnauthorizedError");
+      });
+
+      it("403 InsufficientRightsError: viewer user prova ad eliminare un gateway", async () => {
+        const res = await request(app)
+          .delete(`/api/v1/networks/${testNetworkCode}/gateways/some:gateway:mac`)
+          .set("Authorization", `Bearer ${viewerToken}`);
+
+        expect(res.status).toBe(403);
+        expect(res.body.code).toBe(403);
+        expect(res.body.name).toBe("InsufficientRightsError");
+      });
+
+      it("404 NotFoundError: network inesistente", async () => {
+        const res = await request(app)
+          .delete(`/api/v1/networks/${nonExistentNetworkCode}/gateways/some:gateway:mac`)
+          .set("Authorization", `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(404);
+        expect(res.body.code).toBe(404);
+        expect(res.body.name).toBe("NotFoundError");
+      });
+
+      it("404 NotFoundError: gateway inesistente", async () => {
+        const res = await request(app)
+          .delete(`/api/v1/networks/${testNetworkCode}/gateways/${nonExistentGatewayMac}`)
+          .set("Authorization", `Bearer ${adminToken}`);
+
+        console.log(res.body);
+        expect(res.status).toBe(404);
+        expect(res.body.code).toBe(404);
+        expect(res.body.name).toBe("NotFoundError");
+      });
+    });
 
 
 
