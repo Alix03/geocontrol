@@ -315,17 +315,17 @@ describe("measurementController: mocked repositories", () => {
         ]
       }]);
 
-    // Verifica che i sensori siano stati cercati (caso con sensorArray)
+    // Verifica che i sensori siano stati cercati (caso senza sensorArray)
     const sensorRepo = new SensorRepository();
-    expect(sensorRepo.getSensorsByNetwork).toHaveBeenCalledWith("NET01", ["mac1"]);
+    expect(sensorRepo.getSensorsByNetwork).toHaveBeenCalledWith("NET01");
 
     // Verifica che la funzione sia stata chiamata con i parametri corretti
     const measurementRepo = new MeasurementRepository();
     expect(measurementRepo.getMeasurementByNetworkId).toHaveBeenCalledWith(
       "NET01",
       [testSensorDAO.macAddress],
-      undefined,
-      undefined
+      new Date("2025-05-20T14:40:00.000Z"),
+      new Date("2025-05-20T14:50:00.000Z")
     );
 
     expect(groupMeasurementBySensor).toHaveBeenCalledWith([testMeasurement]);
