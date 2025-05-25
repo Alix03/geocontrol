@@ -12,12 +12,17 @@ export class SensorRepository {
     this.repo = AppDataSource.getRepository(SensorDAO);
   }
 
+<<<<<<< HEAD
   async getAllSensors(
     networkCode: string,
     gatewayMac: string
   ): Promise<SensorDAO[]> {
     //non controllo network e gateway perché già ci pensa il controller
     return await this.repo.find({
+=======
+  getAllSensors(networkCode: string, gatewayMac: string): Promise<SensorDAO[]> {
+    return this.repo.find({
+>>>>>>> 32a6eee2e19d9426d0cfa8b5bfefef4502bde99f
       where: {
         gateway: {
           macAddress: gatewayMac,
@@ -65,6 +70,7 @@ export class SensorRepository {
       `Sensor with MAC address '${macAddress}' already exists`
     );
 
+<<<<<<< HEAD
     //verifica che il gateway faccia parte del network non fatta perchè già eseguita dal sensorController
     const gateway = findOrThrowNotFound(
       await AppDataSource.getRepository(GatewayDAO).find({
@@ -73,6 +79,12 @@ export class SensorRepository {
       () => true,
       `Gateway with MAC address '${gatewayMac}' not found`
     );
+=======
+    //verifica esistenza gateway e che il gateway faccia parte del network non fatta perchè già eseguita dal sensorController
+    const gateway = await AppDataSource.getRepository(GatewayDAO).findOne({
+      where: { macAddress: gatewayMac },
+    });
+>>>>>>> 32a6eee2e19d9426d0cfa8b5bfefef4502bde99f
 
     return this.repo.save({
       macAddress: macAddress,
