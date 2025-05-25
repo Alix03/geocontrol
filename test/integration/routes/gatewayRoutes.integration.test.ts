@@ -170,13 +170,53 @@ describe("Create Gateway", () => {
 
 
     
+    
+
+
+    
+});
+
+
+describe("Get All Gateways", () => {
+    it("Get All Gateways : success (user autenticato)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.getAllGateways as jest.Mock).mockResolvedValue(mockGateways);
+
+      const response = await request(app)
+        .get(`/api/v1/networks/${networkCode}/gateways`)
+        .set("Authorization", token);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockGateways);
+      expect(authService.processToken).toHaveBeenCalledWith(token, [
+        UserType.Admin,
+        UserType.Operator,
+        UserType.Viewer
+      ]);
+      expect(gatewayController.getAllGateways).toHaveBeenCalledWith(networkCode);
+    });
+
+
+     it("Get All Gateways: 401 UnauthorizedError", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new UnauthorizedError("Unauthorized: Invalid token format");
+      });
+
+      const response = await request(app)
+        .get(`/api/v1/networks/${networkCode}/gateways`)
+        .set("Authorization", "Bearer invalid");
+
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe(401);
+      expect(response.body.name).toBe("UnauthorizedError");
+      expect(response.body.message).toMatch(/Unauthorized/);
+    });
+
     // test qui
 
 
     // fine createGateway
-});
-
-
+  });
 
 
   // fine
