@@ -75,6 +75,21 @@ describe("Create Gateway", () => {
       );
     });
 
+    it("Create Gateway: success (Operator user)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.createGateway as jest.Mock).mockResolvedValue(undefined);
+
+      const response = await request(app)
+        .post(`/api/v1/networks/${networkCode}/gateways`)
+        .set("Authorization", token)
+        .send(newGateway);
+
+      expect(response.status).toBe(201);
+      expect(authService.processToken).toHaveBeenCalledWith(token, [
+        UserType.Admin,
+        UserType.Operator
+      ]);
+    });
     // test qui
 
 
