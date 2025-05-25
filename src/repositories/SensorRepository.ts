@@ -12,8 +12,8 @@ export class SensorRepository {
     this.repo = AppDataSource.getRepository(SensorDAO);
   }
 
-  getAllSensors(networkCode:string, gatewayMac: string): Promise<SensorDAO[]> {
-    return this.repo.find({ where: {
+  async getAllSensors(networkCode:string, gatewayMac: string): Promise<SensorDAO[]> {
+    return await this.repo.find({ where: {
       gateway: {
         macAddress: gatewayMac,
         network: {
