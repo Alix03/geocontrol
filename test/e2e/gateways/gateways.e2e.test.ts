@@ -272,5 +272,42 @@ describe("POST /networks/{networkCode}/gateways", () => {
 
   });
 
+  // get Gateway By MacAddress
+  describe("GET /networks/{networkCode}/gateways/{gatewayMac}", () => {
+    describe("Casi di successo", () => {
+      it("Ritorna un gateway specifico (admin user)", async () => {
+        const res = await request(app)
+          .get(`/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}`)
+          .set("Authorization", `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body.macAddress).toBe(testGatewayMac);
+        expect(res.body.name).toBe("Test Gateway");
+        expect(res.body.description).toBe("Gateway for testing purposes");
+      });
+
+      it("Ritorna un gateway specifico (operator user)", async () => {
+        const res = await request(app)
+          .get(`/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}`)
+          .set("Authorization", `Bearer ${operatorToken}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body.macAddress).toBe(testGatewayMac);
+      });
+
+      it("Ritorna un gateway specifico (viewer user)", async () => {
+        const res = await request(app)
+          .get(`/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}`)
+          .set("Authorization", `Bearer ${viewerToken}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body.macAddress).toBe(testGatewayMac);
+      });
+    });
+
+
+
+
+  });
 // fine 
 });
