@@ -125,6 +125,45 @@ describe("Create Gateway", () => {
       expect(response.body.name).toBe("InsufficientRightsError");
       expect(response.body.message).toMatch(/Insufficient rights/);
     });
+
+
+    it("Create Gateway: error 404 Not Found", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.createGateway as jest.Mock).mockRejectedValue(
+        new NotFoundError("Entity not found")
+      );
+
+      const response = await request(app)
+        .post("/api/v1/networks/NONEXISTENT/gateways")
+        .set("Authorization", token)
+        .send(newGateway);
+
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe(404);
+      expect(response.body.name).toBe("NotFoundError");
+      expect(response.body.message).toMatch(/Entity not found/);
+    });
+
+
+    it("Create Gateway: 409 error (macAddress già in uso)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.createGateway as jest.Mock).mockRejectedValue(
+        new ConflictError("Entity with code 77:88:99:AA:BB:CC already exists")
+      );
+
+      const response = await request(app)
+        .post(`/api/v1/networks/${networkCode}/gateways`)
+        .set("Authorization", token)
+        .send(newGateway);
+
+      expect(response.status).toBe(409);
+      expect(response.body.code).toBe(409);
+      expect(response.body.name).toBe("ConflictError");
+      expect(response.body.message).toMatch(/already exists/);
+    });
+
+
+
       
     
     
