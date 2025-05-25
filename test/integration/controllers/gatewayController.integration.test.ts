@@ -203,7 +203,7 @@ describe("Get Gateway By MacAddress", () => {
         macAddress: fakeGatewayDAO.macAddress,
         name: fakeGatewayDAO.name,
         description: fakeGatewayDAO.description,
-        sensors: []
+        
       };
 
       mockNetworkRepository.getNetworkByCode.mockResolvedValue(fakeNetworkDAO);
