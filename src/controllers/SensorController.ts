@@ -48,8 +48,6 @@ export async function createSensor(
 
   //verifica esistenza network e gateway
   const gatewayRepo = new GatewayRepository();
-  const networkRepo = new NetworkRepository();
-  await networkRepo.getNetworkByCode(networkCode);
   await gatewayRepo.getGatewayByMac(networkCode, gatewayMac);
 
   await sensorRepo.createSensor(
