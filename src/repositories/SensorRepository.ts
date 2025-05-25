@@ -139,7 +139,7 @@ export class SensorRepository {
     networkCode: string,
     sensorArray?: string[]
   ): Promise<SensorDAO[]> {
-    if (sensorArray) {
+    if (!sensorArray) {
       return await this.repo.find({
         where: {
           gateway: {

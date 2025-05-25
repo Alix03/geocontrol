@@ -37,8 +37,7 @@ export async function getMeasurementByNetworkId(
   let sensorMacs: string = query.sensorMacs;
   let sensorArray: string[] = [];
   let filterSensor: any = [];
-
-  if (sensorMacs !== undefined && sensorMacs !== "") {
+  if (sensorMacs !== undefined && sensorMacs !== "" && sensorMacs !== null) {
     sensorArray = parseStringArrayParam(sensorMacs);
     //Array di sensori appartenenti al network
     // Usa il metodo del repository per ottenere i sensori
@@ -69,10 +68,11 @@ export async function getMeasurementByNetworkId(
   filterSensor.forEach((sensor) => {
     const sensorMac = sensor.macAddress;
     const sensorMeasurement = groupedMeasurements.get(sensorMac);
-    const stats: StatsDTO = computeStats(sensorMeasurement);
     const sensorMeasurements = createMeasurementsDTO(
       sensorMac,
-      sensorMeasurement && sensorMeasurement.length > 0 ? stats : undefined,
+      sensorMeasurement && sensorMeasurement.length > 0
+        ? computeStats(sensorMeasurement)
+        : undefined,
       sensorMeasurement && sensorMeasurement.length > 0 ? sensorMeasurement : [] // Array vuoto se non ci sono misurazioni
     );
     setOUtliers(sensorMeasurements);
