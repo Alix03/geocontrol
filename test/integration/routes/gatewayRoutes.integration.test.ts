@@ -431,10 +431,104 @@ describe("Update Gateway", () => {
       expect(response.body.name).toBe("ConflictError");
       expect(response.body.message).toMatch(/already exists/);
     });
-    // test qui
-
-
-    // fine update gateway
+    
   });
+
+ describe("Delete Gateway", () => {
+    it("Delete Gateway : success (admin user)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.deleteGateway as jest.Mock).mockResolvedValue(undefined);
+
+      const response = await request(app)
+        .delete(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}`)
+        .set("Authorization", token);
+
+      expect(response.status).toBe(204);
+      expect(authService.processToken).toHaveBeenCalledWith(token, [
+        UserType.Admin,
+        UserType.Operator
+      ]);
+      expect(gatewayController.deleteGateway).toHaveBeenCalledWith(
+        networkCode,
+        gatewayMac
+      );
+    });
+
+    it("Delete Gateway : success (operator user)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.deleteGateway as jest.Mock).mockResolvedValue(undefined);
+
+      const response = await request(app)
+        .delete(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}`)
+        .set("Authorization", token);
+
+      expect(response.status).toBe(204);
+    });
+
+    it("Delete Gateway: 401 UnauthorizedError", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new UnauthorizedError("Unauthorized: Invalid token format");
+      });
+
+      const response = await request(app)
+        .delete(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}`)
+        .set("Authorization", "Bearer invalid");
+
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe(401);
+      expect(response.body.name).toBe("UnauthorizedError");
+      expect(response.body.message).toMatch(/Unauthorized/);
+    });
+
+    it("Delete Gateway: 403 InsufficientRightsError ", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new InsufficientRightsError("Forbidden: Insufficient rights");
+      });
+
+      const response = await request(app)
+        .delete(`/api/v1/networks/${networkCode}/gateways/${gatewayMac}`)
+        .set("Authorization", token);
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe(403);
+      expect(response.body.name).toBe("InsufficientRightsError");
+      expect(response.body.message).toMatch(/Insufficient rights/);
+    });
+
+    it("Delete Gateway: 404 NotFoundError (network inesistente)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.deleteGateway as jest.Mock).mockRejectedValue(
+        new NotFoundError("Entity not found")
+      );
+
+      const response = await request(app)
+        .delete("/api/v1/networks/NONEXISTENT/gateways/00:11:22:33:44:55")
+        .set("Authorization", token);
+
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe(404);
+      expect(response.body.name).toBe("NotFoundError");
+      expect(response.body.message).toMatch(/Entity not found/);
+    });
+
+    it("Delete Gateway: 404 NotFoundError (macAddress inesistente)", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (gatewayController.deleteGateway as jest.Mock).mockRejectedValue(
+        new NotFoundError("Entity not found")
+      );
+
+      const response = await request(app)
+        .delete(`/api/v1/networks/${networkCode}/gateways/FF:FF:FF:FF:FF:FF`)
+        .set("Authorization", token);
+
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe(404);
+      expect(response.body.name).toBe("NotFoundError");
+      expect(response.body.message).toMatch(/Entity not found/);
+    });
+
+  });
+
+
   // fine
 });
