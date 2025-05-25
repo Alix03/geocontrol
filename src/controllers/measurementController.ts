@@ -37,10 +37,7 @@ export async function getMeasurementByNetworkId(
   let sensorMacs: string = query.sensorMacs;
   let sensorArray: string[] = [];
   let filterSensor: any = [];
-  console.log("SIAMO QUI");
   if (sensorMacs !== undefined && sensorMacs !== "" && sensorMacs !== null) {
-    console.log("SIAMO DENTRO L'IF");
-
     sensorArray = parseStringArrayParam(sensorMacs);
     //Array di sensori appartenenti al network
     // Usa il metodo del repository per ottenere i sensori
