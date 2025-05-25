@@ -102,11 +102,33 @@ describe("Create Gateway", () => {
         .set("Authorization", "Bearer invalid")
         .send(newGateway);
 
+        
       expect(response.status).toBe(401);
-      expect(response.body.code).toBe("401");
+      expect(response.body.code).toBe(401);
       expect(response.body.name).toBe("UnauthorizedError");
       expect(response.body.message).toMatch(/Unauthorized/);
+      
     });
+
+    it("Create Gateway: 403 Insufficient rights", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new InsufficientRightsError("Forbidden: Insufficient rights");
+      });
+
+      const response = await request(app)
+        .post(`/api/v1/networks/${networkCode}/gateways`)
+        .set("Authorization", token)
+        .send(newGateway);
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe(403);
+      expect(response.body.name).toBe("InsufficientRightsError");
+      expect(response.body.message).toMatch(/Insufficient rights/);
+    });
+      
+    
+    
+
 
     
     // test qui
