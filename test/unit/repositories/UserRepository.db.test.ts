@@ -138,6 +138,44 @@ describe("UserRepository: SQLite in-memory", () => {
   });
 
 
+   describe("Get User By Username", () => {
+    it("Get User By Username: success", async () => {
+      const createdUser = await repo.createUser("testuser", "testpass", UserType.Operator);
+      
+      const foundUser = await repo.getUserByUsername("testuser");
+      
+      expect(foundUser).toMatchObject({
+        username: "testuser",
+        password: "testpass",
+        type: UserType.Operator
+      });
+      expect(foundUser.username).toBe(createdUser.username);
+      expect(foundUser.password).toBe(createdUser.password);
+      expect(foundUser.type).toBe(createdUser.type);
+    });
+
+    it("Get User By Username: success (caseSensitive)", async () => {
+      await repo.createUser("CaseSensitive", "pass123", UserType.Admin);
+      
+      // Username con case diverso dovrebbe fallire
+      await expect(repo.getUserByUsername("casesensitive")).rejects.toThrow(NotFoundError);
+      await expect(repo.getUserByUsername("CASESENSITIVE")).rejects.toThrow(NotFoundError);
+      
+      // Case corretto dovrebbe funzionare
+      const user = await repo.getUserByUsername("CaseSensitive");
+      expect(user.username).toBe("CaseSensitive");
+    });
+
+    it("Get User By Username: NotFoundError", async () => {
+      const username = "nonexistentuser";
+      
+      await expect(repo.getUserByUsername(username)).rejects.toThrow(
+        new NotFoundError(`User with username '${username}' not found`)
+      );
+    });
+  });
+
+
     
     
 
