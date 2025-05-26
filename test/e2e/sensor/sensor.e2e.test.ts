@@ -354,6 +354,24 @@ describe("Sensor API (e2e)", () => {
 
   // DELETE sensor
   describe("DELETE /networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}", () => {
+    beforeEach(async () => {
+      // Crea un sensore per il test
+      const sensorData = {
+        macAddress: testSensorMac,
+        name: "Test Sensor",
+        description: "Sensor for testing purposes",
+        variable: "temperature",
+        unit: "°C",
+      };
+
+      await request(app)
+        .post(
+          `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
+        )
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(sensorData);
+    });
+
     describe("Casi di successo", () => {
       it("Elimina un sensore (admin user)", async () => {
         const res = await request(app)
@@ -367,6 +385,26 @@ describe("Sensor API (e2e)", () => {
     });
 
     describe("Casi di errore", () => {
+      it("401 UnauthorizedError: token non presente", async () => {
+        const res = await request(app).delete(
+          `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors/${testSensorMac}`
+        );
+        expect(res.status).toBe(401);
+        expect(res.body.code).toBe(401);
+        expect(res.body.name).toBe("UnauthorizedError");
+      });
+
+      it("403 Insufficient rights: utente non autorizzato", async () => {
+        const res = await request(app)
+          .delete(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors/${testSensorMac}`
+          )
+          .set("Authorization", `Bearer ${viewerToken}`);
+        expect(res.status).toBe(403);
+        expect(res.body.code).toBe(403);
+        expect(res.body.name).toBe("InsufficientRightsError");
+      });
+
       it("404 NotFoundError: sensore inesistente", async () => {
         const res = await request(app)
           .delete(
@@ -382,4 +420,65 @@ describe("Sensor API (e2e)", () => {
   });
 
   /// PATCH sensor
+  describe("PATCH /networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}", () => {
+    beforeEach(async () => {
+      // Crea un sensore per il test
+      const sensorData = {
+        macAddress: testSensorMac,
+        name: "Test Sensor",
+        description: "Sensor for testing purposes",
+        variable: "temperature",
+        unit: "°C",
+      };
+
+      await request(app)
+        .post(
+          `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
+        )
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(sensorData);
+    });
+
+    describe("Casi di successo", () => {
+      it("Aggiorna un sensore (admin user)", async () => {
+        const updateData = {
+          name: "Updated Sensor Name",
+          description: "Updated description",
+          variable: "humidity",
+          unit: "%",
+        };
+
+        const res = await request(app)
+          .patch(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors/${testSensorMac}`
+          )
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(updateData);
+
+        expect(res.status).toBe(200);
+        expect(res.body.name).toBe(updateData.name);
+        expect(res.body.description).toBe(updateData.description);
+        expect(res.body.variable).toBe(updateData.variable);
+        expect(res.body.unit).toBe(updateData.unit);
+      });
+    });
+
+    describe("Casi di errore", () => {
+      it("401 UnauthorizedError: token non presente", async () => {
+        const updateData = {
+          name: "Updated Sensor Name",
+        };
+
+        const res = await request(app)
+          .patch(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors/${testSensorMac}`
+          )
+          .send(updateData);
+
+        expect(res.status).toBe(401);
+        expect(res.body.code).toBe(401);
+        expect(res.body.name).toBe("UnauthorizedError");
+      });
+    });
+  });
 });

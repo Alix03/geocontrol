@@ -236,6 +236,7 @@ export async function getOutliersBySensorId(
     sensorMac,
     query
   );
+
   setOUtliers(measurements);
 
   const measurementsDTO = createMeasurementsDTO(
