@@ -606,5 +606,48 @@ describe("POST /networks/{networkCode}/gateways", () => {
 
 
 
+  describe("Integration tests - GET all gateways after operations", () => {
+    it("should return all remaining gateways after CRUD operations", async () => {
+      const res = await request(app)
+        .get(`/api/v1/networks/${testNetworkCode}/gateways`)
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+      
+      // Should contain the gateways that weren't deleted
+      const macAddresses = res.body.map((gateway: any) => gateway.macAddress);
+      expect(macAddresses).toContain("FF:EE:DD:CC:BB:AA"); // Updated MAC
+      expect(macAddresses).toContain(testGatewayMac2);
+      expect(macAddresses).not.toContain("delete:me:admin"); // Deleted
+      expect(macAddresses).not.toContain("delete:me:operator"); // Deleted
+    });
+
+    it("should return gateways with correct structure", async () => {
+      const res = await request(app)
+        .get(`/api/v1/networks/${testNetworkCode}/gateways`)
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(res.status).toBe(200);
+      
+      console.log(res.body);
+      if (res.body.length > 0) {
+        const gateway = res.body[0];
+        expect(gateway).toHaveProperty('macAddress');
+        
+        
+        
+        // Optional properties should be defined if they exist
+        if (gateway.name !== undefined) {
+          expect(typeof gateway.name).toBe('string');
+        }
+        if (gateway.description !== undefined) {
+          expect(typeof gateway.description).toBe('string');
+        }
+      }
+    });
+  });
+
+
 // fine 
 });
