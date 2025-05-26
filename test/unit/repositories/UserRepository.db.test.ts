@@ -24,6 +24,7 @@ beforeEach(async () => {
 describe("UserRepository: SQLite in-memory", () => {
   const repo = new UserRepository();
 
+  describe("Create user", () => {
   it("create user", async () => {
     const user = await repo.createUser("john", "pass123", UserType.Admin);
     expect(user).toMatchObject({
@@ -97,6 +98,7 @@ describe("UserRepository: SQLite in-memory", () => {
       });
     });
 
+  });
 
 
     describe("Get All Users", () => {
@@ -176,18 +178,67 @@ describe("UserRepository: SQLite in-memory", () => {
   });
 
 
+  describe("Delete User", () => {
+    it("Delete User: success", async () => {
+      // Crea un utente
+      await repo.createUser("todelete", "password", UserType.Operator);
+      
+      // Verifica che esista
+      const userBefore = await repo.getUserByUsername("todelete");
+      expect(userBefore.username).toBe("todelete");
+      
+      // Elimina l'utente
+      await repo.deleteUser("todelete");
+      
+      // Verifica che non esista più
+      await expect(repo.getUserByUsername("todelete")).rejects.toThrow(NotFoundError);
+    });
+
+    it("Delete User: NotFoundError (utente inesistente)", async () => {
+      const username = "nonexistent";
+      
+      await expect(repo.deleteUser(username)).rejects.toThrow(
+        new NotFoundError(`User with username '${username}' not found`)
+      );
+    });
+
+    it("Delete user: success (se elimino un user gli altri rimangono invariati)", async () => {
+      // Crea più utenti
+      await repo.createUser("user1", "pass1", UserType.Admin);
+      await repo.createUser("user2", "pass2", UserType.Operator);
+      await repo.createUser("user3", "pass3", UserType.Viewer);
+      
+      // Elimina uno
+      await repo.deleteUser("user2");
+      
+      // Verifica che gli altri esistano ancora
+      const user1 = await repo.getUserByUsername("user1");
+      const user3 = await repo.getUserByUsername("user3");
+      
+      expect(user1.username).toBe("user1");
+      expect(user3.username).toBe("user3");
+      
+      // Verifica che user2 non esista
+      await expect(repo.getUserByUsername("user2")).rejects.toThrow(NotFoundError);
+      
+      // Verifica il conteggio totale
+      const allUsers = await repo.getAllUsers();
+      expect(allUsers).toHaveLength(2);
+    });
+
+    it("Delete User: username con caratteri speciali", async () => {
+      const specialUsername = "user@special.com";
+      
+      await repo.createUser(specialUsername, "password", UserType.Admin);
+      await repo.deleteUser(specialUsername);
+      
+      await expect(repo.getUserByUsername(specialUsername)).rejects.toThrow(NotFoundError);
+    });
+
+  });
+  
     
     
-
-
-
-
-
-
-
-
-
-
 
   it("find user by username: not found", async () => {
     await expect(repo.getUserByUsername("ghost")).rejects.toThrow(
