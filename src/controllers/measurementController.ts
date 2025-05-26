@@ -164,8 +164,13 @@ export async function getStatsByNetworkId(
   filterSensor.forEach((sensor) => {
     const sensorMac = sensor.macAddress;
     const sensorMeasurement = groupedMeasurements.get(sensorMac);
-    const stats: StatsDTO = computeStats(sensorMeasurement, startDate, endDate);
-    const sensorMeasurements = createMeasurementsDTO(sensorMac, stats);
+    //const stats: StatsDTO = computeStats(sensorMeasurement, startDate, endDate);
+    const sensorMeasurements = createMeasurementsDTO(
+      sensorMac,
+      sensorMeasurement && sensorMeasurement.length > 0
+        ? computeStats(sensorMeasurement, startDate, endDate)
+        : undefined
+    );
     measurements.push(sensorMeasurements);
   });
   return measurements;
