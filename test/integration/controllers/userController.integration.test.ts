@@ -282,6 +282,61 @@ describe("UserController integration", () => {
     });
   });
 
+  describe("Delete User", () => {
+    it("Delete User: success", async () => {
+      
+      mockUserRepository.deleteUser.mockResolvedValue();
+
+    await userController.deleteUser("testuser");
+
+      expect(mockUserRepository.deleteUser).toHaveBeenCalledWith("testuser");
+      expect(mockUserRepository.deleteUser).toHaveBeenCalledTimes(1);
+    });
+
+    it("Delete User: success (delete admin user)", async () => {
+      
+      mockUserRepository.deleteUser.mockResolvedValue();
+
+      // Act
+      await userController.deleteUser("admin");
+
+      // Assert
+      expect(mockUserRepository.deleteUser).toHaveBeenCalledWith("admin");
+    });
+
+    it("Delete User: success (delete viewer user)", async () => {
+      
+      mockUserRepository.deleteUser.mockResolvedValue();
+
+      
+      await userController.deleteUser("viewer");
+
+      expect(mockUserRepository.deleteUser).toHaveBeenCalledWith("viewer");
+    });
+
+    it("Delete User: NotFoundError (user inesistente) ", async () => {
+      
+      const error = new NotFoundError("User with username 'nonexistent' not found");
+      mockUserRepository.deleteUser.mockRejectedValue(error);
+
+      
+      await expect(userController.deleteUser("nonexistent")).rejects.toThrow(NotFoundError);
+      expect(mockUserRepository.deleteUser).toHaveBeenCalledWith("nonexistent");
+    });
+
+    it("Delete User: Gestione errori del database durante l'eliminazione", async () => {
+      
+      const error = new Error("Database error during deletion");
+      mockUserRepository.deleteUser.mockRejectedValue(error);
+
+      
+      await expect(userController.deleteUser("testuser")).rejects.toThrow("Database error during deletion");
+      expect(mockUserRepository.deleteUser).toHaveBeenCalledWith("testuser");
+    });
+
+    
+  });
+
 
 
   it("get User: mapperService integration", async () => {
