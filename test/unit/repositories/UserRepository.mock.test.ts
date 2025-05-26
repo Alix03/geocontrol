@@ -205,7 +205,23 @@ describe("UserRepository: mocked database", () => {
       expect(mockFind).toHaveBeenCalledWith({ where: { username: "" } });
     });
 
-    
+
+
+    it("Gestione username con caratteri speciali", async () => {
+      const specialUser = new UserDAO();
+      specialUser.username = "user@domain.com";
+      specialUser.password = "pass";
+      specialUser.type = UserType.Viewer;
+
+      mockFind.mockResolvedValue([specialUser]);
+
+      const result = await repo.getUserByUsername("user@domain.com");
+      
+      expect(result.username).toBe("user@domain.com");
+      expect(mockFind).toHaveBeenCalledWith({ where: { username: "user@domain.com" } });
+    });
+
+
 
 
 
