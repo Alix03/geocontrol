@@ -297,10 +297,10 @@ describe("UserController integration", () => {
       
       mockUserRepository.deleteUser.mockResolvedValue();
 
-      // Act
+      
       await userController.deleteUser("admin");
 
-      // Assert
+      
       expect(mockUserRepository.deleteUser).toHaveBeenCalledWith("admin");
     });
 
