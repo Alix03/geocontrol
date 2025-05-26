@@ -114,6 +114,23 @@ describe("UserRepository: mocked database", () => {
       ).rejects.toThrow("User with username 'duplicate' already exists");
     });
 
+    it("Gestione errori del database durante il salvataggio", async () => {
+      mockFind.mockResolvedValue([]);
+      mockSave.mockRejectedValue(new Error("Database connection failed"));
+
+      await expect(
+        repo.createUser("test", "pass", UserType.Admin)
+      ).rejects.toThrow("Database connection failed");
+    });
+
+    it("Gestione errori database durante il controllo di conflitto", async () => {
+      mockFind.mockRejectedValue(new Error("Database query failed"));
+
+      await expect(
+        repo.createUser("test", "pass", UserType.Admin)
+      ).rejects.toThrow("Database query failed");
+    });
+
   it("find user by username", async () => {
     const foundUser = new UserDAO();
     foundUser.username = "john";
