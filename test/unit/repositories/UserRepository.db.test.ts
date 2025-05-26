@@ -54,7 +54,57 @@ describe("UserRepository: SQLite in-memory", () => {
     });
 
 
+    it("Create User: success (caratteri speciali)", async () => {
+      const specialUsername = "user@test.com";
+      const specialPassword = "p@ssw0rd!#$%";
+      
+      const user = await repo.createUser(specialUsername, specialPassword, UserType.Admin);
+      
+      expect(user.username).toBe(specialUsername);
+      expect(user.password).toBe(specialPassword);
+      
+      // Verifica che possa essere recuperato
+      const foundUser = await repo.getUserByUsername(specialUsername);
+      expect(foundUser.password).toBe(specialPassword);
+    });
+
+    it("ConflictError: user già esistente", async () => {
+      const username = "duplicate";
+      await repo.createUser(username, "first", UserType.Admin);
+      
+      await expect(
+        repo.createUser(username, "second", UserType.Viewer)
+      ).rejects.toThrow(
+        new ConflictError(`User with username '${username}' already exists`)
+      );
+    });
+
+    it("Create user: Non deve modificare user esistente in caso di conflitti", async () => {
+      const username = "original";
+      const originalUser = await repo.createUser(username, "originalpass", UserType.Admin);
+      
+      try {
+        await repo.createUser(username, "newpass", UserType.Viewer);
+      } catch (error) {
+        // Ignora l'errore, vogliamo solo verificare che l'utente originale non sia cambiato
+      }
+      
+      const unchangedUser = await repo.getUserByUsername(username);
+      expect(unchangedUser).toMatchObject({
+        username: "original",
+        password: "originalpass",
+        type: UserType.Admin
+      });
+    });
+
+
     
+    
+
+
+
+
+
 
 
 
