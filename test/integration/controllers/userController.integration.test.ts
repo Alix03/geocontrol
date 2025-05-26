@@ -218,6 +218,71 @@ describe("UserController integration", () => {
   });
 
 
+  describe("Get All User", () => {
+    it("Get All User: success(array di user DTOs senza password)", async () => {
+      
+      const fakeUsersDAO: UserDAO[] = [
+        {
+          username: "admin",
+          password: "adminpass",
+          type: UserType.Admin
+        },
+        {
+          username: "operator",
+          password: "operatorpass", 
+          type: UserType.Operator
+        },
+        {
+          username: "viewer",
+          password: "viewerpass",
+          type: UserType.Viewer
+        }
+      ];
+
+      const expectedDTOs = [
+        { username: "admin", type: UserType.Admin },
+        { username: "operator", type: UserType.Operator },
+        { username: "viewer", type: UserType.Viewer }
+      ];
+
+      mockUserRepository.getAllUsers.mockResolvedValue(fakeUsersDAO);
+
+      
+      const result = await userController.getAllUsers();
+
+      
+      expect(result).toEqual(expectedDTOs);
+      expect(result).toHaveLength(3);
+      result.forEach(user => {
+        expect(user).not.toHaveProperty("password");
+      });
+      expect(mockUserRepository.getAllUsers).toHaveBeenCalledTimes(1);
+    });
+
+    it("Get All User: success (array vuoto se non ci sono users)", async () => {
+      
+      mockUserRepository.getAllUsers.mockResolvedValue([]);
+
+      
+      const result = await userController.getAllUsers();
+
+      
+      expect(result).toEqual([]);
+      expect(result).toHaveLength(0);
+      expect(mockUserRepository.getAllUsers).toHaveBeenCalledTimes(1);
+    });
+
+    it("Gestione di errori nella repository", async () => {
+    
+      const error = new Error("Database connection failed");
+      mockUserRepository.getAllUsers.mockRejectedValue(error);
+
+      
+      await expect(userController.getAllUsers()).rejects.toThrow("Database connection failed");
+    });
+  });
+
+
 
   it("get User: mapperService integration", async () => {
     const fakeUserDAO: UserDAO = {
