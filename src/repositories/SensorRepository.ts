@@ -1,5 +1,5 @@
 import { AppDataSource } from "@database";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { SensorDAO } from "@models/dao/SensorDAO";
 import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
 import { ConflictError } from "@models/errors/ConflictError";
@@ -12,8 +12,12 @@ export class SensorRepository {
     this.repo = AppDataSource.getRepository(SensorDAO);
   }
 
-  getAllSensors(networkCode: string, gatewayMac: string): Promise<SensorDAO[]> {
-    return this.repo.find({
+  async getAllSensors(
+    networkCode: string,
+    gatewayMac: string
+  ): Promise<SensorDAO[]> {
+    //non controllo network e gateway perché già ci pensa il controller
+    return await this.repo.find({
       where: {
         gateway: {
           macAddress: gatewayMac,
@@ -129,5 +133,33 @@ export class SensorRepository {
     });
 
     return this.repo.save(sensor);
+  }
+
+  async getSensorsByNetwork(
+    networkCode: string,
+    sensorArray?: string[]
+  ): Promise<SensorDAO[]> {
+    if (!sensorArray) {
+      return await this.repo.find({
+        where: {
+          gateway: {
+            network: {
+              code: networkCode,
+            },
+          },
+        },
+      });
+    } else {
+      return await this.repo.find({
+        where: {
+          macAddress: In(sensorArray),
+          gateway: {
+            network: {
+              code: networkCode,
+            },
+          },
+        },
+      });
+    }
   }
 }

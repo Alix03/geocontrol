@@ -6,6 +6,7 @@ import {
   computeStats,
   setOUtliers,
   createStatsDTO,
+  groupMeasurementBySensor,
 } from "@services/mapperService";
 import {
   Measurements as MeasurementsDTO,
@@ -14,18 +15,19 @@ import {
 import { getNetwork } from "@controllers/networkController";
 import { getSensor } from "@controllers/SensorController";
 import { SensorDAO } from "@models/dao/SensorDAO";
+import { SensorRepository } from "@repositories/SensorRepository";
 import { Stats as StatsDTO, StatsToJSON } from "@models/dto/Stats";
-import { MeasurementDAO } from "@models/dao/MeasurementDAO";
 import { parseStringArrayParam, parseISODateParamToUTC } from "@utils";
 import { AppDataSource } from "@database";
 import { In } from "typeorm";
-import { create } from "domain";
 
 export async function getMeasurementByNetworkId(
   networkCode: string,
   query?: any
 ): Promise<MeasurementsDTO[]> {
   const measurementRepo = new MeasurementRepository();
+  const sensorRepo = new SensorRepository();
+
   // Check se esiste il network
   await getNetwork(networkCode);
 
@@ -35,30 +37,17 @@ export async function getMeasurementByNetworkId(
   let sensorMacs: string = query.sensorMacs;
   let sensorArray: string[] = [];
   let filterSensor: any = [];
-
-  if (sensorMacs !== undefined && sensorMacs !== "") {
+  if (sensorMacs !== undefined && sensorMacs !== "" && sensorMacs !== null) {
     sensorArray = parseStringArrayParam(sensorMacs);
     //Array di sensori appartenenti al network
-    filterSensor = await AppDataSource.getRepository(SensorDAO).find({
-      where: {
-        macAddress: In(sensorArray),
-        gateway: {
-          network: {
-            code: networkCode,
-          },
-        },
-      },
-    });
+    // Usa il metodo del repository per ottenere i sensori
+    filterSensor = await sensorRepo.getSensorsByNetwork(
+      networkCode,
+      sensorArray
+    );
   } else {
-    filterSensor = await AppDataSource.getRepository(SensorDAO).find({
-      where: {
-        gateway: {
-          network: {
-            code: networkCode,
-          },
-        },
-      },
-    });
+    // Usa il metodo del repository per ottenere tutti i sensori della rete
+    filterSensor = await sensorRepo.getSensorsByNetwork(networkCode);
   }
 
   sensorArray = filterSensor.map((sensor: SensorDAO) => sensor.macAddress);
@@ -79,10 +68,11 @@ export async function getMeasurementByNetworkId(
   filterSensor.forEach((sensor) => {
     const sensorMac = sensor.macAddress;
     const sensorMeasurement = groupedMeasurements.get(sensorMac);
-    const stats: StatsDTO = computeStats(sensorMeasurement);
     const sensorMeasurements = createMeasurementsDTO(
       sensorMac,
-      sensorMeasurement && sensorMeasurement.length > 0 ? stats : undefined,
+      sensorMeasurement && sensorMeasurement.length > 0
+        ? computeStats(sensorMeasurement)
+        : undefined,
       sensorMeasurement && sensorMeasurement.length > 0 ? sensorMeasurement : [] // Array vuoto se non ci sono misurazioni
     );
     setOUtliers(sensorMeasurements);
@@ -135,6 +125,7 @@ export async function getStatsByNetworkId(
   query: any
 ): Promise<MeasurementsDTO[]> {
   const measurementRepo = new MeasurementRepository();
+  const sensorRepo = new SensorRepository();
   // Check se esiste il network
   const startDate = parseISODateParamToUTC(query.startDate);
   const endDate = parseISODateParamToUTC(query.endDate);
@@ -146,26 +137,12 @@ export async function getStatsByNetworkId(
   if (sensorMacs !== undefined && sensorMacs !== "") {
     sensorArray = parseStringArrayParam(sensorMacs);
     //Array di sensori appartenenti al network
-    filterSensor = await AppDataSource.getRepository(SensorDAO).find({
-      where: {
-        macAddress: In(sensorArray),
-        gateway: {
-          network: {
-            code: networkCode,
-          },
-        },
-      },
-    });
+    filterSensor = await sensorRepo.getSensorsByNetwork(
+      networkCode,
+      sensorArray
+    );
   } else {
-    filterSensor = await AppDataSource.getRepository(SensorDAO).find({
-      where: {
-        gateway: {
-          network: {
-            code: networkCode,
-          },
-        },
-      },
-    });
+    filterSensor = await sensorRepo.getSensorsByNetwork(networkCode);
   }
 
   sensorArray = filterSensor.map((sensor: SensorDAO) => sensor.macAddress);
@@ -184,8 +161,13 @@ export async function getStatsByNetworkId(
   filterSensor.forEach((sensor) => {
     const sensorMac = sensor.macAddress;
     const sensorMeasurement = groupedMeasurements.get(sensorMac);
-    const stats: StatsDTO = computeStats(sensorMeasurement, startDate, endDate);
-    const sensorMeasurements = createMeasurementsDTO(sensorMac, stats);
+    //const stats: StatsDTO = computeStats(sensorMeasurement, startDate, endDate);
+    const sensorMeasurements = createMeasurementsDTO(
+      sensorMac,
+      sensorMeasurement && sensorMeasurement.length > 0
+        ? computeStats(sensorMeasurement, startDate, endDate)
+        : undefined
+    );
     measurements.push(sensorMeasurements);
   });
   return measurements;
@@ -274,7 +256,19 @@ export async function createMeasurement(
   sensorMac: string,
   measurements: MeasurementDTO[]
 ): Promise<void> {
+  //verifico i campi obbligatori
+  if (
+    !networkCode ||
+    !gatewayMac ||
+    !sensorMac ||
+    !measurements ||
+    measurements.length === 0
+  ) {
+    throw new Error("Entity Not Found: Missing required parameters");
+  }
+
   const measurementRepo = new MeasurementRepository();
+
   //verifico che il sensore sia correttamente associato alla rete
   await getSensor(networkCode, gatewayMac, sensorMac); // Controlla che il sensore appartenga al gateway e al network
 
@@ -285,29 +279,6 @@ export async function createMeasurement(
       measurement.createdAt,
       measurement.value,
       sensorMac
-      //measurement.isOutlier ?? false
     );
   }
-}
-
-export function groupMeasurementBySensor(
-  measurementArray: MeasurementDAO[]
-): Map<string, MeasurementDTO[]> {
-  const groupedMeasurements: Map<string, MeasurementDTO[]> = new Map();
-  measurementArray.forEach((measurement) => {
-    const sensorMac = measurement.sensor.macAddress; // Assumendo che il sensore abbia un campo macAddress
-    if (!groupedMeasurements.has(sensorMac)) {
-      groupedMeasurements.set(sensorMac, []);
-    }
-    groupedMeasurements
-      .get(sensorMac)!
-      .push(mapMeasurementDAOToDTO(measurement));
-  });
-  // Aggiungi un controllo per i sensori senza misurazioni
-  groupedMeasurements.forEach((measurements, sensorMac) => {
-    if (measurements.length === 0) {
-      groupedMeasurements.set(sensorMac, []); // Assicurati che sia un array vuoto
-    }
-  });
-  return groupedMeasurements;
 }
