@@ -189,6 +189,15 @@ describe("UserRepository: mocked database", () => {
     });
 
 
+    it("Gestione errori database durante find user by username", async () => {
+      mockFind.mockRejectedValue(new Error("Database connection lost"));
+
+      await expect(
+        repo.getUserByUsername("test")
+      ).rejects.toThrow("Database connection lost");
+    });
+
+
 
 
 
