@@ -383,4 +383,42 @@ describe("UserRepository: mocked database", () => {
       expect(mockRemove).toHaveBeenCalledWith(specialUser);
     });
 
+
+   it("Crea la repository con successo", () => {
+      const newRepo = new UserRepository();
+      expect(newRepo).toBeInstanceOf(UserRepository);
+    });
+  
+    it("should verify mockFind is called with correct parameters in all methods", async () => {
+      // Test getUserByUsername
+      mockFind.mockResolvedValue([]);
+      try {
+        await repo.getUserByUsername("test1");
+      } catch (e) {
+        // Expected to throw NotFoundError
+      }
+      expect(mockFind).toHaveBeenLastCalledWith({ where: { username: "test1" } });
+
+      // Test createUser (conflict check)
+      mockFind.mockResolvedValue([]);
+      mockSave.mockResolvedValue(new UserDAO());
+      await repo.createUser("test2", "pass", UserType.Admin);
+      expect(mockFind).toHaveBeenCalledWith({ where: { username: "test2" } });
+
+      // Test deleteUser
+      mockFind.mockResolvedValue([]);
+      try {
+        await repo.deleteUser("test3");
+      } catch (e) {
+        // Expected to throw NotFoundError
+      }
+      expect(mockFind).toHaveBeenLastCalledWith({ where: { username: "test3" } });
+
+      // Test getAllUsers
+      mockFind.mockResolvedValue([]);
+      await repo.getAllUsers();
+      expect(mockFind).toHaveBeenLastCalledWith();
+    });
+
+
 });
