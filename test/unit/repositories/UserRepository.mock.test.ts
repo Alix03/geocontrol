@@ -47,6 +47,46 @@ describe("UserRepository: mocked database", () => {
       type: UserType.Admin
     });
   });
+  it("Create operator user ", async () => {
+      mockFind.mockResolvedValue([]);
+
+      const savedUser = new UserDAO();
+      savedUser.username = "operator";
+      savedUser.password = "op123";
+      savedUser.type = UserType.Operator;
+
+      mockSave.mockResolvedValue(savedUser);
+
+      const result = await repo.createUser("operator", "op123", UserType.Operator);
+
+      expect(result.type).toBe(UserType.Operator);
+      expect(mockSave).toHaveBeenCalledWith({
+        username: "operator",
+        password: "op123",
+
+        type: UserType.Operator
+      });
+    });
+    it("Create viewer user", async () => {
+      mockFind.mockResolvedValue([]);
+
+      const savedUser = new UserDAO();
+      savedUser.username = "viewer";
+      savedUser.password = "view123";
+      savedUser.type = UserType.Viewer;
+
+      mockSave.mockResolvedValue(savedUser);
+
+      const result = await repo.createUser("viewer", "view123", UserType.Viewer);
+
+      expect(result.type).toBe(UserType.Viewer);
+      expect(mockSave).toHaveBeenCalledWith({
+        username: "viewer",
+        password: "view123",
+        type: UserType.Viewer
+      });
+    });
+
 
   it("create user: conflict", async () => {
     const existingUser = new UserDAO();
