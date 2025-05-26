@@ -359,4 +359,28 @@ describe("UserRepository: mocked database", () => {
       expect(mockRemove).toHaveBeenCalledWith(user);
     });
 
+
+    it("Delete user: Gestione stringa vuota", async () => {
+      mockFind.mockResolvedValue([]);
+
+      await expect(repo.deleteUser("")).rejects.toThrow(NotFoundError);
+      expect(mockFind).toHaveBeenCalledWith({ where: { username: "" } });
+      expect(mockRemove).not.toHaveBeenCalled();
+    });
+
+    it("Delete user: Gestione username con caratteri speciali", async () => {
+      const specialUser = new UserDAO();
+      specialUser.username = "user+test@domain.com";
+      specialUser.password = "pass";
+      specialUser.type = UserType.Viewer;
+
+      mockFind.mockResolvedValue([specialUser]);
+      mockRemove.mockResolvedValue(undefined);
+
+      await repo.deleteUser("user+test@domain.com");
+
+      expect(mockFind).toHaveBeenCalledWith({ where: { username: "user+test@domain.com" } });
+      expect(mockRemove).toHaveBeenCalledWith(specialUser);
+    });
+
 });
