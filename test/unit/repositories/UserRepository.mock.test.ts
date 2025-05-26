@@ -180,6 +180,15 @@ describe("UserRepository: mocked database", () => {
   });
 
 
+  it("find user by username: not found error con messaggio corretto", async () => {
+      mockFind.mockResolvedValue([]);
+
+      await expect(repo.getUserByUsername("nonexistent")).rejects.toThrow(
+        "User with username 'nonexistent' not found"
+      );
+    });
+
+
 
 
 
