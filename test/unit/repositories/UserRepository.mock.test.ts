@@ -389,7 +389,7 @@ describe("UserRepository: mocked database", () => {
       expect(newRepo).toBeInstanceOf(UserRepository);
     });
   
-    it("should verify mockFind is called with correct parameters in all methods", async () => {
+    it("mockfind chiamata con i parametri corretti in tutti i metodi", async () => {
       // Test getUserByUsername
       mockFind.mockResolvedValue([]);
       try {

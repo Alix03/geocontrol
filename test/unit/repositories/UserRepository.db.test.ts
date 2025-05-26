@@ -36,6 +36,31 @@ describe("UserRepository: SQLite in-memory", () => {
     expect(found.username).toBe("john");
   });
 
+
+  it("Create user: success (admin, operator, viewer)", async () => {
+      // Test per ogni tipo di utente
+      const adminUser = await repo.createUser("admin", "adminpass", UserType.Admin);
+      expect(adminUser.type).toBe(UserType.Admin);
+      
+      const operatorUser = await repo.createUser("operator", "operatorpass", UserType.Operator);
+      expect(operatorUser.type).toBe(UserType.Operator);
+      
+      const viewerUser = await repo.createUser("viewer", "viewerpass", UserType.Viewer);
+      expect(viewerUser.type).toBe(UserType.Viewer);
+      
+      // Verifica che tutti siano stati salvati correttamente
+      const allUsers = await repo.getAllUsers();
+      expect(allUsers).toHaveLength(3);
+    });
+
+
+    
+
+
+
+
+
+
   it("find user by username: not found", async () => {
     await expect(repo.getUserByUsername("ghost")).rejects.toThrow(
       NotFoundError
