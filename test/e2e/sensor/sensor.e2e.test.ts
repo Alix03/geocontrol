@@ -130,7 +130,7 @@ describe("Sensor API (e2e)", () => {
 
       it("Crea un sensore con tutti i campi (operator user)", async () => {
         const sensorData = {
-          macAddress: testSensorMac,
+          macAddress: "11:22:33:44:55:66",
           name: "Test Sensor",
           description: "Sensor for testing purposes",
           variable: "temperature",
@@ -149,7 +149,7 @@ describe("Sensor API (e2e)", () => {
 
       it("Crea un sensore con solo i campi obbligatori (admin user)", async () => {
         const sensorData = {
-          macAddress: "11:22:33:44:55:66",
+          macAddress: "11:22:33:44:55:67",
         };
 
         const res = await request(app)
@@ -164,7 +164,7 @@ describe("Sensor API (e2e)", () => {
 
       it("Crea un sensore con solo i campi obbligatori (operator user)", async () => {
         const sensorData = {
-          macAddress: "11:22:33:44:55:66",
+          macAddress: "11:22:33:44:55:68",
         };
 
         const res = await request(app)
@@ -211,7 +211,7 @@ describe("Sensor API (e2e)", () => {
         expect(res.body.name).toBe("UnauthorizedError");
       });
 
-      it("403 ForbiddenError: utente non autorizzato", async () => {
+      it("403 Insufficient rights: utente non autorizzato", async () => {
         const sensorData = {
           macAddress: "11:22:33:44:55:66",
         };
@@ -225,7 +225,7 @@ describe("Sensor API (e2e)", () => {
 
         expect(res.status).toBe(403);
         expect(res.body.code).toBe(403);
-        expect(res.body.name).toBe("ForbiddenError");
+        expect(res.body.name).toBe("InsufficientRightsError");
       });
 
       it("404 NotFoundError: gateway inesistente", async () => {
@@ -248,6 +248,17 @@ describe("Sensor API (e2e)", () => {
           macAddress: testSensorMac,
         };
 
+        // Prima richiesta: Creazione del sensore
+        const createRes = await request(app)
+          .post(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
+          )
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(sensorData);
+
+        expect(createRes.status).toBe(201); // Verifica che il sensore sia stato creato
+
+        // Act: Tenta di creare un altro sensore con lo stesso macAddress
         const res = await request(app)
           .post(
             `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
@@ -264,6 +275,24 @@ describe("Sensor API (e2e)", () => {
 
   // GET specific sensor
   describe("GET /networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}", () => {
+    beforeEach(async () => {
+      // Crea un sensore per il test
+      const sensorData = {
+        macAddress: testSensorMac,
+        name: "Test Sensor",
+        description: "Sensor for testing purposes",
+        variable: "temperature",
+        unit: "°C",
+      };
+
+      await request(app)
+        .post(
+          `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
+        )
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(sensorData);
+    });
+
     describe("Casi di successo", () => {
       it("Ritorna un sensore specifico (admin user)", async () => {
         const res = await request(app)
@@ -275,9 +304,40 @@ describe("Sensor API (e2e)", () => {
         expect(res.status).toBe(200);
         expect(res.body.macAddress).toBe(testSensorMac);
       });
+
+      it("Ritorna un sensore specifico (operator user)", async () => {
+        const res = await request(app)
+          .get(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors/${testSensorMac}`
+          )
+          .set("Authorization", `Bearer ${operatorToken}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body.macAddress).toBe(testSensorMac);
+      });
+
+      it("Ritorna un sensore specifico (viewer user)", async () => {
+        const res = await request(app)
+          .get(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors/${testSensorMac}`
+          )
+          .set("Authorization", `Bearer ${viewerToken}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body.macAddress).toBe(testSensorMac);
+      });
     });
 
     describe("Casi di errore", () => {
+      it("401 UnauthorizedError: token non presente", async () => {
+        const res = await request(app).get(
+          `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors/${testSensorMac}`
+        );
+        expect(res.status).toBe(401);
+        expect(res.body.code).toBe(401);
+        expect(res.body.name).toBe("UnauthorizedError");
+      });
+
       it("404 NotFoundError: sensore inesistente", async () => {
         const res = await request(app)
           .get(
@@ -320,4 +380,6 @@ describe("Sensor API (e2e)", () => {
       });
     });
   });
+
+  /// PATCH sensor
 });
