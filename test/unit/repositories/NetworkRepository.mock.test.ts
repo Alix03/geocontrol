@@ -27,7 +27,8 @@ describe("NetworkRepository: mocked database", () => {
     });
 
     describe("CreateNetwork: mocked database", () => {
-        it("create network", async () =>{
+        
+        it("create network: all fields", async () =>{
             mockFind.mockResolvedValue([]);
 
             const savedNetwork = new NetworkDAO();
@@ -371,5 +372,5 @@ describe("NetworkRepository: mocked database", () => {
 
             expect(mockSave).not.toHaveBeenCalled();
         });
-    })
+    });
 })
