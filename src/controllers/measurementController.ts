@@ -96,7 +96,8 @@ export async function getMeasurementBySensorId(
   const startDate = parseISODateParamToUTC(query.startDate);
   const endDate = parseISODateParamToUTC(query.endDate);
   //check se esiste il sensore
-  await getSensor(networkCode, gatewayMac, sensorMac);
+  const sensorRepo= new SensorRepository();
+  await sensorRepo.getSensorByMac(networkCode, gatewayMac, sensorMac);
 
   // Ottieni le misurazioni dal repository
   const measurementArray =

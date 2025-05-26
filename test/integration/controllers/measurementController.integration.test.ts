@@ -9,6 +9,7 @@ import { SensorRepository } from "@repositories/SensorRepository";
 import {
   createMeasurement,
   getMeasurementByNetworkId,
+  getMeasurementBySensorId,
 } from "@controllers/measurementController";
 import { NetworkRepository } from "@repositories/NetworkRepository";
 import {
@@ -487,6 +488,39 @@ describe("measurementController: mocked repositories", () => {
     expect(result).toHaveLength(2);
     expect(result[0].sensorMacAddress).toBe("mac1");
     expect(result[1].sensorMacAddress).toBe("mac2");
+    expect(result).toEqual([{
+      sensorMacAddress: "mac1",
+        stats: {
+          mean: 5,
+          variance: 0,
+          upperThreshold: 5,
+          lowerThreshold: 5,
+        },
+        measurements: [
+          {
+            createdAt: new Date("2025-05-20T14:48:00.000Z"),
+            value: 5,
+            isOutlier: false,
+          },
+        ],
+      },
+      {
+      sensorMacAddress: "mac2",
+        stats: {
+          mean: 5,
+          variance: 0,
+          upperThreshold: 5,
+          lowerThreshold: 5,
+        },
+        measurements: [
+          {
+            createdAt: new Date("2025-05-20T14:48:00.000Z"),
+            value: 5,
+            isOutlier: false,
+          },
+        ],
+      }
+    ])
 
     expect(groupMeasurementBySensor).toHaveBeenCalledWith([
       testMeasurement,
@@ -665,7 +699,7 @@ it("getMeasurementByNetwork with multiple measurements and outlier", async () =>
       {
         createdAt: new Date("2025-05-20T14:57:00.000Z"),
         value: 50,
-        isOutlier: false   //per ora è false  --> dopo diventa true
+        isOutlier: true   //DA RIVEDERE
       }
     ];
 
@@ -692,5 +726,96 @@ it("getMeasurementByNetwork with multiple measurements and outlier", async () =>
 
     expect(setOUtliers).toHaveBeenCalledWith(measurementsDTO);
   });
+
+  /*
+
+  getMeasurementBySensorId
+
+  */
+
+  it("getMeasurementBySensor without query", async () => {
+    mockSensorRepository.getSensorByMac.mockResolvedValue(testSensorDAO);
+    mockMeasurementRepository.getMeasurementBySensorMac.mockResolvedValue([
+      testMeasurement,
+    ]);
+
+    const query = {
+      startDate: undefined,
+      endDate: undefined,
+    };
+    const result = await getMeasurementBySensorId("NET01", "gw1", "mac1", query);
+    expect(result).toEqual(
+      {
+        sensorMacAddress: "mac1",
+        stats: {
+          mean: 5,
+          variance: 0,
+          upperThreshold: 5,
+          lowerThreshold: 5,
+          
+        },
+        measurements: [
+          {
+            createdAt: new Date("2025-05-20T14:48:00.000Z"),
+            value: 5,
+            isOutlier: false,
+          },
+        ],
+      },
+    );
+
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      1,
+      query.startDate
+    );
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      2,
+      query.endDate
+    );
+
+    // Verifica che viene controllata l'esistenza del sensore/gateway/network
+    const sensorRepo = new SensorRepository();
+    expect(sensorRepo.getSensorByMac).toHaveBeenCalledWith("NET01", "gw1", "mac1");
+
+    // Verifica che la funzione sia stata chiamata con i parametri corretti
+    const measurementRepo = new MeasurementRepository();
+    expect(measurementRepo.getMeasurementBySensorMac).toHaveBeenCalledWith(
+      "NET01",
+      "gw1",
+      "mac1",
+      undefined,
+      undefined
+    );
+
+    const measurementDTO: Measurement = {
+      createdAt: new Date("2025-05-20T14:48:00.000Z"),
+      isOutlier: false,
+      value: 5,
+    };
+
+    expect(computeStats).toHaveBeenCalledWith([measurementDTO]);
+
+    const statsDTO: Stats = {
+      mean: 5,
+      variance: 0,
+      upperThreshold: 5,
+      lowerThreshold: 5,
+    };
+
+    expect(createMeasurementsDTO).toHaveBeenCalledWith(
+      testSensorDAO.macAddress,
+      statsDTO,
+      [measurementDTO]
+    );
+
+    const measurementsDTO: Measurements = {
+      sensorMacAddress: testSensorDAO.macAddress,
+      stats: statsDTO,
+      measurements: [measurementDTO],
+    };
+    
+    expect(setOUtliers).toHaveBeenCalledWith(measurementsDTO);
+  });
+
 
 });
