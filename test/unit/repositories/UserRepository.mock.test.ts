@@ -144,6 +144,33 @@ describe("UserRepository: mocked database", () => {
     expect(result.type).toBe(UserType.Operator);
   });
 
+
+  it("Find admin user by username", async () => {
+      const adminUser = new UserDAO();
+      adminUser.username = "admin";
+      adminUser.password = "admin123";
+      adminUser.type = UserType.Admin;
+
+      mockFind.mockResolvedValue([adminUser]);
+
+      const result = await repo.getUserByUsername("admin");
+      
+      expect(result.type).toBe(UserType.Admin);
+    });
+
+    it("Find viewer user by username", async () => {
+      const viewerUser = new UserDAO();
+      viewerUser.username = "viewer";
+      viewerUser.password = "view123";
+      viewerUser.type = UserType.Viewer;
+
+      mockFind.mockResolvedValue([viewerUser]);
+
+      const result = await repo.getUserByUsername("viewer");
+      
+      expect(result.type).toBe(UserType.Viewer);
+    });
+
   it("find user by username: not found", async () => {
     mockFind.mockResolvedValue([]);
 
@@ -151,6 +178,13 @@ describe("UserRepository: mocked database", () => {
       NotFoundError
     );
   });
+
+
+
+
+
+
+
 
   it("delete user", async () => {
     const user = new UserDAO();
