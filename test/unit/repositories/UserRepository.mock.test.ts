@@ -222,6 +222,44 @@ describe("UserRepository: mocked database", () => {
     });
 
 
+    it("Get All Users success", async () => {
+      const users = [
+        { username: "user1", password: "pass1", type: UserType.Admin },
+        { username: "user2", password: "pass2", type: UserType.Operator },
+        { username: "user3", password: "pass3", type: UserType.Viewer }
+      ];
+
+      mockFind.mockResolvedValue(users);
+
+      const result = await repo.getAllUsers();
+
+      expect(result).toEqual(users);
+      expect(result).toHaveLength(3);
+      expect(mockFind).toHaveBeenCalledWith();
+    });
+
+    it("Get All Users: success (array vuoto)", async () => {
+      mockFind.mockResolvedValue([]);
+
+      const result = await repo.getAllUsers();
+
+      expect(result).toEqual([]);
+      expect(result).toHaveLength(0);
+      expect(mockFind).toHaveBeenCalledWith();
+    });
+
+
+     it("Get All Users: success (array con un solo user)", async () => {
+      const singleUser = [{ username: "only", password: "pass", type: UserType.Admin }];
+      mockFind.mockResolvedValue(singleUser);
+
+      const result = await repo.getAllUsers();
+
+      expect(result).toEqual(singleUser);
+      expect(result).toHaveLength(1);
+    });
+    // riparti da getAllUsers
+
 
 
 
