@@ -236,14 +236,8 @@ export function groupMeasurementBySensor(
       groupedMeasurements.set(sensorMac, []);
     }
     groupedMeasurements
-      .get(sensorMac)!
-      .push(mapMeasurementDAOToDTO(measurement));
-  });
-  // Aggiungi un controllo per i sensori senza misurazioni
-  groupedMeasurements.forEach((measurements, sensorMac) => {
-    if (measurements.length === 0) {
-      groupedMeasurements.set(sensorMac, []); // Assicurati che sia un array vuoto
-    }
+      .get(sensorMac)
+      ?.push(mapMeasurementDAOToDTO(measurement));
   });
   return groupedMeasurements;
 }
