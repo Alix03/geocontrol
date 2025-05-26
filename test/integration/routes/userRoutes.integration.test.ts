@@ -7,6 +7,7 @@ import { User as UserDTO } from "@dto/User";
 import { UnauthorizedError } from "@models/errors/UnauthorizedError";
 import { InsufficientRightsError } from "@models/errors/InsufficientRightsError";
 import { ConflictError } from "@models/errors/ConflictError";
+import { NotFoundError } from "@models/errors/NotFoundError";
 
 jest.mock("@services/authService");
 jest.mock("@controllers/userController");
@@ -246,6 +247,85 @@ describe("UserRoutes integration", () => {
       expect(response.body).toEqual([]);
     });
   });
+
+
+  describe("GET /api/v1/users/:username", () => {
+    it("Get User By Username: success", async () => {
+      const mockUser: UserDTO = { username: "testuser", type: UserType.Viewer };
+
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (userController.getUser as jest.Mock).mockResolvedValue(mockUser);
+
+      const response = await request(app)
+        .get("/api/v1/users/testuser")
+        .set("Authorization", token);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockUser);
+      expect(authService.processToken).toHaveBeenCalledWith(token, [
+        UserType.Admin
+      ]);
+      expect(userController.getUser).toHaveBeenCalledWith("testuser");
+    });
+
+    it("Get User By Username: 401 UnauthorizedError (token non valido)", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new UnauthorizedError("Unauthorized: Invalid token");
+      });
+
+      const response = await request(app)
+        .get("/api/v1/users/testuser")
+        .set("Authorization", "Bearer invalid");
+
+      expect(response.status).toBe(401);
+      expect(response.body.message).toMatch(/Unauthorized/);
+    });
+
+    it("Get User By Username: 403 InsufficientRightsError", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new InsufficientRightsError("Forbidden: Insufficient rights");
+      });
+
+      const response = await request(app)
+        .get("/api/v1/users/testuser")
+        .set("Authorization", token);
+
+      expect(response.status).toBe(403);
+      expect(response.body.message).toMatch(/Insufficient rights/);
+    });
+
+    it("Get User By Username: 404 NotFoundError", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (userController.getUser as jest.Mock).mockRejectedValue(
+        new NotFoundError("User with username 'nonexistent' not found")
+      );
+
+      const response = await request(app)
+        .get("/api/v1/users/nonexistent")
+        .set("Authorization", token);
+
+      expect(response.status).toBe(404);
+      expect(response.body.message).toMatch(/not found/);
+    });
+
+    it("Get User By Username: username con caratteri speciali", async () => {
+      const mockUser: UserDTO = { username: "test@user.com", type: UserType.Viewer };
+
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (userController.getUser as jest.Mock).mockResolvedValue(mockUser);
+
+      const response = await request(app)
+        .get("/api/v1/users/test@user.com")
+        .set("Authorization", token);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockUser);
+      expect(userController.getUser).toHaveBeenCalledWith("test@user.com");
+    });
+  });
+
+
+
 
 
 ///////////
