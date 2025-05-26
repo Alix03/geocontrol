@@ -128,6 +128,40 @@ describe("Sensor API (e2e)", () => {
         expect(res.status).toBe(201);
       });
 
+      it("Crea un sensore con tutti i campi (operator user)", async () => {
+        const sensorData = {
+          macAddress: testSensorMac,
+          name: "Test Sensor",
+          description: "Sensor for testing purposes",
+          variable: "temperature",
+          unit: "°C",
+        };
+
+        const res = await request(app)
+          .post(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
+          )
+          .set("Authorization", `Bearer ${operatorToken}`)
+          .send(sensorData);
+
+        expect(res.status).toBe(201);
+      });
+
+      it("Crea un sensore con solo i campi obbligatori (admin user)", async () => {
+        const sensorData = {
+          macAddress: "11:22:33:44:55:66",
+        };
+
+        const res = await request(app)
+          .post(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
+          )
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(sensorData);
+
+        expect(res.status).toBe(201);
+      });
+
       it("Crea un sensore con solo i campi obbligatori (operator user)", async () => {
         const sensorData = {
           macAddress: "11:22:33:44:55:66",
@@ -159,6 +193,54 @@ describe("Sensor API (e2e)", () => {
 
         expect(res.status).toBe(400);
         expect(res.body.code).toBe(400);
+      });
+
+      it("401 Unauthorized: token non presente", async () => {
+        const sensorData = {
+          macAddress: "11:22:33:44:55:66",
+        };
+
+        const res = await request(app)
+          .post(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
+          )
+          .send(sensorData);
+
+        expect(res.status).toBe(401);
+        expect(res.body.code).toBe(401);
+        expect(res.body.name).toBe("UnauthorizedError");
+      });
+
+      it("403 ForbiddenError: utente non autorizzato", async () => {
+        const sensorData = {
+          macAddress: "11:22:33:44:55:66",
+        };
+
+        const res = await request(app)
+          .post(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
+          )
+          .set("Authorization", `Bearer ${viewerToken}`)
+          .send(sensorData);
+
+        expect(res.status).toBe(403);
+        expect(res.body.code).toBe(403);
+        expect(res.body.name).toBe("ForbiddenError");
+      });
+
+      it("404 NotFoundError: gateway inesistente", async () => {
+        const sensorData = {
+          macAddress: "11:22:33:44:55:66",
+        };
+        const res = await request(app)
+          .post(
+            `/api/v1/networks/${testNetworkCode}/gateways/NONEXISTENT_GATEWAY/sensors`
+          )
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(sensorData);
+        expect(res.status).toBe(404);
+        expect(res.body.code).toBe(404);
+        expect(res.body.name).toBe("NotFoundError");
       });
 
       it("409 ConflictError: macAddress già in uso", async () => {

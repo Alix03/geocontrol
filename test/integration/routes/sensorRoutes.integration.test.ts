@@ -86,7 +86,7 @@ describe("SensorRoutes integration", () => {
       ]);
     });
 
-    it("Create Sensor: unauthorized user (invalid token, 401 error)", async () => {
+    it("Create Sensor: 401 Unauthorized)", async () => {
       (authService.processToken as jest.Mock).mockImplementation(() => {
         throw new UnauthorizedError("Unauthorized: Invalid token format");
       });
