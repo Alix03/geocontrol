@@ -105,14 +105,11 @@ export async function getMeasurementBySensorId(
       endDate
     )) || [];
   // Calcola le statistiche per ogni gruppo di sensori
-
-  const stats: StatsDTO = computeStats(measurementArray);
+  const mappedMeasurement = measurementArray.map(mapMeasurementDAOToDTO);
   const sensorMeasurements = createMeasurementsDTO(
     sensorMac,
-    measurementArray.length > 0 ? stats : undefined,
-    measurementArray.length > 0
-      ? measurementArray.map(mapMeasurementDAOToDTO)
-      : undefined
+    measurementArray.length > 0 ? computeStats(mappedMeasurement) : undefined,
+    measurementArray.length > 0 ? mappedMeasurement : undefined
   );
 
   setOUtliers(sensorMeasurements);
