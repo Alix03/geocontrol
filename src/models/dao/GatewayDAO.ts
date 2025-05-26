@@ -11,11 +11,11 @@ export class GatewayDAO{
     @Column({nullable: false})
     macAddress: string
 
-    @Column({nullable: false})
-    name: string
+    @Column({nullable: true})
+    name?: string
 
-    @Column({nullable: false})
-    description: string
+    @Column({nullable: true})
+    description?: string
 
 
     @ManyToOne(() => NetworkDAO, (network) => network.gateways, { onDelete: "CASCADE"})

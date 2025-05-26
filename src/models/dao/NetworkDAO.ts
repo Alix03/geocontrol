@@ -11,11 +11,11 @@ export class NetworkDAO{
     @Column({ nullable: false })
     code: string
 
-    @Column({ nullable: false })
-    name: string
+    @Column({ nullable: true })
+    name?: string | null
 
-    @Column({ nullable: false })
-    description: string
+    @Column({ nullable: true })
+    description?: string | null
 
     
     @OneToMany(() => GatewayDAO, gateway => gateway.network, {
