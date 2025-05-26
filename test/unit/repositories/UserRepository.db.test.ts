@@ -98,6 +98,46 @@ describe("UserRepository: SQLite in-memory", () => {
     });
 
 
+
+    describe("Get All Users", () => {
+    it("Get All Users: success (array vuoto)", async () => {
+      const users = await repo.getAllUsers();
+      expect(users).toEqual([]);
+      expect(users).toHaveLength(0);
+    });
+
+    it("Get All Users: success", async () => {
+      // Crea diversi utenti con tipi diversi
+      await repo.createUser("admin1", "adminpass", UserType.Admin);
+      await repo.createUser("operator1", "operatorpass", UserType.Operator);
+      await repo.createUser("viewer1", "viewerpass", UserType.Viewer);
+
+      const users = await repo.getAllUsers();
+      
+      expect(users).toHaveLength(3);
+      expect(users.map(u => u.username)).toContain("admin1");
+      expect(users.map(u => u.username)).toContain("operator1");
+      expect(users.map(u => u.username)).toContain("viewer1");
+      
+      // Verifica che tutti i tipi di utente siano presenti
+      const userTypes = users.map(u => u.type);
+      expect(userTypes).toContain(UserType.Admin);
+      expect(userTypes).toContain(UserType.Operator);
+      expect(userTypes).toContain(UserType.Viewer);
+    });
+
+    it("Get All Users: ritona un array con un solo user se ne esiste solo 1", async () => {
+      await repo.createUser("singleuser", "password123", UserType.Admin);
+      
+      const users = await repo.getAllUsers();
+      expect(users).toHaveLength(1);
+      expect(users[0].username).toBe("singleuser");
+      expect(users[0].type).toBe(UserType.Admin);
+    });
+
+  });
+
+
     
     
 
