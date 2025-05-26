@@ -1,6 +1,7 @@
 import * as userController from "@controllers/userController";
 import { UserDAO } from "@dao/UserDAO";
 import { ConflictError } from "@models/errors/ConflictError";
+import { NotFoundError } from "@models/errors/NotFoundError";
 import { UserType } from "@models/UserType";
 import { UserRepository } from "@repositories/UserRepository";
 
@@ -76,7 +77,7 @@ describe("UserController integration", () => {
     });
 
     it("Create user: success (viewer user)", async () => {
-      // Arrange
+      
       const viewerDTO = {
         username: "newviewer",
         password: "viewerpass",
@@ -88,11 +89,10 @@ describe("UserController integration", () => {
         password: "viewerpass",
         type: UserType.Viewer
       });
-
-      // Act
+      
       await userController.createUser(viewerDTO);
 
-      // Assert
+      
       expect(mockUserRepository.createUser).toHaveBeenCalledWith(
         "newviewer",
         "viewerpass",
@@ -105,7 +105,7 @@ describe("UserController integration", () => {
     
 
     it("Create user: ConflictError (user già esistente)", async () => {
-      // Arrange
+      
       const userDTO = {
         username: "existinguser",
         password: "password",
@@ -115,7 +115,7 @@ describe("UserController integration", () => {
       const error = new ConflictError("User with username 'existinguser' already exists");
       mockUserRepository.createUser.mockRejectedValue(error);
 
-      // Act & Assert
+      
       await expect(userController.createUser(userDTO)).rejects.toThrow(ConflictError);
       expect(mockUserRepository.createUser).toHaveBeenCalledWith(
         "existinguser",
@@ -125,7 +125,7 @@ describe("UserController integration", () => {
     });
 
     it("Create user: Gestione di errori del database durante la creazione", async () => {
-      // Arrange
+      
       const userDTO = {
         username: "testuser",
         password: "testpass",
@@ -135,8 +135,85 @@ describe("UserController integration", () => {
       const error = new Error("Database error");
       mockUserRepository.createUser.mockRejectedValue(error);
 
-      // Act & Assert
+      
       await expect(userController.createUser(userDTO)).rejects.toThrow("Database error");
+    });
+  });
+
+  describe("Get User", () => {
+    it("Get User: success (user DTO senza password)", async () => {
+      
+      const fakeUserDAO: UserDAO = {
+        username: "testuser",
+        password: "secret",
+        type: UserType.Operator
+      };
+
+      const expectedDTO = {
+        username: fakeUserDAO.username,
+        type: fakeUserDAO.type
+      };
+
+      mockUserRepository.getUserByUsername.mockResolvedValue(fakeUserDAO);
+
+    
+      const result = await userController.getUser("testuser");
+
+      
+      expect(result).toEqual(expectedDTO);
+      expect(result).not.toHaveProperty("password");
+      expect(mockUserRepository.getUserByUsername).toHaveBeenCalledWith("testuser");
+      expect(mockUserRepository.getUserByUsername).toHaveBeenCalledTimes(1);
+    });
+
+    it("Get User: success (admin user)", async () => {
+      
+      const fakeAdminDAO: UserDAO = {
+        username: "admin",
+        password: "adminpass",
+        type: UserType.Admin
+      };
+
+      mockUserRepository.getUserByUsername.mockResolvedValue(fakeAdminDAO);
+      
+      const result = await userController.getUser("admin");
+
+      
+      expect(result).toEqual({
+        username: "admin",
+        type: UserType.Admin
+      });
+      expect(result).not.toHaveProperty("password");
+    });
+
+    it("Get User: success (viewer user)", async () => {
+      
+      const fakeViewerDAO: UserDAO = {
+        username: "viewer",
+        password: "viewerpass",
+        type: UserType.Viewer
+      };
+
+      mockUserRepository.getUserByUsername.mockResolvedValue(fakeViewerDAO);
+
+    
+      const result = await userController.getUser("viewer");
+
+      
+      expect(result).toEqual({
+        username: "viewer",
+        type: UserType.Viewer
+      });
+    });
+
+    it("Get User: NotFoundError (user inesistente)", async () => {
+      
+      const error = new NotFoundError("User with username 'nonexistent' not found");
+      mockUserRepository.getUserByUsername.mockRejectedValue(error);
+
+      
+      await expect(userController.getUser("nonexistent")).rejects.toThrow(NotFoundError);
+      expect(mockUserRepository.getUserByUsername).toHaveBeenCalledWith("nonexistent");
     });
   });
 
