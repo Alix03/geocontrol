@@ -288,13 +288,6 @@ describe("UserRepository: mocked database", () => {
     });
 
 
-    // riparti da getAllUsers
-
-
-
-
-
-
   it("delete user", async () => {
     const user = new UserDAO();
     user.username = "john";
@@ -308,4 +301,33 @@ describe("UserRepository: mocked database", () => {
 
     expect(mockRemove).toHaveBeenCalledWith(user);
   });
+
+  it("Delete operator user", async () => {
+      const operatorUser = new UserDAO();
+      operatorUser.username = "operator";
+      operatorUser.password = "pass";
+      operatorUser.type = UserType.Operator;
+
+      mockFind.mockResolvedValue([operatorUser]);
+      mockRemove.mockResolvedValue(undefined);
+
+      await repo.deleteUser("operator");
+
+      expect(mockRemove).toHaveBeenCalledWith(operatorUser);
+    });
+
+    it("Delete viewer user", async () => {
+      const viewerUser = new UserDAO();
+      viewerUser.username = "viewer";
+      viewerUser.password = "pass";
+      viewerUser.type = UserType.Viewer;
+
+      mockFind.mockResolvedValue([viewerUser]);
+      mockRemove.mockResolvedValue(undefined);
+
+      await repo.deleteUser("viewer");
+
+      expect(mockRemove).toHaveBeenCalledWith(viewerUser);
+    });
+
 });
