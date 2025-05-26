@@ -260,10 +260,31 @@ describe("UserRepository: mocked database", () => {
     });
 
 
-    it("should handle database errors during findAll", async () => {
+    it("Get All Users: Gestione errori del database", async () => {
       mockFind.mockRejectedValue(new Error("Database timeout"));
 
       await expect(repo.getAllUsers()).rejects.toThrow("Database timeout");
+    });
+
+
+
+    it("Get All Users: users di diverso tipo", async () => {
+      const mixedUsers = [
+        { username: "admin1", password: "pass1", type: UserType.Admin },
+        { username: "admin2", password: "pass2", type: UserType.Admin },
+        { username: "op1", password: "pass3", type: UserType.Operator },
+        { username: "viewer1", password: "pass4", type: UserType.Viewer },
+        { username: "viewer2", password: "pass5", type: UserType.Viewer }
+      ];
+
+      mockFind.mockResolvedValue(mixedUsers);
+
+      const result = await repo.getAllUsers();
+
+      expect(result).toHaveLength(5);
+      expect(result.filter(u => u.type === UserType.Admin)).toHaveLength(2);
+      expect(result.filter(u => u.type === UserType.Operator)).toHaveLength(1);
+      expect(result.filter(u => u.type === UserType.Viewer)).toHaveLength(2);
     });
 
 
