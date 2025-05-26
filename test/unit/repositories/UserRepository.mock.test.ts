@@ -338,4 +338,25 @@ describe("UserRepository: mocked database", () => {
       );
     });
 
+    it("Delete Gateway: Gestione database error durante ricerca per eliminazione", async () => {
+      mockFind.mockRejectedValue(new Error("Database connection failed"));
+
+      await expect(repo.deleteUser("test")).rejects.toThrow("Database connection failed");
+      expect(mockRemove).not.toHaveBeenCalled();
+    });
+
+    it("Delete Gateway: Gestione database error durante la rimozione", async () => {
+      const user = new UserDAO();
+      user.username = "test";
+      user.password = "pass";
+      user.type = UserType.Admin;
+
+      mockFind.mockResolvedValue([user]);
+      mockRemove.mockRejectedValue(new Error("Failed to delete from database"));
+
+      await expect(repo.deleteUser("test")).rejects.toThrow("Failed to delete from database");
+      expect(mockFind).toHaveBeenCalledWith({ where: { username: "test" } });
+      expect(mockRemove).toHaveBeenCalledWith(user);
+    });
+
 });
