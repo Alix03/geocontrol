@@ -258,6 +258,15 @@ describe("UserRepository: mocked database", () => {
       expect(result).toEqual(singleUser);
       expect(result).toHaveLength(1);
     });
+
+
+    it("should handle database errors during findAll", async () => {
+      mockFind.mockRejectedValue(new Error("Database timeout"));
+
+      await expect(repo.getAllUsers()).rejects.toThrow("Database timeout");
+    });
+
+
     // riparti da getAllUsers
 
 
