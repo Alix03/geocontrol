@@ -88,7 +88,7 @@ describe("UserRepository: mocked database", () => {
     });
 
 
-  it("create user: conflict", async () => {
+  it("create user: ConflictError", async () => {
     const existingUser = new UserDAO();
     existingUser.username = "john";
     existingUser.password = "pass123";
@@ -100,6 +100,19 @@ describe("UserRepository: mocked database", () => {
       repo.createUser("john", "another", UserType.Viewer)
     ).rejects.toThrow(ConflictError);
   });
+
+  it("create user: ConflictError con messaggio corretto", async () => {
+      const existingUser = new UserDAO();
+      existingUser.username = "duplicate";
+      existingUser.password = "pass";
+      existingUser.type = UserType.Admin;
+
+      mockFind.mockResolvedValue([existingUser]);
+
+      await expect(
+        repo.createUser("duplicate", "newpass", UserType.Operator)
+      ).rejects.toThrow("User with username 'duplicate' already exists");
+    });
 
   it("find user by username", async () => {
     const foundUser = new UserDAO();
