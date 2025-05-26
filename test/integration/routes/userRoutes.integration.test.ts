@@ -325,10 +325,115 @@ describe("UserRoutes integration", () => {
   });
 
 
+  describe("DELETE /api/v1/users/:username", () => {
+    it("Delete User: success", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (userController.deleteUser as jest.Mock).mockResolvedValue(undefined);
 
+      const response = await request(app)
+        .delete("/api/v1/users/testuser")
+        .set("Authorization", token);
 
+      expect(response.status).toBe(204);
+      expect(authService.processToken).toHaveBeenCalledWith(token, [
+        UserType.Admin
+      ]);
+      expect(userController.deleteUser).toHaveBeenCalledWith("testuser");
+    });
 
-///////////
+  
+
+    it("Delete User: 401 UnauthorizedError", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new UnauthorizedError("Unauthorized: Invalid token");
+      });
+
+      const response = await request(app)
+        .delete("/api/v1/users/testuser")
+        .set("Authorization", "Bearer invalid");
+
+      expect(response.status).toBe(401);
+      expect(response.body.message).toMatch(/Unauthorized/);
+    });
+
+    it("Delete User: 403 InsufficientRightsError", async () => {
+      (authService.processToken as jest.Mock).mockImplementation(() => {
+        throw new InsufficientRightsError("Forbidden: Insufficient rights");
+      });
+
+      const response = await request(app)
+        .delete("/api/v1/users/testuser")
+        .set("Authorization", token);
+
+      expect(response.status).toBe(403);
+      expect(response.body.message).toMatch(/Insufficient rights/);
+    });
+
+    it("Delete User: 404 NotFoundError", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (userController.deleteUser as jest.Mock).mockRejectedValue(
+        new NotFoundError("User with username 'nonexistent' not found")
+      );
+
+      const response = await request(app)
+        .delete("/api/v1/users/nonexistent")
+        .set("Authorization", token);
+
+      expect(response.status).toBe(404);
+      expect(response.body.message).toMatch(/not found/);
+    });
+
+    it("Delete User: username con caratteri speciali", async () => {
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (userController.deleteUser as jest.Mock).mockResolvedValue(undefined);
+
+      const response = await request(app)
+        .delete("/api/v1/users/test@user.com")
+        .set("Authorization", token);
+
+      expect(response.status).toBe(204);
+      expect(userController.deleteUser).toHaveBeenCalledWith("test@user.com");
+    });
+
+    
+  });
+
+  describe("Casi limite e gestione degli errori", () => {
+    
+
+    it("Username molto lunghi", async () => {
+      const longUsername = "a".repeat(1000);
+      const mockUser: UserDTO = { username: longUsername, type: UserType.Viewer };
+
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (userController.getUser as jest.Mock).mockResolvedValue(mockUser);
+
+      const response = await request(app)
+        .get(`/api/v1/users/${longUsername}`)
+        .set("Authorization", token);
+
+      expect(response.status).toBe(200);
+      expect(userController.getUser).toHaveBeenCalledWith(longUsername);
+    });
+
+    it("URL encoded characters in username", async () => {
+      const encodedUsername = "test%40example.com";
+      const decodedUsername = "test@example.com";
+      const mockUser: UserDTO = { username: decodedUsername, type: UserType.Viewer };
+
+      (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+      (userController.getUser as jest.Mock).mockResolvedValue(mockUser);
+
+      const response = await request(app)
+        .get(`/api/v1/users/${encodedUsername}`)
+        .set("Authorization", token);
+
+      expect(response.status).toBe(200);
+      expect(userController.getUser).toHaveBeenCalledWith(decodedUsername);
+    });
+
+    
+  });
 
   it("get all users", async () => {
     const mockUsers: UserDTO[] = [
