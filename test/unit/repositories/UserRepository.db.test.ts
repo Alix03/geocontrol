@@ -236,8 +236,72 @@ describe("UserRepository: SQLite in-memory", () => {
     });
 
   });
-  
-    
+
+    describe("Casi limite", () => {
+    it("Gestione di più operazioni in cascata", async () => {
+      const username = "rapidtest";
+      
+      // Crea, elimina, ricrea
+      await repo.createUser(username, "pass1", UserType.Admin);
+      await repo.deleteUser(username);
+      await repo.createUser(username, "pass2", UserType.Viewer);
+      
+      const finalUser = await repo.getUserByUsername(username);
+      expect(finalUser.password).toBe("pass2");
+      expect(finalUser.type).toBe(UserType.Viewer);
+    });
+
+    it("Integrità dei dati con più operazioni in cascata", async () => {
+      // Scenario complesso che testa più operazioni insieme
+      
+      // Crea utenti iniziali
+      await repo.createUser("admin", "adminpass", UserType.Admin);
+      await repo.createUser("op1", "op1pass", UserType.Operator);
+      
+      let users = await repo.getAllUsers();
+      expect(users).toHaveLength(2);
+      
+      // Aggiungi altri utenti
+      await repo.createUser("viewer1", "v1pass", UserType.Viewer);
+      await repo.createUser("viewer2", "v2pass", UserType.Viewer);
+      
+      users = await repo.getAllUsers();
+      expect(users).toHaveLength(4);
+      
+      // Elimina un utente
+      await repo.deleteUser("op1");
+      
+      users = await repo.getAllUsers();
+      expect(users).toHaveLength(3);
+      
+      // Verifica che gli utenti rimanenti siano corretti
+      const usernames = users.map(u => u.username).sort();
+      expect(usernames).toEqual(["admin", "viewer1", "viewer2"]);
+      
+      // Tenta di creare conflitto
+      await expect(repo.createUser("admin", "newpass", UserType.Viewer))
+        .rejects.toThrow(ConflictError);
+      
+      // Verifica che l'admin originale sia invariato
+      const admin = await repo.getUserByUsername("admin");
+      expect(admin.password).toBe("adminpass");
+      expect(admin.type).toBe(UserType.Admin);
+    });
+
+    it("Username e password con lunghezza elevata", async () => {
+      const longUsername = "a".repeat(100);
+      const longPassword = "b".repeat(200);
+      
+      const user = await repo.createUser(longUsername, longPassword, UserType.Operator);
+      
+      expect(user.username).toBe(longUsername);
+      expect(user.password).toBe(longPassword);
+      
+      const foundUser = await repo.getUserByUsername(longUsername);
+      expect(foundUser.username).toBe(longUsername);
+      expect(foundUser.password).toBe(longPassword);
+    });
+  });
     
 
   it("find user by username: not found", async () => {
