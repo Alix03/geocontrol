@@ -108,7 +108,7 @@ export async function getMeasurementBySensorId(
       startDate,
       endDate
     )) || [];
-  // Calcola le statistiche per ogni gruppo di sensori
+  // Calcola le statistiche 
   const mappedMeasurement = measurementArray.map(mapMeasurementDAOToDTO);
   const sensorMeasurements = createMeasurementsDTO(
     sensorMac,
@@ -117,8 +117,8 @@ export async function getMeasurementBySensorId(
   );
 
   setOUtliers(sensorMeasurements);
-  // Converti in JSON e restituisci
-  return MeasurementsToJSON(sensorMeasurements);
+
+  return sensorMeasurements;
 }
 
 export async function getStatsByNetworkId(
@@ -128,6 +128,7 @@ export async function getStatsByNetworkId(
   const measurementRepo = new MeasurementRepository();
   const sensorRepo = new SensorRepository();
   // Check se esiste il network
+  sensorRepo.getSensorsByNetwork(networkCode);
   const startDate = parseISODateParamToUTC(query.startDate);
   const endDate = parseISODateParamToUTC(query.endDate);
 
@@ -209,7 +210,7 @@ export async function getStatsBySensorId(
         };
 
   // Converti in JSON e restituisci
-  return StatsToJSON(stats);
+  return stats;
 }
 
 export async function getOutliersByNetworkId(

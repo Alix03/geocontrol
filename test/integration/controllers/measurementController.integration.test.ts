@@ -421,7 +421,7 @@ describe("measurementController: mocked repositories", () => {
   it("getMeasurementByNetwork with invalid date format", async () => {
     mockNetworkRepository.getNetworkByCode.mockResolvedValue(testNetworkDAO);
     mockSensorRepository.getSensorsByNetwork.mockResolvedValue([testSensorDAO]);
-        mockMeasurementRepository.getMeasurementByNetworkId.mockResolvedValue([
+    mockMeasurementRepository.getMeasurementByNetworkId.mockResolvedValue([
       testMeasurement,
     ]);
 
@@ -488,8 +488,9 @@ describe("measurementController: mocked repositories", () => {
     expect(result).toHaveLength(2);
     expect(result[0].sensorMacAddress).toBe("mac1");
     expect(result[1].sensorMacAddress).toBe("mac2");
-    expect(result).toEqual([{
-      sensorMacAddress: "mac1",
+    expect(result).toEqual([
+      {
+        sensorMacAddress: "mac1",
         stats: {
           mean: 5,
           variance: 0,
@@ -505,7 +506,7 @@ describe("measurementController: mocked repositories", () => {
         ],
       },
       {
-      sensorMacAddress: "mac2",
+        sensorMacAddress: "mac2",
         stats: {
           mean: 5,
           variance: 0,
@@ -519,8 +520,8 @@ describe("measurementController: mocked repositories", () => {
             isOutlier: false,
           },
         ],
-      }
-    ])
+      },
+    ]);
 
     expect(groupMeasurementBySensor).toHaveBeenCalledWith([
       testMeasurement,
@@ -537,7 +538,7 @@ describe("measurementController: mocked repositories", () => {
 
     expect(result).toEqual([
       {
-        sensorMacAddress: "mac1"
+        sensorMacAddress: "mac1",
       },
     ]);
 
@@ -556,28 +557,26 @@ describe("measurementController: mocked repositories", () => {
     expect(result).toEqual([]);
     expect(
       mockMeasurementRepository.getMeasurementByNetworkId
-    ).toHaveBeenCalledWith(
-     "NET01",
-      [],
-      undefined,
-      undefined
-    );
+    ).toHaveBeenCalledWith("NET01", [], undefined, undefined);
   });
 
-it("getMeasurementByNetwork with multiple measurements and outlier", async () => {
-  const measurementArray = []; 
-  const measurements = [10, 12, 11, 13, 14, 15, 16, 12, 11, 50].map((value, index) => {
-    const measurement = new MeasurementDAO();
-    measurement.createdAt = new Date(`2025-05-20T14:${48 + index}:00.000Z`);
-    measurement.id = index + 1;
-    measurement.value = value;
-    measurement.sensor = testSensorDAO;
-    measurementArray.push(measurement);
-  });
+  it("getMeasurementByNetwork with multiple measurements and outlier", async () => {
+    const measurementArray = [];
+    const measurements = [10, 12, 11, 13, 14, 15, 16, 12, 11, 50].map(
+      (value, index) => {
+        const measurement = new MeasurementDAO();
+        measurement.createdAt = new Date(`2025-05-20T14:${48 + index}:00.000Z`);
+        measurement.id = index + 1;
+        measurement.value = value;
+        measurement.sensor = testSensorDAO;
+        measurementArray.push(measurement);
+      }
+    );
 
     mockNetworkRepository.getNetworkByCode.mockResolvedValue(testNetworkDAO);
     mockSensorRepository.getSensorsByNetwork.mockResolvedValue([testSensorDAO]);
-    mockMeasurementRepository.getMeasurementByNetworkId.mockResolvedValue(measurementArray 
+    mockMeasurementRepository.getMeasurementByNetworkId.mockResolvedValue(
+      measurementArray
     );
 
     const result = await getMeasurementByNetworkId("NET01", {});
@@ -594,55 +593,55 @@ it("getMeasurementByNetwork with multiple measurements and outlier", async () =>
         },
         measurements: [
           {
-        createdAt: new Date("2025-05-20T14:48:00.000Z"),
-        value: 10,
-        isOutlier: false
-      },
-      {
-        createdAt: new Date("2025-05-20T14:49:00.000Z"),
-        value: 12,
-        isOutlier: false
-      },
-      {
-        createdAt: new Date("2025-05-20T14:50:00.000Z"),
-        value: 11,
-        isOutlier: false
-      },
-      {
-        createdAt: new Date("2025-05-20T14:51:00.000Z"),
-        value: 13,
-        isOutlier: false
-      },
-      {
-        createdAt: new Date("2025-05-20T14:52:00.000Z"),
-        value: 14,
-        isOutlier: false
-      },
-      {
-        createdAt: new Date("2025-05-20T14:53:00.000Z"),
-        value: 15,
-        isOutlier: false
-      },
-      {
-        createdAt: new Date("2025-05-20T14:54:00.000Z"),
-        value: 16,
-        isOutlier: false
-      },
-      {
-        createdAt: new Date("2025-05-20T14:55:00.000Z"),
-        value: 12,
-        isOutlier: false
-      },
-      {
-        createdAt: new Date("2025-05-20T14:56:00.000Z"),
-        value: 11,
-        isOutlier: false
-      },
-      {
-        createdAt: new Date("2025-05-20T14:57:00.000Z"),
-        value: 50,
-        isOutlier: true   //outlier
-      }
+            createdAt: new Date("2025-05-20T14:48:00.000Z"),
+            value: 10,
+            isOutlier: false,
+          },
+          {
+            createdAt: new Date("2025-05-20T14:49:00.000Z"),
+            value: 12,
+            isOutlier: false,
+          },
+          {
+            createdAt: new Date("2025-05-20T14:50:00.000Z"),
+            value: 11,
+            isOutlier: false,
+          },
+          {
+            createdAt: new Date("2025-05-20T14:51:00.000Z"),
+            value: 13,
+            isOutlier: false,
+          },
+          {
+            createdAt: new Date("2025-05-20T14:52:00.000Z"),
+            value: 14,
+            isOutlier: false,
+          },
+          {
+            createdAt: new Date("2025-05-20T14:53:00.000Z"),
+            value: 15,
+            isOutlier: false,
+          },
+          {
+            createdAt: new Date("2025-05-20T14:54:00.000Z"),
+            value: 16,
+            isOutlier: false,
+          },
+          {
+            createdAt: new Date("2025-05-20T14:55:00.000Z"),
+            value: 12,
+            isOutlier: false,
+          },
+          {
+            createdAt: new Date("2025-05-20T14:56:00.000Z"),
+            value: 11,
+            isOutlier: false,
+          },
+          {
+            createdAt: new Date("2025-05-20T14:57:00.000Z"),
+            value: 50,
+            isOutlier: true, //outlier
+          },
         ],
       },
     ]);
@@ -654,53 +653,53 @@ it("getMeasurementByNetwork with multiple measurements and outlier", async () =>
       {
         createdAt: new Date("2025-05-20T14:48:00.000Z"),
         value: 10,
-        isOutlier: false
+        isOutlier: false,
       },
       {
         createdAt: new Date("2025-05-20T14:49:00.000Z"),
         value: 12,
-        isOutlier: false
+        isOutlier: false,
       },
       {
         createdAt: new Date("2025-05-20T14:50:00.000Z"),
         value: 11,
-        isOutlier: false
+        isOutlier: false,
       },
       {
         createdAt: new Date("2025-05-20T14:51:00.000Z"),
         value: 13,
-        isOutlier: false
+        isOutlier: false,
       },
       {
         createdAt: new Date("2025-05-20T14:52:00.000Z"),
         value: 14,
-        isOutlier: false
+        isOutlier: false,
       },
       {
         createdAt: new Date("2025-05-20T14:53:00.000Z"),
         value: 15,
-        isOutlier: false
+        isOutlier: false,
       },
       {
         createdAt: new Date("2025-05-20T14:54:00.000Z"),
         value: 16,
-        isOutlier: false
+        isOutlier: false,
       },
       {
         createdAt: new Date("2025-05-20T14:55:00.000Z"),
         value: 12,
-        isOutlier: false
+        isOutlier: false,
       },
       {
         createdAt: new Date("2025-05-20T14:56:00.000Z"),
         value: 11,
-        isOutlier: false
+        isOutlier: false,
       },
       {
         createdAt: new Date("2025-05-20T14:57:00.000Z"),
         value: 50,
-        isOutlier: true   //DA RIVEDERE
-      }
+        isOutlier: true, //DA RIVEDERE
+      },
     ];
 
     expect(computeStats).toHaveBeenCalledWith(measurementDTOs);
@@ -708,8 +707,8 @@ it("getMeasurementByNetwork with multiple measurements and outlier", async () =>
     const statsDTO: Stats = {
       mean: 16.4,
       variance: 128.64,
-          upperThreshold: 39.08391500601252,
-          lowerThreshold: -6.283915006012521,
+      upperThreshold: 39.08391500601252,
+      lowerThreshold: -6.283915006012521,
     };
 
     expect(createMeasurementsDTO).toHaveBeenCalledWith(
@@ -743,26 +742,28 @@ it("getMeasurementByNetwork with multiple measurements and outlier", async () =>
       startDate: undefined,
       endDate: undefined,
     };
-    const result = await getMeasurementBySensorId("NET01", "gw1", "mac1", query);
-    expect(result).toEqual(
-      {
-        sensorMacAddress: "mac1",
-        stats: {
-          mean: 5,
-          variance: 0,
-          upperThreshold: 5,
-          lowerThreshold: 5,
-          
-        },
-        measurements: [
-          {
-            createdAt: new Date("2025-05-20T14:48:00.000Z"),
-            value: 5,
-            isOutlier: false,
-          },
-        ],
-      },
+    const result = await getMeasurementBySensorId(
+      "NET01",
+      "gw1",
+      "mac1",
+      query
     );
+    expect(result).toEqual({
+      sensorMacAddress: "mac1",
+      stats: {
+        mean: 5,
+        variance: 0,
+        upperThreshold: 5,
+        lowerThreshold: 5,
+      },
+      measurements: [
+        {
+          createdAt: new Date("2025-05-20T14:48:00.000Z"),
+          value: 5,
+          isOutlier: false,
+        },
+      ],
+    });
 
     expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
       1,
@@ -775,7 +776,11 @@ it("getMeasurementByNetwork with multiple measurements and outlier", async () =>
 
     // Verifica che viene controllata l'esistenza del sensore/gateway/network
     const sensorRepo = new SensorRepository();
-    expect(sensorRepo.getSensorByMac).toHaveBeenCalledWith("NET01", "gw1", "mac1");
+    expect(sensorRepo.getSensorByMac).toHaveBeenCalledWith(
+      "NET01",
+      "gw1",
+      "mac1"
+    );
 
     // Verifica che la funzione sia stata chiamata con i parametri corretti
     const measurementRepo = new MeasurementRepository();
@@ -813,9 +818,379 @@ it("getMeasurementByNetwork with multiple measurements and outlier", async () =>
       stats: statsDTO,
       measurements: [measurementDTO],
     };
-    
+
     expect(setOUtliers).toHaveBeenCalledWith(measurementsDTO);
   });
+
+  it("getMeasurementBySensor with only endDate ", async () => {
+    mockSensorRepository.getSensorByMac.mockResolvedValue(testSensorDAO);
+    mockMeasurementRepository.getMeasurementBySensorMac.mockResolvedValue([
+      testMeasurement,
+    ]);
+
+    const query = {
+      startDate: undefined,
+      endDate: "2025-05-20T14:50:00.000Z",
+    };
+    const result = await getMeasurementBySensorId(
+      "NET01",
+      "gw1",
+      "mac1",
+      query
+    );
+    expect(result).toEqual({
+      sensorMacAddress: "mac1",
+      stats: {
+        mean: 5,
+        variance: 0,
+        upperThreshold: 5,
+        lowerThreshold: 5,
+      },
+      measurements: [
+        {
+          createdAt: new Date("2025-05-20T14:48:00.000Z"),
+          value: 5,
+          isOutlier: false,
+        },
+      ],
+    });
+
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      1,
+      query.startDate
+    );
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      2,
+      query.endDate
+    );
+
+    // Verifica che viene controllata l'esistenza del sensore/gateway/network
+    const sensorRepo = new SensorRepository();
+    expect(sensorRepo.getSensorByMac).toHaveBeenCalledWith(
+      "NET01",
+      "gw1",
+      "mac1"
+    );
+
+    // Verifica che la funzione sia stata chiamata con i parametri corretti
+    const measurementRepo = new MeasurementRepository();
+    expect(measurementRepo.getMeasurementBySensorMac).toHaveBeenCalledWith(
+      "NET01",
+      "gw1",
+      "mac1",
+      undefined,
+      new Date("2025-05-20T14:50:00.000Z")
+    );
+
+    const measurementDTO: Measurement = {
+      createdAt: new Date("2025-05-20T14:48:00.000Z"),
+      isOutlier: false,
+      value: 5,
+    };
+
+    expect(computeStats).toHaveBeenCalledWith([measurementDTO]);
+
+    const statsDTO: Stats = {
+      mean: 5,
+      variance: 0,
+      upperThreshold: 5,
+      lowerThreshold: 5,
+    };
+
+    expect(createMeasurementsDTO).toHaveBeenCalledWith(
+      testSensorDAO.macAddress,
+      statsDTO,
+      [measurementDTO]
+    );
+
+    const measurementsDTO: Measurements = {
+      sensorMacAddress: testSensorDAO.macAddress,
+      stats: statsDTO,
+      measurements: [measurementDTO],
+    };
+
+    expect(setOUtliers).toHaveBeenCalledWith(measurementsDTO);
+  });
+
+  it("getMeasurementBySensor with startDate and endDate ", async () => {
+    mockSensorRepository.getSensorByMac.mockResolvedValue(testSensorDAO);
+    mockMeasurementRepository.getMeasurementBySensorMac.mockResolvedValue([
+      testMeasurement,
+    ]);
+
+    const query = {
+      startDate: "2025-05-20T14:40:00.000Z",
+      endDate: "2025-05-20T14:50:00.000Z",
+    };
+    const result = await getMeasurementBySensorId(
+      "NET01",
+      "gw1",
+      "mac1",
+      query
+    );
+    expect(result).toEqual({
+      sensorMacAddress: "mac1",
+      stats: {
+        mean: 5,
+        variance: 0,
+        upperThreshold: 5,
+        lowerThreshold: 5,
+      },
+      measurements: [
+        {
+          createdAt: new Date("2025-05-20T14:48:00.000Z"),
+          value: 5,
+          isOutlier: false,
+        },
+      ],
+    });
+
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      1,
+      query.startDate
+    );
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      2,
+      query.endDate
+    );
+
+    // Verifica che viene controllata l'esistenza del sensore/gateway/network
+    const sensorRepo = new SensorRepository();
+    expect(sensorRepo.getSensorByMac).toHaveBeenCalledWith(
+      "NET01",
+      "gw1",
+      "mac1"
+    );
+
+    // Verifica che la funzione sia stata chiamata con i parametri corretti
+    const measurementRepo = new MeasurementRepository();
+    expect(measurementRepo.getMeasurementBySensorMac).toHaveBeenCalledWith(
+      "NET01",
+      "gw1",
+      "mac1",
+      new Date("2025-05-20T14:40:00.000Z"),
+      new Date("2025-05-20T14:50:00.000Z")
+    );
+
+    const measurementDTO: Measurement = {
+      createdAt: new Date("2025-05-20T14:48:00.000Z"),
+      isOutlier: false,
+      value: 5,
+    };
+
+    expect(computeStats).toHaveBeenCalledWith([measurementDTO]);
+
+    const statsDTO: Stats = {
+      mean: 5,
+      variance: 0,
+      upperThreshold: 5,
+      lowerThreshold: 5,
+    };
+
+    expect(createMeasurementsDTO).toHaveBeenCalledWith(
+      testSensorDAO.macAddress,
+      statsDTO,
+      [measurementDTO]
+    );
+
+    const measurementsDTO: Measurements = {
+      sensorMacAddress: testSensorDAO.macAddress,
+      stats: statsDTO,
+      measurements: [measurementDTO],
+    };
+
+    expect(setOUtliers).toHaveBeenCalledWith(measurementsDTO);
+  });
+
+  it("getMeasurementBySensor with endDate before startDate: empty array ", async () => {
+    mockSensorRepository.getSensorByMac.mockResolvedValue(testSensorDAO);
+    mockMeasurementRepository.getMeasurementBySensorMac.mockResolvedValue([]);
+
+    const query = {
+      startDate: "2025-05-20T14:50:00.000Z",
+      endDate: "2025-05-20T14:40:00.000Z",
+    };
+    const result = await getMeasurementBySensorId(
+      "NET01",
+      "gw1",
+      "mac1",
+      query
+    );
+    expect(result).toEqual({
+      sensorMacAddress: "mac1",
+    });
+
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      1,
+      query.startDate
+    );
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      2,
+      query.endDate
+    );
+
+    // Verifica che viene controllata l'esistenza del sensore/gateway/network
+    const sensorRepo = new SensorRepository();
+    expect(sensorRepo.getSensorByMac).toHaveBeenCalledWith(
+      "NET01",
+      "gw1",
+      "mac1"
+    );
+
+    // Verifica che la funzione sia stata chiamata con i parametri corretti
+    const measurementRepo = new MeasurementRepository();
+    expect(measurementRepo.getMeasurementBySensorMac).toHaveBeenCalledWith(
+      "NET01",
+      "gw1",
+      "mac1",
+      new Date("2025-05-20T14:50:00.000Z"),
+      new Date("2025-05-20T14:40:00.000Z")
+    );
+
+    expect(computeStats).not.toHaveBeenCalled();
+
+    expect(createMeasurementsDTO).toHaveBeenCalledWith(
+      testSensorDAO.macAddress,
+      undefined,
+      undefined
+    );
+
+    const measurementsDTO: Measurements = {
+      sensorMacAddress: testSensorDAO.macAddress,
+    };
+
+    expect(setOUtliers).toHaveBeenCalledWith(measurementsDTO);
+  });
+
+  it("getMeasurementBySensor with invalid sensor/gateway/network ", async () => {
+    mockSensorRepository.getSensorByMac.mockRejectedValue(
+      new NotFoundError("")
+    );
+
+    const query = {
+      startDate: undefined,
+      endDate: undefined,
+    };
+
+    await expect(
+      getMeasurementBySensorId("NET01", "gw1", "INVALID", query)
+    ).rejects.toThrow(NotFoundError);
+
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      1,
+      query.startDate
+    );
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      2,
+      query.endDate
+    );
+
+    // Verifica che viene controllata l'esistenza del sensore/gateway/network
+    const sensorRepo = new SensorRepository();
+    expect(sensorRepo.getSensorByMac).toHaveBeenCalledWith(
+      "NET01",
+      "gw1",
+      "INVALID"
+    );
+
+    // Verifica che la funzione sia stata chiamata con i parametri corretti
+    const measurementRepo = new MeasurementRepository();
+    expect(measurementRepo.getMeasurementBySensorMac).not.toHaveBeenCalled();
+  });
+
+  /*
+
+  GETSTATSBYNETWORK
+
+  */
+
+  it("getStatsByNetworkId without query", async () => {
+    mockNetworkRepository.getNetworkByCode.mockResolvedValue(testNetworkDAO);
+    mockSensorRepository.getSensorsByNetwork.mockResolvedValue([testSensorDAO]);
+    mockMeasurementRepository.getMeasurementByNetworkId.mockResolvedValue([
+      testMeasurement,
+    ]);
+
+    const query = {
+      startDate: undefined,
+      endDate: undefined,
+    };
+    const result = await getMeasurementByNetworkId("NET01", query);
+    expect(result).toEqual([
+      {
+        sensorMacAddress: "mac1",
+        stats: {
+          mean: 5,
+          variance: 0,
+          upperThreshold: 5,
+          lowerThreshold: 5,
+        },
+        measurements: [
+          {
+            createdAt: new Date("2025-05-20T14:48:00.000Z"),
+            value: 5,
+            isOutlier: false,
+          },
+        ],
+      },
+    ]);
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      1,
+      query.startDate
+    );
+    expect(utils.parseISODateParamToUTC).toHaveBeenNthCalledWith(
+      2,
+      query.endDate
+    );
+
+    // Verifica che i sensori siano stati cercati (caso senza sensorArray)
+    const sensorRepo = new SensorRepository();
+    expect(sensorRepo.getSensorsByNetwork).toHaveBeenCalledWith("NET01");
+
+    // Verifica che la funzione sia stata chiamata con i parametri corretti
+    const measurementRepo = new MeasurementRepository();
+    expect(measurementRepo.getMeasurementByNetworkId).toHaveBeenCalledWith(
+      "NET01",
+      [testSensorDAO.macAddress],
+      undefined,
+      undefined
+    );
+
+    expect(groupMeasurementBySensor).toHaveBeenCalledWith([testMeasurement]);
+
+    const measurementDTO: Measurement = {
+      createdAt: new Date("2025-05-20T14:48:00.000Z"),
+      isOutlier: false,
+      value: 5,
+    };
+
+    expect(computeStats).toHaveBeenCalledWith([measurementDTO]);
+
+    const statsDTO: Stats = {
+      mean: 5,
+      variance: 0,
+      upperThreshold: 5,
+      lowerThreshold: 5,
+    };
+
+    expect(createMeasurementsDTO).toHaveBeenCalledWith(
+      testSensorDAO.macAddress,
+      statsDTO,
+      [measurementDTO]
+    );
+
+    const measurementsDTO: Measurements = {
+      sensorMacAddress: testSensorDAO.macAddress,
+      stats: statsDTO,
+      measurements: [measurementDTO],
+    };
+    //expect(createMeasurementsDTO).toHaveReturned();
+    expect(setOUtliers).toHaveBeenCalledWith(measurementsDTO);
+  });
+
+
+
+
 
 
 });
