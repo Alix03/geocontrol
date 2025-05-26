@@ -337,6 +337,117 @@ describe("UserController integration", () => {
     
   });
 
+  describe("Integrazione con mapperService", () => {
+    it("Integrazione con mapUserDAOToDTO per diversi tipi di user", async () => {
+      // Arrange
+      const adminDAO: UserDAO = {
+        username: "admin",
+        password: "secret",
+        type: UserType.Admin
+      };
+
+      const operatorDAO: UserDAO = {
+        username: "operator", 
+        password: "secret",
+        type: UserType.Operator
+      };
+
+      const viewerDAO: UserDAO = {
+        username: "viewer",
+        password: "secret", 
+        type: UserType.Viewer
+      };
+
+      // Test Admin mapping
+      mockUserRepository.getUserByUsername.mockResolvedValueOnce(adminDAO);
+      const adminResult = await userController.getUser("admin");
+      expect(adminResult).toEqual({ username: "admin", type: UserType.Admin });
+
+      // Test Operator mapping
+      mockUserRepository.getUserByUsername.mockResolvedValueOnce(operatorDAO);
+      const operatorResult = await userController.getUser("operator");
+      expect(operatorResult).toEqual({ username: "operator", type: UserType.Operator });
+
+      // Test Viewer mapping
+      mockUserRepository.getUserByUsername.mockResolvedValueOnce(viewerDAO);
+      const viewerResult = await userController.getUser("viewer");
+      expect(viewerResult).toEqual({ username: "viewer", type: UserType.Viewer });
+
+      // Verifica che le password non siano presenti nei risultati
+      [adminResult, operatorResult, viewerResult].forEach(result => {
+        expect(result).not.toHaveProperty("password");
+      });
+    });
+
+    it("Il mapping dei dati tra getAllUsers e getUser è consistente", async () => {
+      // Arrange
+      const usersDAO: UserDAO[] = [
+        { username: "user1", password: "pass1", type: UserType.Admin },
+        { username: "user2", password: "pass2", type: UserType.Operator }
+      ];
+
+      mockUserRepository.getAllUsers.mockResolvedValue(usersDAO);
+      mockUserRepository.getUserByUsername
+        .mockResolvedValueOnce(usersDAO[0])
+        .mockResolvedValueOnce(usersDAO[1]);
+
+      
+      const allUsers = await userController.getAllUsers();
+      const user1 = await userController.getUser("user1");
+      const user2 = await userController.getUser("user2");
+
+      
+      expect(allUsers[0]).toEqual(user1);
+      expect(allUsers[1]).toEqual(user2);
+    });
+  });
+
+  describe("Gestione degli errori e casi limite", () => {
+    it("Gestione corretta dei caratteri speciali nell'username", async () => {
+      
+      const specialUsername = "user@domain.com";
+      const userDAO: UserDAO = {
+        username: specialUsername,
+        password: "password",
+        type: UserType.Operator
+      };
+
+      mockUserRepository.getUserByUsername.mockResolvedValue(userDAO);
+
+      
+      const result = await userController.getUser(specialUsername);
+
+      expect(result.username).toBe(specialUsername);
+      expect(mockUserRepository.getUserByUsername).toHaveBeenCalledWith(specialUsername);
+    });
+
+    it("Gestione di username lunghi", async () => {
+      // Arrange
+      const longUsername = "a".repeat(100);
+      const userDAO: UserDAO = {
+        username: longUsername,
+        password: "password",
+        type: UserType.Viewer
+      };
+
+      mockUserRepository.getUserByUsername.mockResolvedValue(userDAO);
+
+      // Act
+      const result = await userController.getUser(longUsername);
+
+      // Assert
+      expect(result.username).toBe(longUsername);
+    });
+
+    it("should handle repository returning null/undefined gracefully", async () => {
+      // Arrange
+      mockUserRepository.getUserByUsername.mockResolvedValue(null as any);
+
+      // Act & Assert
+      await expect(userController.getUser("test")).rejects.toThrow();
+    });
+  });
+
 
 
   it("get User: mapperService integration", async () => {
