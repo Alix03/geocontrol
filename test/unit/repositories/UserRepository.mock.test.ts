@@ -198,7 +198,14 @@ describe("UserRepository: mocked database", () => {
     });
 
 
+    it("username con stringa vuota", async () => {
+      mockFind.mockResolvedValue([]);
 
+      await expect(repo.getUserByUsername("")).rejects.toThrow(NotFoundError);
+      expect(mockFind).toHaveBeenCalledWith({ where: { username: "" } });
+    });
+
+    
 
 
 
