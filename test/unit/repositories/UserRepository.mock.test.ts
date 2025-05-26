@@ -330,4 +330,12 @@ describe("UserRepository: mocked database", () => {
       expect(mockRemove).toHaveBeenCalledWith(viewerUser);
     });
 
+    it("NotFoundError: delete user non esistente", async () => {
+      mockFind.mockResolvedValue([]);
+
+      await expect(repo.deleteUser("ghost")).rejects.toThrow(
+        "User with username 'ghost' not found"
+      );
+    });
+
 });
