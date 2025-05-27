@@ -1,12 +1,12 @@
 import * as networkController from "@controllers/networkController";
 import { GatewayDAO } from "@models/dao/GatewayDAO";
+import { MeasurementDAO } from "@models/dao/MeasurementDAO";
 import { NetworkDAO } from "@models/dao/NetworkDAO";
 import { SensorDAO } from "@models/dao/SensorDAO";
 import { Network as NetworkDTO } from "@models/dto/Network";
 import { ConflictError } from "@models/errors/ConflictError";
 import { NotFoundError } from "@models/errors/NotFoundError";
 import { NetworkRepository } from "@repositories/NetworkRepository";
-import { Not } from "typeorm";
 
 jest.mock("@repositories/NetworkRepository");
 
@@ -98,7 +98,6 @@ describe("NetworkController integration", () =>{
         });
 
         it("Get all networks: ok, tre networks", async () =>{
-
             let fakeSensor : SensorDAO = {
                 id: 1,
                 gateway: {} as GatewayDAO,
@@ -107,7 +106,12 @@ describe("NetworkController integration", () =>{
                 description: "first sensor",
                 variable: "Temperature",
                 unit: "K",
-                measurements: [],
+                measurements: [{
+                    id: 1,
+                    createdAt: new Date("2025-01-16T17:25:00+01:00"),
+                    value: 5,
+                    sensor: this,
+                }],
             };
 
             let fakeGateway1 : GatewayDAO = {
@@ -177,6 +181,7 @@ describe("NetworkController integration", () =>{
                 }]
             });
             expect(res[0]).not.toHaveProperty("id");
+            expect(res[0].gateways[0]).not.toHaveProperty("measurements");
             expect(res[1]).toMatchObject({
                 code: "NET02",
                 description: "second network",
