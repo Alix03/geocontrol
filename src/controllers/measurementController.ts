@@ -106,7 +106,7 @@ export async function getMeasurementBySensorId(
       sensorMac,
       startDate,
       endDate
-    )) || [];
+    )) ;
   // Calcola le statistiche 
   const mappedMeasurement = measurementArray.map(mapMeasurementDAOToDTO);
   const sensorMeasurements = createMeasurementsDTO(
@@ -198,7 +198,7 @@ export async function getStatsBySensorId(
       sensorMac,
       startDate,
       endDate
-    )) || [];
+    )) ;
   // Calcola le statistiche per ogni gruppo di sensori
   const mappedMeasurement = measurementArray.map(mapMeasurementDAOToDTO);
   const stats: StatsDTO =
@@ -218,7 +218,6 @@ export async function getOutliersByNetworkId(
   networkCode: string,
   query: any
 ): Promise<MeasurementsDTO[]> {
-  const measurementRepo = new MeasurementRepository();
 
   const measurements = await getMeasurementsByNetworkId(networkCode, query);
   const measurementsDTO: MeasurementsDTO[] = [];
@@ -226,7 +225,6 @@ export async function getOutliersByNetworkId(
   let outliers: MeasurementDTO[];
   measurements.forEach((x) => {
     const measurement = x.measurements;
-    setOUtliers(x);   //ridondante
 
     if (measurement && measurement.length > 0) {
       outliers = measurement.filter(
@@ -258,7 +256,6 @@ export async function getOutliersBySensorId(
     sensorMac,
     query
   );
-  setOUtliers(measurements);
 
   const measurementsDTO = createMeasurementsDTO(
     measurements.sensorMacAddress,
@@ -278,16 +275,6 @@ export async function createMeasurement(
   sensorMac: string,
   measurements: MeasurementDTO[]
 ): Promise<void> {
-  //verifico i campi obbligatori
-  if (
-    !networkCode ||
-    !gatewayMac ||
-    !sensorMac ||
-    !measurements ||
-    measurements.length === 0
-  ) {
-    throw new Error("Entity Not Found: Missing required parameters");
-  }
 
   const measurementRepo = new MeasurementRepository();
 
