@@ -64,7 +64,7 @@ export async function getMeasurementByNetworkId(
   );
 
   // Raggruppa le misurazioni per sensore
-  const groupedMeasurements = groupMeasurementBySensor(measurementArray);
+  const groupedMeasurements =  groupMeasurementBySensor(measurementArray);
   // Calcola le statistiche per ogni gruppo di sensori
   const measurements: MeasurementsDTO[] = [];
 
@@ -126,9 +126,10 @@ export async function getStatsByNetworkId(
   query: any
 ): Promise<MeasurementsDTO[]> {
   const measurementRepo = new MeasurementRepository();
+  const networkRepo = new NetworkRepository();
   const sensorRepo = new SensorRepository();
   // Check se esiste il network
-  sensorRepo.getSensorsByNetwork(networkCode);
+  networkRepo.getNetworkByCode(networkCode);
   const startDate = parseISODateParamToUTC(query.startDate);
   const endDate = parseISODateParamToUTC(query.endDate);
 
@@ -209,7 +210,6 @@ export async function getStatsBySensorId(
           lowerThreshold: 0,
         };
 
-  // Converti in JSON e restituisci
   return stats;
 }
 
