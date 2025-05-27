@@ -2,6 +2,7 @@ import request from "supertest";
 import { app } from "@app";
 import { generateToken } from "@services/authService";
 import { beforeAllE2e, afterAllE2e, TEST_USERS } from "@test/e2e/lifecycle";
+import { UserType } from "@models/UserType";
 
 describe("GET /users (e2e)", () => {
   
@@ -96,6 +97,200 @@ describe("GET /users (e2e)", () => {
     });
   });
 
+
+
+  // Create User
+  describe("POST /users", () => {
+    const testUser = {
+      username: "testuser",
+      password: "testpass123",
+      type: UserType.Viewer
+    };
+
+    afterEach(async () => {
+      // Cleanup: delete test user if it exists
+      try {
+        await request(app)
+          .delete(`/api/v1/users/${testUser.username}`)
+          .set("Authorization", `Bearer ${adminToken}`);
+      } catch (error) {
+        // Ignore error if user doesn't exist
+      }
+    });
+
+    it("Create user: success (admin user)", async () => {
+      const res = await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(testUser);
+
+      expect(res.status).toBe(201);
+
+      // Verify user was created by getting it
+      const getRes = await request(app)
+        .get(`/api/v1/users/${testUser.username}`)
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(getRes.status).toBe(200);
+      expect(getRes.body.username).toBe(testUser.username);
+      expect(getRes.body.type).toBe(testUser.type);
+      expect(getRes.body.password).toBeUndefined();
+    });
+
+    it("Create user: 403 InsufficientRightsError (operator user prova a creare un user) ", async () => {
+      const res = await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${operatorToken}`)
+        .send(testUser);
+
+      expect(res.status).toBe(403);
+      expect(res.body.code).toBe(403);
+      expect(res.body.name).toBe("InsufficientRightsError");
+    });
+
+    it("Create user: 403 InsufficientRightsError (viewer user prova a creare un user)", async () => {
+      const res = await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${viewerToken}`)
+        .send(testUser);
+
+      expect(res.status).toBe(403);
+      expect(res.body.code).toBe(403);
+      expect(res.body.name).toBe("InsufficientRightsError");
+    });
+
+    it("Create user: 401 UnauthorizedError (token non presente)", async () => {
+      const res = await request(app).post("/api/v1/users").send(testUser);
+
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe(401);
+      expect(res.body.name).toBe("UnauthorizedError");
+    });
+
+    it("Create user: 409 ConflictError (username già esistente)", async () => {
+      // First create the user
+      await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(testUser);
+
+      // Try to create again with same username
+      const res = await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(testUser);
+
+      expect(res.status).toBe(409);
+      expect(res.body.code).toBe(409);
+      expect(res.body.name).toBe("ConflictError");
+    });
+
+    it("Create user: 400 BadRequest (username mancante)", async () => {
+      const invalidUser = {
+        password: "testpass123",
+        type: UserType.Viewer
+      };
+
+      const res = await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(invalidUser);
+
+      expect(res.status).toBe(400);
+      expect(res.body.code).toBe(400);
+    });
+
+    it("Create user: 400 BadRequest (password mancante)", async () => {
+      const invalidUser = {
+        username: "testuser",
+        type: UserType.Viewer
+      };
+
+      const res = await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(invalidUser);
+
+      expect(res.status).toBe(400);
+      expect(res.body.code).toBe(400);
+    });
+
+    it("Create user: 400 BadRequest (type user mancante)", async () => {
+      const invalidUser = {
+        username: "testuser",
+        password: "testpass123"
+      };
+
+      const res = await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(invalidUser);
+
+      expect(res.status).toBe(400);
+      expect(res.body.code).toBe(400);
+    });
+
+    it("Create user: 400 BadRequest  (user type non valido)", async () => {
+      const invalidUser = {
+        username: "testuser",
+        password: "testpass123",
+        type: "invalidtype"
+      };
+
+      const res = await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(invalidUser);
+
+      expect(res.status).toBe(400);
+      expect(res.body.code).toBe(400);
+    });
+
+    it("Create user: success (crea user di tipo admin)", async () => {
+      const adminUser = {
+        username: "testadmin",
+        password: "testpass123",
+        type: UserType.Admin
+      };
+
+      const res = await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(adminUser);
+
+      expect(res.status).toBe(201);
+
+      // Cleanup
+      await request(app)
+        .delete(`/api/v1/users/${adminUser.username}`)
+        .set("Authorization", `Bearer ${adminToken}`);
+    });
+
+    it("Create user: success (crea user di tipo operator)", async () => {
+      const operatorUser = {
+        username: "testoperator",
+        password: "testpass123",
+        type: UserType.Operator
+      };
+
+      const res = await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(operatorUser);
+
+      expect(res.status).toBe(201);
+
+      // Cleanup
+      await request(app)
+        .delete(`/api/v1/users/${operatorUser.username}`)
+        .set("Authorization", `Bearer ${adminToken}`);
+    });
+  });
+
+
+
+  ///////
+
   it("get all users", async () => {
     const res = await request(app)
       .get("/api/v1/users")
@@ -110,4 +305,8 @@ describe("GET /users (e2e)", () => {
     expect(usernames).toEqual(["admin", "operator", "viewer"]);
     expect(types).toEqual(["admin", "operator", "viewer"]);
   });
+
+
+
+  
 });
