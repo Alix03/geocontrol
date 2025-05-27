@@ -34,7 +34,7 @@ export class SensorRepository {
     gatewayMac: string,
     macAddress: string
   ): Promise<SensorDAO> {
-    return findOrThrowNotFound(
+    const result = findOrThrowNotFound(
       await this.repo.find({
         where: {
           macAddress,
@@ -45,10 +45,13 @@ export class SensorRepository {
             },
           },
         },
+        relations: { gateway: { network: true } },
       }),
       () => true,
       `Sensor with MAC address '${macAddress}' not found`
     );
+
+    return result;
   }
 
   async createSensor(
@@ -93,12 +96,12 @@ export class SensorRepository {
   async updateSensor(
     networkCode: string,
     gatewayMac: string,
-    oldMacAddress: string,
-    macAddress?: string,
-    name?: string,
-    description?: string,
-    variable?: string,
-    unit?: string
+    oldMacAddress: string, //macAddress del sensore da modificare
+    newmacAddress?: string, //nuovo macAddress del sensore
+    newname?: string,
+    newdescription?: string,
+    newvariable?: string,
+    newunit?: string
   ): Promise<SensorDAO> {
     findOrThrowNotFound(
       await this.repo.find({ where: { macAddress: oldMacAddress } }),
@@ -111,28 +114,30 @@ export class SensorRepository {
       gatewayMac,
       oldMacAddress
     );
-    if (oldMacAddress != macAddress && macAddress !== undefined) {
+
+    if (oldMacAddress != newmacAddress && newmacAddress !== undefined) {
+      console.log("SIAMO QUA");
+
       const exists = await this.repo.findOne({
-        where: { macAddress: macAddress },
+        where: { macAddress: newmacAddress },
       });
       if (exists) {
+        console.log("SIAMO QUA");
         throw new ConflictError(
-          `Sensor with MAC Address '${macAddress}' already exists`
+          `Sensor with MAC Address '${newmacAddress}' already exists`
         );
       }
 
-      sensor.macAddress = macAddress;
+      sensor.macAddress = newmacAddress;
     }
+
     //se il nuovo macAddress non è presente nella richiesta di update rimane il macAddress vecchio
+    sensor.name = newname ?? sensor.name;
+    sensor.description = newdescription ?? sensor.description;
+    sensor.variable = newvariable ?? sensor.variable;
+    sensor.unit = newunit ?? sensor.unit;
 
-    Object.assign(sensor, {
-      ...(name !== undefined && { name }),
-      ...(description !== undefined && { description }),
-      ...(variable !== undefined && { variable }),
-      ...(unit !== undefined && { unit }),
-    });
-
-    return this.repo.save(sensor);
+    return await this.repo.save(sensor);
   }
 
   async getSensorsByNetwork(
