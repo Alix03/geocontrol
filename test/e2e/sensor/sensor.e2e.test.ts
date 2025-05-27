@@ -15,6 +15,22 @@ describe("Sensor API (e2e)", () => {
   const testSensorMac2 = "AA:BB:CC:DD:EE:KK";
   const nonExistentSensorMac = "99:99:99:99:99:99";
 
+  const sensorData = {
+    macAddress: testSensorMac,
+    name: "Test Sensor",
+    description: "Sensor for testing purposes",
+    variable: "temperature",
+    unit: "°C",
+  };
+
+  const sensor2Data = {
+    macAddress: testSensorMac2,
+    name: "Another Sensor",
+    description: "Sensor for testing purposes",
+    variable: "pressure",
+    unit: "Pa",
+  };
+
   beforeAll(async () => {
     await beforeAllE2e();
 
@@ -22,23 +38,9 @@ describe("Sensor API (e2e)", () => {
     adminToken = generateToken(TEST_USERS.admin);
     operatorToken = generateToken(TEST_USERS.operator);
     viewerToken = generateToken(TEST_USERS.viewer);
+  });
 
-    const sensorData = {
-      macAddress: testSensorMac,
-      name: "Test Sensor",
-      description: "Sensor for testing purposes",
-      variable: "temperature",
-      unit: "°C",
-    };
-
-    const sensor2Data = {
-      macAddress: testSensorMac2,
-      name: "Another Sensor",
-      description: "Sensor for testing purposes",
-      variable: "pressure",
-      unit: "Pa",
-    };
-
+  beforeEach(async () => {
     // Create test network, gateway and sensor
     await request(app)
       .post("/api/v1/networks")
@@ -80,6 +82,23 @@ describe("Sensor API (e2e)", () => {
       )
       .set("Authorization", `Bearer ${adminToken}`)
       .send(sensor2Data);
+  });
+  afterEach(async () => {
+    // Cleanup: Delete test network and gateways
+    // Elimina rete, gateway e sensore dopo ogni test
+    await request(app)
+      .delete(
+        `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors/${testSensorMac}`
+      )
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    await request(app)
+      .delete(`/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}`)
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    await request(app)
+      .delete(`/api/v1/networks/${testNetworkCode}`)
+      .set("Authorization", `Bearer ${adminToken}`);
   });
 
   afterAll(async () => {
@@ -341,24 +360,6 @@ describe("Sensor API (e2e)", () => {
 
   // GET specific sensor
   describe("GET /networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}", () => {
-    beforeEach(async () => {
-      // Crea un sensore per il test
-      const sensorData = {
-        macAddress: testSensorMac,
-        name: "Test Sensor",
-        description: "Sensor for testing purposes",
-        variable: "temperature",
-        unit: "°C",
-      };
-
-      await request(app)
-        .post(
-          `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
-        )
-        .set("Authorization", `Bearer ${adminToken}`)
-        .send(sensorData);
-    });
-
     describe("Casi di successo", () => {
       it("Ritorna un sensore specifico (admin user)", async () => {
         const res = await request(app)
@@ -420,24 +421,6 @@ describe("Sensor API (e2e)", () => {
 
   // DELETE sensor
   describe("DELETE /networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}", () => {
-    beforeEach(async () => {
-      // Crea un sensore per il test
-      const sensorData = {
-        macAddress: testSensorMac,
-        name: "Test Sensor",
-        description: "Sensor for testing purposes",
-        variable: "temperature",
-        unit: "°C",
-      };
-
-      await request(app)
-        .post(
-          `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
-        )
-        .set("Authorization", `Bearer ${adminToken}`)
-        .send(sensorData);
-    });
-
     describe("Casi di successo", () => {
       it("Elimina un sensore (admin user)", async () => {
         const res = await request(app)
@@ -487,27 +470,6 @@ describe("Sensor API (e2e)", () => {
 
   /// PATCH sensor
   describe("PATCH /networks/{networkCode}/gateways/{gatewayMac}/sensors/{sensorMac}", () => {
-    beforeAll(async () => {
-      // Crea un sensore per il test
-      const sensorData = {
-        macAddress: testSensorMac,
-        name: "Test Sensor",
-        description: "Sensor for testing purposes",
-        variable: "temperature",
-        unit: "°C",
-      };
-
-      await request(app)
-        .post(
-          `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
-        )
-        .set("Authorization", `Bearer ${adminToken}`)
-        .send(sensorData);
-    });
-    afterAll(async () => {
-      await afterAllE2e();
-    });
-
     describe("Casi di successo", () => {
       it("Aggiorna nome e descrizione di un sensore (admin user)", async () => {
         const updateData = {
@@ -648,7 +610,7 @@ describe("Sensor API (e2e)", () => {
 
       it("409 ConflictError: macAddress già in uso", async () => {
         const sensor2Data = {
-          macAddress: "11:22:33:44:55:65",
+          macAddress: testSensorMac2, // Stesso macAddress del sensore esistente
           name: "Another Sensor",
           description: "Sensor for testing purposes",
           variable: "pressure",
@@ -664,7 +626,7 @@ describe("Sensor API (e2e)", () => {
 
         const res = await request(app)
           .patch(
-            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors/${testSensorMac2}` // Stesso macAddress del sensore esistente
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors/${testSensorMac}` // Stesso macAddress del sensore esistente
           )
           .set("Authorization", `Bearer ${adminToken}`)
           .send(sensor2Data);
