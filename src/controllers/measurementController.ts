@@ -22,11 +22,10 @@ import { AppDataSource } from "@database";
 import { In } from "typeorm";
 import { NetworkRepository } from "@repositories/NetworkRepository";
 
-export async function getMeasurementByNetworkId(
+export async function getMeasurementsByNetworkId(
   networkCode: string,
   query: any
 ): Promise<MeasurementsDTO[]> {
-  console.log(query);
   const measurementRepo = new MeasurementRepository();
   const sensorRepo = new SensorRepository();
 
@@ -219,11 +218,11 @@ export async function getOutliersByNetworkId(
 ): Promise<MeasurementsDTO[]> {
   const measurementRepo = new MeasurementRepository();
 
-  const measurements = await getMeasurementByNetworkId(networkCode, query);
+  const measurements = await getMeasurementsByNetworkId(networkCode, query);
   const measurementsDTO: MeasurementsDTO[] = [];
   measurements.forEach((x) => {
     const measurement = x.measurements;
-    setOUtliers(x);
+    setOUtliers(x);   //ridondante
     const outliers = measurement.filter(
       (measurement) => measurement.isOutlier === true
     );
