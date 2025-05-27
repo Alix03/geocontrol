@@ -287,6 +287,90 @@ describe("GET /users (e2e)", () => {
     });
   });
 
+  // Get Specific User
+  describe("GET /users/{userName}", () => {
+    it("Get User: success", async () => {
+      const res = await request(app)
+        .get("/api/v1/users/admin")
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.username).toBe("admin");
+      expect(res.body.type).toBe("admin");
+      expect(res.body.password).toBeUndefined();
+    });
+
+    it("Get User: success", async () => {
+      const res = await request(app)
+        .get("/api/v1/users/operator")
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.username).toBe("operator");
+      expect(res.body.type).toBe("operator");
+      expect(res.body.password).toBeUndefined();
+    });
+
+    it("Get User: success success", async () => {
+      const res = await request(app)
+        .get("/api/v1/users/viewer")
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.username).toBe("viewer");
+      expect(res.body.type).toBe("viewer");
+      expect(res.body.password).toBeUndefined();
+    });
+
+    it("Get User: 404 NotFoundError (user inesistente)", async () => {
+      const res = await request(app)
+        .get("/api/v1/users/nonexistent")
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(res.status).toBe(404);
+      expect(res.body.code).toBe(404);
+      expect(res.body.name).toBe("NotFoundError");
+    });
+
+    it("Get User: 403 InsufficientRightsError (operator user)", async () => {
+      const res = await request(app)
+        .get("/api/v1/users/admin")
+        .set("Authorization", `Bearer ${operatorToken}`);
+
+      expect(res.status).toBe(403);
+      expect(res.body.code).toBe(403);
+      expect(res.body.name).toBe("InsufficientRightsError");
+    });
+
+    it("Get User: 403 InsufficientRightsError (viewer user)", async () => {
+      const res = await request(app)
+        .get("/api/v1/users/admin")
+        .set("Authorization", `Bearer ${viewerToken}`);
+
+      expect(res.status).toBe(403);
+      expect(res.body.code).toBe(403);
+      expect(res.body.name).toBe("InsufficientRightsError");
+    });
+
+    it("Get User: 401 UnauthorizedError (token assente)", async () => {
+      const res = await request(app).get("/api/v1/users/admin");
+
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe(401);
+      expect(res.body.name).toBe("UnauthorizedError");
+    });
+
+    it("Get User: 401 UnauthorizedError (toeken non valido)", async () => {
+      const res = await request(app)
+        .get("/api/v1/users/admin")
+        .set("Authorization", "Bearer invalid-token");
+
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe(401);
+      expect(res.body.name).toBe("UnauthorizedError");
+    });
+  });
+
 
 
   ///////
