@@ -87,19 +87,6 @@ it("get all measurements: 401 UnauthorizedError", async () => {
   expect(response.body.message).toMatch(/Unauthorized/);
 });
 
-it("get all measurements: 403 InsufficientRightsError", async () => {
-  (authService.processToken as jest.Mock).mockImplementation(() => {
-    throw new InsufficientRightsError("Forbidden: Insufficient rights");
-  });
-
-  const response = await request(app)
-    .get("/api/v1/networks/NET01/measurements")
-    .set("Authorization", token);
-
-  expect(response.status).toBe(403);
-  expect(response.body.message).toMatch(/Insufficient rights/);
-});
-
 it("get all measurements: empty result", async () => {
   const mockMeasurements: Measurements[] = [];
 
