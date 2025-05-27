@@ -206,13 +206,26 @@ describe("GatewayRepository: mocked database", () => {
 
     describe("Delete Gateway", () => {
       it("Delete Gateway: success", async () => {
-        const mac = "AA:BB:CC:DD:EE:FF";
-        mockGatewayDelete.mockResolvedValue({ affected: 1 });
+          const mac = "AA:BB:CC:DD:EE:FF";
+          const networkCode = "NET01";
 
-        await expect(repo.deleteGateway("NET01", mac)).resolves.toBeUndefined();
+          // Mock per getGatewayByMac (tramite mockGatewayFind)
+          const fakeGateway = new GatewayDAO();
+          fakeGateway.id = 1;
+          fakeGateway.macAddress = mac;
+          fakeGateway.network = { code: networkCode } as NetworkDAO;
 
-        expect(mockGatewayDelete).toHaveBeenCalledWith({ macAddress: mac });
-      });
+          mockGatewayFind.mockResolvedValueOnce([fakeGateway]);
+
+          // Mock per la delete
+          mockGatewayDelete.mockResolvedValue({ affected: 1 });
+
+          // Verifica che la delete funzioni
+          await expect(repo.deleteGateway(networkCode, mac)).resolves.toBeUndefined();
+
+          // Verifica che la delete sia stata chiamata correttamente
+          expect(mockGatewayDelete).toHaveBeenCalledWith({ macAddress: mac });
+          });
     });
 
     describe("Update Gateway", () => {
