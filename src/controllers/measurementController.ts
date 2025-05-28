@@ -71,7 +71,7 @@ export async function getMeasurementByNetworkId(
     const sensorMeasurements = createMeasurementsDTO(
       sensorMac,
       sensorMeasurement && sensorMeasurement.length > 0
-        ? computeStats(sensorMeasurement)
+        ? computeStats(sensorMeasurement, startDate, endDate)
         : undefined,
       sensorMeasurement && sensorMeasurement.length > 0 ? sensorMeasurement : [] // Array vuoto se non ci sono misurazioni
     );
@@ -105,14 +105,13 @@ export async function getMeasurementBySensorId(
       endDate
     )) || [];
   // Calcola le statistiche per ogni gruppo di sensori
-
-  const stats: StatsDTO = computeStats(measurementArray);
+  const mappedMeasurement = measurementArray.map(mapMeasurementDAOToDTO);
   const sensorMeasurements = createMeasurementsDTO(
     sensorMac,
-    measurementArray.length > 0 ? stats : undefined,
     measurementArray.length > 0
-      ? measurementArray.map(mapMeasurementDAOToDTO)
-      : undefined
+      ? computeStats(mappedMeasurement, startDate, endDate)
+      : undefined,
+    measurementArray.length > 0 ? mappedMeasurement : undefined
   );
 
   setOUtliers(sensorMeasurements);
@@ -179,11 +178,12 @@ export async function getStatsBySensorId(
   sensorMac: string,
   query: any
 ): Promise<StatsDTO> {
+  const sensorRepo = new SensorRepository();
   const measurementRepo = new MeasurementRepository();
   const startDate = parseISODateParamToUTC(query.startDate);
   const endDate = parseISODateParamToUTC(query.endDate);
   //check se esiste il sensore
-  await getSensor(networkCode, gatewayMac, sensorMac);
+  await sensorRepo.getSensorByMac(networkCode, gatewayMac, sensorMac);
 
   // Ottieni le misurazioni dal repository
   const measurementArray =
@@ -195,7 +195,16 @@ export async function getStatsBySensorId(
       endDate
     )) || [];
   // Calcola le statistiche per ogni gruppo di sensori
-  const stats: StatsDTO = computeStats(measurementArray, startDate, endDate);
+  const mappedMeasurement = measurementArray.map(mapMeasurementDAOToDTO);
+  const stats: StatsDTO =
+    measurementArray && measurementArray.length > 0
+      ? computeStats(mappedMeasurement, startDate, endDate)
+      : {
+          mean: 0,
+          variance: 0,
+          upperThreshold: 0,
+          lowerThreshold: 0,
+        };
 
   // Converti in JSON e restituisci
   return StatsToJSON(stats);
@@ -209,14 +218,23 @@ export async function getOutliersByNetworkId(
 
   const measurements = await getMeasurementByNetworkId(networkCode, query);
   const measurementsDTO: MeasurementsDTO[] = [];
+
+  let outliers: MeasurementDTO[];
   measurements.forEach((x) => {
     const measurement = x.measurements;
     setOUtliers(x);
-    const outliers = measurement.filter(
-      (measurement) => measurement.isOutlier === true
-    );
+
+    if (measurement && measurement.length > 0) {
+      outliers = measurement.filter(
+        (measurement) => measurement.isOutlier === true
+      );
+    }
     measurementsDTO.push(
-      createMeasurementsDTO(x.sensorMacAddress, x.stats, outliers)
+      createMeasurementsDTO(
+        x.sensorMacAddress,
+        measurement && measurement.length > 0 ? x.stats : undefined,
+        measurement && measurement.length > 0 ? outliers : undefined
+      )
     );
   });
   return measurementsDTO;
