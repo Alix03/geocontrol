@@ -372,6 +372,141 @@ describe("GET /users (e2e)", () => {
   });
 
 
+  // delete user
+  describe("DELETE /users/{userName}", () => {
+    let testUser: any;
+
+    beforeEach(async () => {
+      // Create a test user for deletion tests
+      testUser = {
+        username: `testuser_${Date.now()}`,
+        password: "testpass123",
+        type: UserType.Viewer
+      };
+
+      await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(testUser);
+    });
+
+    afterEach(async () => {
+      // Cleanup: try to delete test user if it still exists
+      try {
+        await request(app)
+          .delete(`/api/v1/users/${testUser.username}`)
+          .set("Authorization", `Bearer ${adminToken}`);
+      } catch (error) {
+        // Ignore error if user doesn't exist
+      }
+    });
+
+    it("Delete user: success", async () => {
+      const res = await request(app)
+        .delete(`/api/v1/users/${testUser.username}`)
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(res.status).toBe(204);
+      expect(res.body).toEqual({});
+
+      // Verify user was deleted
+      const getRes = await request(app)
+        .get(`/api/v1/users/${testUser.username}`)
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(getRes.status).toBe(404);
+    });
+
+    it("Delete user: 404 NotFoundError (user inesistente)", async () => {
+      const res = await request(app)
+        .delete("/api/v1/users/nonexistent")
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(res.status).toBe(404);
+      expect(res.body.code).toBe(404);
+      expect(res.body.name).toBe("NotFoundError");
+    });
+
+    it("Delete user: 403 InsufficientRightsError (operator prova ad eliminare un user)", async () => {
+      const res = await request(app)
+        .delete(`/api/v1/users/${testUser.username}`)
+        .set("Authorization", `Bearer ${operatorToken}`);
+
+      expect(res.status).toBe(403);
+      expect(res.body.code).toBe(403);
+      expect(res.body.name).toBe("InsufficientRightsError");
+    });
+
+    it("Delete user: 403 InsufficientRightsError (viewer prova ad eliminare un user)", async () => {
+      const res = await request(app)
+        .delete(`/api/v1/users/${testUser.username}`)
+        .set("Authorization", `Bearer ${viewerToken}`);
+
+      expect(res.status).toBe(403);
+      expect(res.body.code).toBe(403);
+      expect(res.body.name).toBe("InsufficientRightsError");
+    });
+
+    it("Delete user: 401 UnauthorizedError (token non presente)", async () => {
+      const res = await request(app).delete(`/api/v1/users/${testUser.username}`);
+
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe(401);
+      expect(res.body.name).toBe("UnauthorizedError");
+    });
+
+    it("Delete user: 401 UnauthorizedError (token non valido)", async () => {
+      const res = await request(app)
+        .delete(`/api/v1/users/${testUser.username}`)
+        .set("Authorization", "Bearer invalid-token");
+
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe(401);
+      expect(res.body.name).toBe("UnauthorizedError");
+    });
+
+    it("Delete user: success (admin elimina admin)", async () => {
+      // Create another admin user first
+      const adminUser = {
+        username: `testadmin_${Date.now()}`,
+        password: "testpass123",
+        type: UserType.Admin
+      };
+
+      await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(adminUser);
+
+      const res = await request(app)
+        .delete(`/api/v1/users/${adminUser.username}`)
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(res.status).toBe(204);
+    });
+
+    it("Delete user: success  (admin elimina operator)", async () => {
+      // Create an operator user first
+      const operatorUser = {
+        username: `testoperator_${Date.now()}`,
+        password: "testpass123",
+        type: UserType.Operator
+      };
+
+      await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(operatorUser);
+
+      const res = await request(app)
+        .delete(`/api/v1/users/${operatorUser.username}`)
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(res.status).toBe(204);
+    });
+  });
+
+
 
   ///////
 
