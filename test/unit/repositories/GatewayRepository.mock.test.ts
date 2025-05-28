@@ -4,12 +4,15 @@ import { GatewayDAO } from "@dao/GatewayDAO";
 import { NetworkDAO } from "@dao/NetworkDAO";
 import { ConflictError } from "@models/errors/ConflictError";
 import { NotFoundError } from "@models/errors/NotFoundError";
+import { mock } from "node:test";
 
 const mockGatewayFind = jest.fn();
 const mockGatewayFindOne = jest.fn();
 const mockGatewaySave = jest.fn();
 const mockGatewayDelete = jest.fn();
 const mockNetworkFind = jest.fn();
+const mockSensorFind = jest.fn();
+const mockSensorFindOne = jest.fn();
 
 jest.mock("@database", () => ({
   AppDataSource: {
@@ -25,6 +28,9 @@ jest.mock("@database", () => ({
       if ((dao as any).name === "NetworkDAO") {
         return { find: mockNetworkFind };
       }
+      if ((dao as any).name === "SensorDAO") {
+        return { find: mockSensorFind, findOne: mockSensorFindOne };
+      }
       return {};
     },
   },
@@ -38,8 +44,12 @@ describe("GatewayRepository: mocked database", () => {
   });
 
   describe("Create new Gateway", () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it("Create new Gateway: success", async () => {
       mockGatewayFind.mockResolvedValue([]);
+      mockSensorFind.mockResolvedValue([]);
       const network = new NetworkDAO();
       network.id = 10;
       network.code = "NET01";
@@ -84,9 +94,15 @@ describe("GatewayRepository: mocked database", () => {
       existing.name = "Gateway";
       existing.description = "Gateway già esistente";
       mockGatewayFind.mockResolvedValue([existing]);
+      mockSensorFind.mockResolvedValue([]);
 
       await expect(
-        repo.createGateway("NET01", "AA:BB:CC:DD:EE:FF", "Gateway", "Gateway già esistente")
+        repo.createGateway(
+          "NET01",
+          "AA:BB:CC:DD:EE:FF",
+          "Gateway",
+          "Gateway già esistente"
+        )
       ).rejects.toBeInstanceOf(ConflictError);
 
       expect(mockGatewaySave).not.toHaveBeenCalled();
@@ -98,7 +114,12 @@ describe("GatewayRepository: mocked database", () => {
       mockNetworkFind.mockResolvedValue([]);
 
       await expect(
-        repo.createGateway("INVALID_NET", "AA:BB:CC:DD:EE:11", "GW-NEW", "Gateway")
+        repo.createGateway(
+          "INVALID_NET",
+          "AA:BB:CC:DD:EE:11",
+          "GW-NEW",
+          "Gateway"
+        )
       ).rejects.toBeInstanceOf(NotFoundError);
 
       expect(mockGatewayFind).toHaveBeenCalledWith({
@@ -115,6 +136,7 @@ describe("GatewayRepository: mocked database", () => {
       existing.macAddress = "AA:BB:CC:DD:EE:FF";
       mockGatewayFind.mockResolvedValue([existing]);
       mockNetworkFind.mockResolvedValue([]);
+      mockSensorFind.mockResolvedValue([]);
 
       await expect(
         repo.createGateway("INVALID_NET", "AA:BB:CC:DD:EE:FF")
@@ -198,7 +220,9 @@ describe("GatewayRepository: mocked database", () => {
       it("Get Gateway By MacAddress: MacAddress inesistente", async () => {
         mockGatewayFind.mockResolvedValue([]);
 
-        await expect(repo.getGatewayByMac("NET01", "00:11:22:33:44:55")).rejects.toBeInstanceOf(NotFoundError);
+        await expect(
+          repo.getGatewayByMac("NET01", "00:11:22:33:44:55")
+        ).rejects.toBeInstanceOf(NotFoundError);
 
         expect(mockGatewayFind).toHaveBeenCalled();
       });
@@ -206,26 +230,28 @@ describe("GatewayRepository: mocked database", () => {
 
     describe("Delete Gateway", () => {
       it("Delete Gateway: success", async () => {
-          const mac = "AA:BB:CC:DD:EE:FF";
-          const networkCode = "NET01";
+        const mac = "AA:BB:CC:DD:EE:FF";
+        const networkCode = "NET01";
 
-          // Mock per getGatewayByMac (tramite mockGatewayFind)
-          const fakeGateway = new GatewayDAO();
-          fakeGateway.id = 1;
-          fakeGateway.macAddress = mac;
-          fakeGateway.network = { code: networkCode } as NetworkDAO;
+        // Mock per getGatewayByMac (tramite mockGatewayFind)
+        const fakeGateway = new GatewayDAO();
+        fakeGateway.id = 1;
+        fakeGateway.macAddress = mac;
+        fakeGateway.network = { code: networkCode } as NetworkDAO;
 
-          mockGatewayFind.mockResolvedValueOnce([fakeGateway]);
+        mockGatewayFind.mockResolvedValueOnce([fakeGateway]);
 
-          // Mock per la delete
-          mockGatewayDelete.mockResolvedValue({ affected: 1 });
+        // Mock per la delete
+        mockGatewayDelete.mockResolvedValue({ affected: 1 });
 
-          // Verifica che la delete funzioni
-          await expect(repo.deleteGateway(networkCode, mac)).resolves.toBeUndefined();
+        // Verifica che la delete funzioni
+        await expect(
+          repo.deleteGateway(networkCode, mac)
+        ).resolves.toBeUndefined();
 
-          // Verifica che la delete sia stata chiamata correttamente
-          expect(mockGatewayDelete).toHaveBeenCalledWith({ macAddress: mac });
-          });
+        // Verifica che la delete sia stata chiamata correttamente
+        expect(mockGatewayDelete).toHaveBeenCalledWith({ macAddress: mac });
+      });
     });
 
     describe("Update Gateway", () => {
@@ -250,9 +276,16 @@ describe("GatewayRepository: mocked database", () => {
 
         mockGatewayFind.mockResolvedValueOnce([original]);
         mockGatewayFindOne.mockResolvedValueOnce(undefined);
+        mockSensorFindOne.mockResolvedValue(undefined);
         mockGatewaySave.mockResolvedValueOnce(updated);
 
-        const result = await repo.updateGateway(netCode, oldMac, newMac, "GW-new", "new desc");
+        const result = await repo.updateGateway(
+          netCode,
+          oldMac,
+          newMac,
+          "GW-new",
+          "new desc"
+        );
 
         expect(mockGatewayFind).toHaveBeenCalledWith({
           where: { macAddress: oldMac, network: { code: netCode } },
@@ -274,12 +307,17 @@ describe("GatewayRepository: mocked database", () => {
           macAddress: oldMac,
           network: { code: netCode },
         });
-        const duplicate = Object.assign(new GatewayDAO(), { macAddress: newMac });
+        const duplicate = Object.assign(new GatewayDAO(), {
+          macAddress: newMac,
+        });
 
         mockGatewayFind.mockResolvedValueOnce([original]);
         mockGatewayFindOne.mockResolvedValueOnce(duplicate);
+         mockSensorFindOne.mockResolvedValue(undefined);
 
-        await expect(repo.updateGateway(netCode, oldMac, newMac, "GW-new")).rejects.toBeInstanceOf(ConflictError);
+        await expect(
+          repo.updateGateway(netCode, oldMac, newMac, "GW-new")
+        ).rejects.toBeInstanceOf(ConflictError);
 
         expect(mockGatewaySave).not.toHaveBeenCalled();
       });
