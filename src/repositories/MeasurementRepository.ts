@@ -42,23 +42,20 @@ export class MeasurementRepository {
   }
 
   async getMeasurementByNetworkId(
-    networkCode: string,
-    sensorMacs?: string[],
-    startDate?: Date,
-    endDate?: Date
-  ): Promise<MeasurementDAO[]> {
-    const whereClause: any = { sensor: {} };
+  networkCode: string,
+  sensorMacs?: string[],
+  startDate?: Date,
+  endDate?: Date
+): Promise<MeasurementDAO[]> {
+   const whereClause: any ={sensor:{ macAddress: In(sensorMacs)}};
 
-    if (startDate && endDate) {
-      whereClause.createdAt = Between(startDate, endDate);
-    } else if (startDate) {
-      whereClause.createdAt = MoreThanOrEqual(startDate);
-    } else if (endDate) {
-      whereClause.createdAt = LessThanOrEqual(endDate);
-    }
-
-    //aggiungo filtro per sensori prensenti nel paramentro in input
-    whereClause.sensor.macAddress = In(sensorMacs);
+  if (startDate && endDate) {
+    whereClause.createdAt = Between(startDate, endDate);
+  } else if (startDate) {
+    whereClause.createdAt = MoreThanOrEqual(startDate);
+  } else if (endDate) {
+    whereClause.createdAt = LessThanOrEqual(endDate);
+  }
 
     const measurements = await this.repo.find({
       where: whereClause,

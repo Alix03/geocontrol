@@ -20,16 +20,20 @@ import { Stats as StatsDTO, StatsToJSON } from "@models/dto/Stats";
 import { parseStringArrayParam, parseISODateParamToUTC } from "@utils";
 import { AppDataSource } from "@database";
 import { In } from "typeorm";
+import { NetworkRepository } from "@repositories/NetworkRepository";
+import { NotFoundError } from "@models/errors/NotFoundError";
+import { start } from "repl";
 
-export async function getMeasurementByNetworkId(
+export async function getMeasurementsByNetworkId(
   networkCode: string,
-  query?: any
+  query: any
 ): Promise<MeasurementsDTO[]> {
   const measurementRepo = new MeasurementRepository();
   const sensorRepo = new SensorRepository();
 
   // Check se esiste il network
-  await getNetwork(networkCode);
+  const networkRepo = new NetworkRepository();
+  await networkRepo.getNetworkByCode(networkCode);
 
   const startDate = parseISODateParamToUTC(query.startDate);
   const endDate = parseISODateParamToUTC(query.endDate);
@@ -61,7 +65,7 @@ export async function getMeasurementByNetworkId(
   );
 
   // Raggruppa le misurazioni per sensore
-  const groupedMeasurements = groupMeasurementBySensor(measurementArray);
+  const groupedMeasurements =  groupMeasurementBySensor(measurementArray);
   // Calcola le statistiche per ogni gruppo di sensori
   const measurements: MeasurementsDTO[] = [];
 
@@ -78,7 +82,6 @@ export async function getMeasurementByNetworkId(
     setOUtliers(sensorMeasurements);
     measurements.push(sensorMeasurements);
   });
-
   return measurements;
 }
 
@@ -93,17 +96,17 @@ export async function getMeasurementBySensorId(
   const startDate = parseISODateParamToUTC(query.startDate);
   const endDate = parseISODateParamToUTC(query.endDate);
   //check se esiste il sensore
-  await getSensor(networkCode, gatewayMac, sensorMac);
+  const sensorRepo= new SensorRepository();
+  await sensorRepo.getSensorByMac(networkCode, gatewayMac, sensorMac);
 
   // Ottieni le misurazioni dal repository
-  const measurementArray =
-    (await measurementRepo.getMeasurementBySensorMac(
-      networkCode,
-      gatewayMac,
-      sensorMac,
-      startDate,
-      endDate
-    )) || [];
+  const measurementArray = await measurementRepo.getMeasurementBySensorMac(
+    networkCode,
+    gatewayMac,
+    sensorMac,
+    startDate,
+    endDate
+  );
   // Calcola le statistiche per ogni gruppo di sensori
   const mappedMeasurement = measurementArray.map(mapMeasurementDAOToDTO);
   const sensorMeasurements = createMeasurementsDTO(
@@ -115,8 +118,8 @@ export async function getMeasurementBySensorId(
   );
 
   setOUtliers(sensorMeasurements);
-  // Converti in JSON e restituisci
-  return MeasurementsToJSON(sensorMeasurements);
+
+  return sensorMeasurements;
 }
 
 export async function getStatsByNetworkId(
@@ -124,8 +127,10 @@ export async function getStatsByNetworkId(
   query: any
 ): Promise<MeasurementsDTO[]> {
   const measurementRepo = new MeasurementRepository();
+  const networkRepo = new NetworkRepository();
   const sensorRepo = new SensorRepository();
   // Check se esiste il network
+  networkRepo.getNetworkByCode(networkCode);
   const startDate = parseISODateParamToUTC(query.startDate);
   const endDate = parseISODateParamToUTC(query.endDate);
 
@@ -186,14 +191,13 @@ export async function getStatsBySensorId(
   await sensorRepo.getSensorByMac(networkCode, gatewayMac, sensorMac);
 
   // Ottieni le misurazioni dal repository
-  const measurementArray =
-    (await measurementRepo.getMeasurementBySensorMac(
-      networkCode,
-      gatewayMac,
-      sensorMac,
-      startDate,
-      endDate
-    )) || [];
+  const measurementArray = await measurementRepo.getMeasurementBySensorMac(
+    networkCode,
+    gatewayMac,
+    sensorMac,
+    startDate,
+    endDate
+  );
   // Calcola le statistiche per ogni gruppo di sensori
   const mappedMeasurement = measurementArray.map(mapMeasurementDAOToDTO);
   const stats: StatsDTO =
@@ -206,23 +210,20 @@ export async function getStatsBySensorId(
           lowerThreshold: 0,
         };
 
-  // Converti in JSON e restituisci
-  return StatsToJSON(stats);
+  return stats;
 }
 
 export async function getOutliersByNetworkId(
   networkCode: string,
   query: any
 ): Promise<MeasurementsDTO[]> {
-  const measurementRepo = new MeasurementRepository();
 
-  const measurements = await getMeasurementByNetworkId(networkCode, query);
+  const measurements = await getMeasurementsByNetworkId(networkCode, query);
   const measurementsDTO: MeasurementsDTO[] = [];
 
   let outliers: MeasurementDTO[];
   measurements.forEach((x) => {
     const measurement = x.measurements;
-    setOUtliers(x);
 
     if (measurement && measurement.length > 0) {
       outliers = measurement.filter(
@@ -254,7 +255,6 @@ export async function getOutliersBySensorId(
     sensorMac,
     query
   );
-  setOUtliers(measurements);
 
   const measurementsDTO = createMeasurementsDTO(
     measurements.sensorMacAddress,
@@ -274,21 +274,12 @@ export async function createMeasurement(
   sensorMac: string,
   measurements: MeasurementDTO[]
 ): Promise<void> {
-  //verifico i campi obbligatori
-  if (
-    !networkCode ||
-    !gatewayMac ||
-    !sensorMac ||
-    !measurements ||
-    measurements.length === 0
-  ) {
-    throw new Error("Entity Not Found: Missing required parameters");
-  }
 
   const measurementRepo = new MeasurementRepository();
 
   //verifico che il sensore sia correttamente associato alla rete
-  await getSensor(networkCode, gatewayMac, sensorMac); // Controlla che il sensore appartenga al gateway e al network
+  const sensorRepo = new SensorRepository();
+  await sensorRepo.getSensorByMac(networkCode, gatewayMac, sensorMac); // Controlla che il sensore appartenga al gateway e al network
 
   for (const measurement of measurements) {
     // Call the repository method with all required parameters
