@@ -210,7 +210,7 @@ describe("NetworkRoutes integration", () => {
         it("Get all networks: AppError generico", async () => {
             (authService.processToken as jest.Mock).mockResolvedValue(undefined);
             (networkController.getAllNetworks as jest.Mock).mockImplementation(() => {
-                throw new Error("Internal server error");
+                throw new AppError("Internal server error", 500);
             });
 
             const resp = await request(app)
