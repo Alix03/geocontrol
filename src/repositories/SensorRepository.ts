@@ -124,9 +124,12 @@ export class SensorRepository {
       const exists = await this.repo.findOne({
         where: { macAddress: newmacAddress },
       });
-      if (exists) {
+      const gatewayExists = await AppDataSource.getRepository(GatewayDAO).findOne({
+        where: { macAddress: newmacAddress },
+      });
+      if (exists || gatewayExists) {
         throw new ConflictError(
-          `Sensor with MAC Address '${newmacAddress}' already exists`
+          `Entity with MAC Address '${newmacAddress}' already exists`
         );
       }
 

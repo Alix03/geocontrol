@@ -86,10 +86,11 @@ export class GatewayRepository{
   ): Promise<GatewayDAO> {
     const gateway = await this.getGatewayByMac(networkCode, oldAddress); 
     
-    if (oldAddress != newAddress){
+    if (oldAddress != newAddress && newAddress !== undefined) {
       const existing = await this.repo.findOne({ where: { macAddress: newAddress } });
-      if (existing) {
-        throw new ConflictError(`Gateway with code '${newAddress}' already exists`);
+      const existingSensor = await AppDataSource.getRepository(SensorDAO).findOne({ where: { macAddress: newAddress } });
+      if (existing || existingSensor) {
+        throw new ConflictError(`Entity with code '${newAddress}' already exists`);
       }
       gateway.macAddress=newAddress;
     }
