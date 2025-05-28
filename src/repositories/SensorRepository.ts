@@ -45,7 +45,6 @@ export class SensorRepository {
             },
           },
         },
-        relations: { gateway: { network: true } },
       }),
       () => true,
       `Sensor with MAC address '${macAddress}' not found`

@@ -45,7 +45,7 @@ router.get(
       const networkCode = req.params.networkCode;
       res
         .status(200)
-        .send(await getMeasurementByNetworkId(networkCode, req.query));
+        .json(await getMeasurementByNetworkId(networkCode, req.query));
     } catch (error) {
       next(error);
     }
