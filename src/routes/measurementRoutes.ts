@@ -6,12 +6,12 @@ import { create } from "domain";
 import { Router } from "express";
 import {
   createMeasurement,
-  getMeasurementsByNetworkId,
-  getMeasurementBySensorId,
-  getStatsByNetworkId,
-  getStatsBySensorId,
-  getOutliersByNetworkId,
-  getOutliersBySensorId,
+  getMeasurementsByNetwork,
+  getMeasurementsBySensor,
+  getStatsByNetwork,
+  getStatsBySensor,
+  getOutliersByNetwork,
+  getOutliersBySensor,
 } from "@controllers/measurementController";
 import { query } from "winston";
 
@@ -45,7 +45,7 @@ router.get(
       const networkCode = req.params.networkCode;
       res
         .status(200)
-        .json(await getMeasurementsByNetworkId(networkCode, req.query));
+        .json(await getMeasurementsByNetwork(networkCode, req.query));
     } catch (error) {
       next(error);
     }
@@ -64,7 +64,7 @@ router.get(
       res
         .status(200)
         .json(
-          await getMeasurementBySensorId(
+          await getMeasurementsBySensor(
             networkCode,
             gatewayMac,
             sensorMac,
@@ -89,12 +89,7 @@ router.get(
       res
         .status(200)
         .json(
-          await getStatsBySensorId(
-            networkCode,
-            gatewayMac,
-            sensorMac,
-            req.query
-          )
+          await getStatsBySensor(networkCode, gatewayMac, sensorMac, req.query)
         );
     } catch (error) {
       next(error);
@@ -114,7 +109,7 @@ router.get(
       res
         .status(200)
         .json(
-          await getOutliersBySensorId(
+          await getOutliersBySensor(
             networkCode,
             gatewayMac,
             sensorMac,
@@ -134,7 +129,7 @@ router.get(
   async (req, res, next) => {
     try {
       const networkCode = req.params.networkCode;
-      res.status(200).json(await getStatsByNetworkId(networkCode, req.query));
+      res.status(200).json(await getStatsByNetwork(networkCode, req.query));
     } catch (error) {
       next(error);
     }
@@ -148,9 +143,7 @@ router.get(
   async (req, res, next) => {
     try {
       const networkCode = req.params.networkCode;
-      res
-        .status(200)
-        .json(await getOutliersByNetworkId(networkCode, req.query));
+      res.status(200).json(await getOutliersByNetwork(networkCode, req.query));
     } catch (error) {
       next(error);
     }
