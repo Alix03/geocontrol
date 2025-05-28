@@ -39,7 +39,7 @@ describe("MeasurementRepository: SQLite in-memory", () => {
     });
   
     //dovrebbe tornare array vuoto
-    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1", "mac2"]);  
+    const result = await repo.getMeasurementByNetwork("NET01", ["mac1", "mac2"]);  
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(0);
   });
@@ -74,7 +74,7 @@ describe("MeasurementRepository: SQLite in-memory", () => {
       }
     ]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1", "mac2"]);
+    const result = await repo.getMeasurementByNetwork("NET01", ["mac1", "mac2"]);
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(0);
   });
@@ -112,7 +112,7 @@ describe("MeasurementRepository: SQLite in-memory", () => {
     
 
     // Retrieve and verify
-    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1"]);
+    const result = await repo.getMeasurementByNetwork("NET01", ["mac1"]);
     expect(result.length).toBe(3);
     expect(result.map(m => m.value)).toEqual([20.5, 21.0, 21.5]);
     expect(result[0]).toEqual({

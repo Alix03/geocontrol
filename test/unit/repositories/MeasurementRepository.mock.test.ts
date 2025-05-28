@@ -110,7 +110,7 @@ describe("UserRepository: mocked database", () => {
 
     mockFind.mockResolvedValue([foundMeasurement]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01"); 
+    const result = await repo.getMeasurementByNetwork("NET01"); 
     expect(Array.isArray(result)).toBe(true);
     expect(result[0]).toBeInstanceOf(MeasurementDAO);
     expect(result[0].id).toBe(1);
@@ -164,7 +164,7 @@ describe("UserRepository: mocked database", () => {
     sensor2.measurements =[foundMeasurement2];
 
     mockFind.mockResolvedValue([foundMeasurement, foundMeasurement2]);
-    const result = await repo.getMeasurementByNetworkId("NET01",  ["mac1", "mac2"] );  
+    const result = await repo.getMeasurementByNetwork("NET01",  ["mac1", "mac2"] );  
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(2);
     expect(result[0]).toBeInstanceOf(MeasurementDAO);
@@ -196,7 +196,7 @@ describe("UserRepository: mocked database", () => {
 
     mockFind.mockResolvedValue([foundMeasurement]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1", "mac2"]);  
+    const result = await repo.getMeasurementByNetwork("NET01", ["mac1", "mac2"]);  
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(1);
     expect(result[0]).toBeInstanceOf(MeasurementDAO);
@@ -210,7 +210,7 @@ describe("UserRepository: mocked database", () => {
     //dovrebbe tornare array vuoto
     mockFind.mockResolvedValue([]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1", "mac2"]);  
+    const result = await repo.getMeasurementByNetwork("NET01", ["mac1", "mac2"]);  
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(0);
   });
@@ -236,7 +236,7 @@ describe("UserRepository: mocked database", () => {
 
     mockFind.mockResolvedValue([foundMeasurement]);
     //quando non è specificato il set of sensors il controller recupera tutti i sensors del network
-    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1"], new Date("2025-05-20T14:40:00.000Z"), new Date("2025-05-20T14:50:00.000Z") );  
+    const result = await repo.getMeasurementByNetwork("NET01", ["mac1"], new Date("2025-05-20T14:40:00.000Z"), new Date("2025-05-20T14:50:00.000Z") );  
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(1);
     expect(result[0]).toBeInstanceOf(MeasurementDAO);
@@ -271,7 +271,7 @@ describe("UserRepository: mocked database", () => {
 
     mockFind.mockResolvedValue([foundMeasurement]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01",  ["mac1", "mac2"], new Date( "2025-05-20T15:40:00+01:00"), new Date("2025-05-20T15:50:00+01:00") );  
+    const result = await repo.getMeasurementByNetwork("NET01",  ["mac1", "mac2"], new Date( "2025-05-20T15:40:00+01:00"), new Date("2025-05-20T15:50:00+01:00") );  
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(1);
     expect(result[0]).toBeInstanceOf(MeasurementDAO);
@@ -300,7 +300,7 @@ describe("UserRepository: mocked database", () => {
 
     mockFind.mockResolvedValue([foundMeasurement]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1"],  new Date("2025-05-20T15:40:00+01:00"), new Date("2025-05-20T15:50:00+01:00" ) );  
+    const result = await repo.getMeasurementByNetwork("NET01", ["mac1"],  new Date("2025-05-20T15:40:00+01:00"), new Date("2025-05-20T15:50:00+01:00" ) );  
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(1);
     expect(result[0]).toBeInstanceOf(MeasurementDAO);
@@ -336,7 +336,7 @@ describe("UserRepository: mocked database", () => {
 
     mockFind.mockResolvedValue([foundMeasurement]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1"], new Date("2025-05-20T14:40:00.000Z"));
+    const result = await repo.getMeasurementByNetwork("NET01", ["mac1"], new Date("2025-05-20T14:40:00.000Z"));
     
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(1);
@@ -373,7 +373,7 @@ it("get measurement by network with only end date", async () => {
 
     mockFind.mockResolvedValue([foundMeasurement]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01",["mac1"], undefined, new Date( "2025-05-20T14:50:00.000Z" ));
+    const result = await repo.getMeasurementByNetwork("NET01",["mac1"], undefined, new Date( "2025-05-20T14:50:00.000Z" ));
     
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(1);
@@ -409,7 +409,7 @@ it("get measurement by network with only end date", async () => {
 
     mockFind.mockResolvedValue([foundMeasurement]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01", ["mac1", "mac2"]);  
+    const result = await repo.getMeasurementByNetwork("NET01", ["mac1", "mac2"]);  
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(1);
     expect(result[0]).toBeInstanceOf(MeasurementDAO);
@@ -422,7 +422,7 @@ it("get measurement by network with only end date", async () => {
     it("get measurement by network with list of sensors mac with all empty string", async () => {
     mockFind.mockResolvedValue([]);
 
-    const result = await repo.getMeasurementByNetworkId("NET01", ["", ""]);  
+    const result = await repo.getMeasurementByNetwork("NET01", ["", ""]);  
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(0);
   });
@@ -454,7 +454,7 @@ it("get measurement by network with only end date", async () => {
 
     mockFind.mockResolvedValue([measurement]);
 
-    const result = await repo.getMeasurementBySensorMac(
+    const result = await repo.getMeasurementBySensor(
       "NET01",
       "gmac1",
       "mac1",
@@ -488,7 +488,7 @@ it("get measurement by network with only end date", async () => {
 
     mockFind.mockResolvedValue([measurement]);
 
-    const result = await repo.getMeasurementBySensorMac(
+    const result = await repo.getMeasurementBySensor(
       "NET01",
       "gmac1",
       "mac1",
@@ -530,7 +530,7 @@ it("get measurement by network with only end date", async () => {
 
     mockFind.mockResolvedValue([measurement]);
 
-    const result = await repo.getMeasurementBySensorMac(
+    const result = await repo.getMeasurementBySensor(
       "NET01",
       "gmac1",
       "mac1",
@@ -573,7 +573,7 @@ it("get measurement by network with only end date", async () => {
 
     mockFind.mockResolvedValue([measurement]);
 
-    const result = await repo.getMeasurementBySensorMac(
+    const result = await repo.getMeasurementBySensor(
       "NET01",
       "gmac1",
       "mac1",
@@ -600,7 +600,7 @@ it("get measurement by network with only end date", async () => {
   it("get measurements by sensor : empty array when no measurements found", async () => {
     mockFind.mockResolvedValue([]);
 
-    const result = await repo.getMeasurementBySensorMac(
+    const result = await repo.getMeasurementBySensor(
       "NET01",
       "gmac1",
       "mac1",
@@ -639,7 +639,7 @@ it("get measurement by network with only end date", async () => {
 
     mockFind.mockResolvedValue([measurement1, measurement2]);
 
-    const result = await repo.getMeasurementBySensorMac(
+    const result = await repo.getMeasurementBySensor(
       "NET01",
       "gmac1",
       "mac1",

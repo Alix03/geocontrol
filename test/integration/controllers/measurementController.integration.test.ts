@@ -56,8 +56,8 @@ describe("measurementController: mocked repositories", () => {
 
     mockMeasurementRepository = {
       createMeasurement: jest.fn(),
-      getMeasurementByNetworkId: jest.fn(),
-      getMeasurementBySensorMac: jest.fn(),
+      getMeasurementByNetwork: jest.fn(),
+      getMeasurementBySensor: jest.fn(),
     } as any;
 
     (NetworkRepository as jest.Mock).mockImplementation(
@@ -87,10 +87,6 @@ describe("measurementController: mocked repositories", () => {
 
     jest.spyOn(StatsDTO, "StatsToJSON");
 
-    jest.spyOn(
-      require("@controllers/measurementController"),
-      "getMeasurementsByNetworkId"
-    );
   });
 
   const testNetworkDAO = new NetworkDAO();
@@ -1441,7 +1437,6 @@ describe("measurementController: mocked repositories", () => {
 
     const measurementDTO: Measurement = {
       createdAt: new Date("2025-05-20T14:48:00.000Z"),
-      isOutlier: false,
       value: 5,
     };
 
@@ -1979,12 +1974,6 @@ GETOUTLIERSBYNETWORK
         },
       },
     ]);
-
-    const getMeasurementsByNetworkIdSpy = jest.spyOn(
-      require("@controllers/measurementController"),
-      "getMeasurementsByNetworkId"
-    );
-    //expect(getMeasurementsByNetworkIdSpy).toHaveBeenCalledWith("NET01", query);
 
     const measurementDTO: Measurement = {
       createdAt: new Date("2025-05-20T14:48:00.000Z"),
