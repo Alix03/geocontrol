@@ -429,6 +429,31 @@ describe("Update Sensor", () => {
     expect(updatedSensor.unit).toBe("Percentage");
   });
 
+  it("Update Sensor: campi opzionali vuoti", async () => {
+    const network = await createTestNetwork("TEST_NET");
+    const gateway = await createTestGateway(network.code, "GATEWAY_MAC");
+    const sensorRepo = TestDataSource.getRepository(SensorDAO);
+    // Create a sensor associated with the gateway
+    const sensor = await sensorRepo.save({
+      macAddress: "SENSOR_MAC",
+      network,
+      gateway,
+    });
+    // Update the sensor's details
+    const updatedSensor = await repo.updateSensor(
+      network.code,
+      gateway.macAddress,
+      sensor.macAddress,
+      "UPDATED_SENSOR_MAC"
+    );
+    // Verify that the sensor was updated successfully
+    expect(updatedSensor.macAddress).toBe("UPDATED_SENSOR_MAC");
+    expect(updatedSensor.name).toBe(null);
+    expect(updatedSensor.description).toBe(null);
+    expect(updatedSensor.variable).toBe(null);
+    expect(updatedSensor.unit).toBe(null);
+  });
+
   it("Update Sensor: macAddress già esistente", async () => {
     const network = await createTestNetwork("TEST_NET");
     const gateway = await createTestGateway(network.code, "GATEWAY_MAC");
@@ -465,5 +490,20 @@ describe("Update Sensor", () => {
         "Pascal"
       )
     ).rejects.toThrow(ConflictError);
+  });
+
+  it("Update Sensor: macAddress inesistente", async () => {
+    const network = await createTestNetwork("TEST_NET");
+    const gateway = await createTestGateway(network.code, "GATEWAY_MAC");
+
+    // Attempt to update a sensor with a non-existent macAddress
+    await expect(
+      repo.updateSensor(
+        network.code,
+        gateway.macAddress,
+        "NON_EXISTENT_MAC", // oldMacAddress
+        "UPDATED_SENSOR_MAC" // newMacAddress
+      )
+    ).rejects.toThrow(NotFoundError);
   });
 });
