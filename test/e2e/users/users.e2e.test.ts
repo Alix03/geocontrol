@@ -506,6 +506,48 @@ describe("GET /users (e2e)", () => {
     });
   });
 
+  describe("Casi limite autenticazione ", () => {
+    it("401 UnauthorizedError: authorization header vuoto", async () => {
+      const res = await request(app)
+        .get("/api/v1/users")
+        .set("Authorization", "");
+
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe(401);
+      expect(res.body.name).toBe("UnauthorizedError");
+    });
+
+    it("401 UnauthorizedError: bearer token vuoto", async () => {
+      const res = await request(app)
+        .get("/api/v1/users")
+        .set("Authorization", "Bearer ");
+
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe(401);
+      expect(res.body.name).toBe("UnauthorizedError");
+    });
+
+    it("401 UnauthorizedError: formato del token sbagliato", async () => {
+      const res = await request(app)
+        .get("/api/v1/users")
+        .set("Authorization", "Bearer token extra part");
+
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe(401);
+      expect(res.body.name).toBe("UnauthorizedError");
+    });
+
+    it("401 UnauthorizedError: Token malformato", async () => {
+      const res = await request(app)
+        .get("/api/v1/users")
+        .set("Authorization", "Bearer not.a.valid.jwt.token");
+
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe(401);
+      expect(res.body.name).toBe("UnauthorizedError");
+    });
+  });
+
 
 
   ///////
