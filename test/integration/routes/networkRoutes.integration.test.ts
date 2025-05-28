@@ -8,6 +8,7 @@ import { UnauthorizedError } from "@models/errors/UnauthorizedError";
 import { InsufficientRightsError } from "@models/errors/InsufficientRightsError";
 import { NotFoundError } from "@models/errors/NotFoundError";
 import { ConflictError } from "@models/errors/ConflictError";
+import AppError from "@models/errors/AppError";
 
 jest.mock("@services/authService");
 jest.mock("@controllers/networkController");
@@ -196,7 +197,7 @@ describe("NetworkRoutes integration", () => {
             });
 
             const resp = await request(app)
-                .get("/api/v1/users")
+                .get("/api/v1/networks")
                 .set("Authorization", "Bearer invalid");
 
             expect(resp.status).toBe(401);
@@ -204,6 +205,20 @@ describe("NetworkRoutes integration", () => {
             expect(resp.body.name).toBe("UnauthorizedError");
             expect(resp.body.message).toMatch(/Unauthorized/);
             expect(networkController.getAllNetworks).not.toHaveBeenCalled();
+        });
+
+        it("Get all networks: AppError generico", async () => {
+            (authService.processToken as jest.Mock).mockResolvedValue(undefined);
+            (networkController.getAllNetworks as jest.Mock).mockImplementation(() => {
+                throw new Error("Internal server error");
+            });
+
+            const resp = await request(app)
+                .get("/api/v1/networks")
+                .set("Authorization", token);
+
+            expect(resp.status).toBe(500);
+            expect(resp.body.code).toBe(500);
         });
     });
 
