@@ -21,6 +21,7 @@ import { parseStringArrayParam, parseISODateParamToUTC } from "@utils";
 import { AppDataSource } from "@database";
 import { In } from "typeorm";
 import { NotFoundError } from "@models/errors/NotFoundError";
+import { start } from "repl";
 
 export async function getMeasurementByNetworkId(
   networkCode: string,
@@ -72,14 +73,13 @@ export async function getMeasurementByNetworkId(
     const sensorMeasurements = createMeasurementsDTO(
       sensorMac,
       sensorMeasurement && sensorMeasurement.length > 0
-        ? computeStats(sensorMeasurement)
+        ? computeStats(sensorMeasurement, startDate, endDate)
         : undefined,
       sensorMeasurement && sensorMeasurement.length > 0 ? sensorMeasurement : [] // Array vuoto se non ci sono misurazioni
     );
     setOUtliers(sensorMeasurements);
     measurements.push(sensorMeasurements);
   });
-
   return measurements;
 }
 

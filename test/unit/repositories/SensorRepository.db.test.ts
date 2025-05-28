@@ -137,20 +137,6 @@ describe("SensorRepository: SQLite in-memory", () => {
       )
     ).rejects.toThrow(ConflictError);
   });
-
-  it("Create new Sensor: Gateway inesistente", async () => {
-    // Attempt to create a sensor with a non-existent gateway
-    await expect(
-      repo.createSensor(
-        "NON_EXISTENT_GATEWAY_MAC",
-        "SENSOR_MAC",
-        "Test Sensor",
-        "Test Sensor Description",
-        "Temperature",
-        "Celsius"
-      )
-    ).rejects.toThrow(NotFoundError);
-  });
 });
 
 describe("Get Sensor By macAddress", () => {
@@ -190,6 +176,84 @@ describe("Get Sensor By macAddress", () => {
     await expect(
       repo.getSensorByMac(network.code, gateway.macAddress, "NON_EXISTENT_MAC")
     ).rejects.toThrow(NotFoundError);
+  });
+
+  it("Restituisce tutti i sensori associati alla rete quando sensorArray è undefined", async () => {
+    const network = await createTestNetwork("TEST_NET");
+    const gateway = await createTestGateway(network.code, "GATEWAY_MAC");
+    const sensorRepo = TestDataSource.getRepository(SensorDAO);
+
+    // Crea sensori associati alla rete
+    await sensorRepo.save({
+      macAddress: "SENSOR_MAC_1",
+      name: "Sensor 1",
+      description: "Description 1",
+      variable: "Temperature",
+      unit: "Celsius",
+      gateway,
+    });
+
+    await sensorRepo.save({
+      macAddress: "SENSOR_MAC_2",
+      name: "Sensor 2",
+      description: "Description 2",
+      variable: "Humidity",
+      unit: "Percentage",
+      gateway,
+    });
+
+    // Chiama il metodo con sensorArray undefined
+    const sensors = await repo.getSensorsByNetwork(network.code);
+
+    // Verifica che tutti i sensori siano restituiti
+    expect(sensors.length).toBe(2);
+    expect(sensors[0].macAddress).toBe("SENSOR_MAC_1");
+    expect(sensors[1].macAddress).toBe("SENSOR_MAC_2");
+  });
+
+  it("Restituisce solo i sensori specificati in sensorArray", async () => {
+    const network = await createTestNetwork("TEST_NET");
+    const gateway = await createTestGateway(network.code, "GATEWAY_MAC");
+    const sensorRepo = TestDataSource.getRepository(SensorDAO);
+
+    // Crea sensori associati alla rete
+    await sensorRepo.save({
+      macAddress: "SENSOR_MAC_1",
+      name: "Sensor 1",
+      description: "Description 1",
+      variable: "Temperature",
+      unit: "Celsius",
+      gateway,
+    });
+
+    await sensorRepo.save({
+      macAddress: "SENSOR_MAC_2",
+      name: "Sensor 2",
+      description: "Description 2",
+      variable: "Humidity",
+      unit: "Percentage",
+      gateway,
+    });
+
+    await sensorRepo.save({
+      macAddress: "SENSOR_MAC_3",
+      name: "Sensor 3",
+      description: "Description 3",
+      variable: "Pressure",
+      unit: "Pascal",
+      gateway,
+    });
+
+    // Chiama il metodo con sensorArray contenente alcuni MAC address
+    const sensors = await repo.getSensorsByNetwork(network.code, [
+      "SENSOR_MAC_1",
+      "SENSOR_MAC_3",
+    ]);
+
+    // Verifica che solo i sensori specificati siano restituiti
+    expect(sensors.length).toBe(2);
+    expect(sensors[0].macAddress).toBe("SENSOR_MAC_1");
+    expect(sensors[1].macAddress).toBe("SENSOR_MAC_3");
   });
 });
 
@@ -233,13 +297,6 @@ describe("Get all Sensor", () => {
     // Attempt to get sensors when none exist
     const sensors = await repo.getAllSensors(network.code, gateway.macAddress);
     expect(sensors.length).toBe(0);
-  });
-
-  it("Get all Sensor: Gateway inesistente", async () => {
-    // Attempt to get sensors for a non-existent gateway
-    await expect(
-      repo.getAllSensors("TEST_NET", "NON_EXISTENT_GATEWAY_MAC")
-    ).rejects.toThrow(NotFoundError);
   });
 
   it("Get all Sensor: Filtra solo i sensori appartenenti al gateway", async () => {

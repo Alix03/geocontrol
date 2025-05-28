@@ -116,13 +116,10 @@ export class SensorRepository {
     );
 
     if (oldMacAddress != newmacAddress && newmacAddress !== undefined) {
-      console.log("SIAMO QUA");
-
       const exists = await this.repo.findOne({
         where: { macAddress: newmacAddress },
       });
       if (exists) {
-        console.log("SIAMO QUA");
         throw new ConflictError(
           `Sensor with MAC Address '${newmacAddress}' already exists`
         );
