@@ -29,6 +29,7 @@ describe("AuthenticationRoutes integration", () =>{
         it("Authenticate: ok", async () =>{
 
             (authController.getToken as jest.Mock).mockResolvedValue(expectedToken);
+            
 
             const response = await request(app)
                 .post("/api/v1/auth")
@@ -36,7 +37,6 @@ describe("AuthenticationRoutes integration", () =>{
 
             expect(response.status).toBe(200);
             expect(response.body).toMatchObject(expectedToken);
-            
         });
 
         it("Authenticate: 401 Unauthorized", async () =>{
