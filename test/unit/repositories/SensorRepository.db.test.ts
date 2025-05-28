@@ -112,7 +112,7 @@ describe("SensorRepository: SQLite in-memory", () => {
     expect(sensor.unit).toBeNull();
   });
 
-  it("Create new Sensor: MacAddress già esistente", async () => {
+  it("Create new Sensor: MacAddress già esistente associato ad un altro sensore", async () => {
     const network = await createTestNetwork("TEST_NET");
     const gateway = await createTestGateway(network.code, "GATEWAY_MAC");
 
@@ -130,6 +130,23 @@ describe("SensorRepository: SQLite in-memory", () => {
       repo.createSensor(
         gateway.macAddress,
         "SENSOR_MAC",
+        "Duplicate Sensor",
+        "Duplicate Sensor Description",
+        "Humidity",
+        "Percentage"
+      )
+    ).rejects.toThrow(ConflictError);
+  });
+
+  it("Create new Sensor: MacAddress già esistente associato ad un gateway", async () => {
+    const network = await createTestNetwork("TEST_NET");
+    const gateway = await createTestGateway(network.code, "GATEWAY_MAC");
+
+    // Attempt to create another sensor with the same MAC address
+    await expect(
+      repo.createSensor(
+        gateway.macAddress,
+        "GATEWAY_MAC",
         "Duplicate Sensor",
         "Duplicate Sensor Description",
         "Humidity",
