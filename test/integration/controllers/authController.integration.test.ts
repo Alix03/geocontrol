@@ -7,7 +7,7 @@ import { UnauthorizedError } from "@models/errors/UnauthorizedError";
 
 jest.mock("@repositories/UserRepository");
 
-describe("getToken", () =>{
+describe("AuthController integration", () =>{
     let mockRepo : jest.Mocked<UserRepository>;
 
     mockRepo = {
