@@ -2,8 +2,6 @@ import request from "supertest";
 import { app } from "@app";
 import { generateToken } from "@services/authService";
 import { beforeAllE2e, afterAllE2e, TEST_USERS } from "@test/e2e/lifecycle";
-import { Measurements } from "@models/dto/Measurements";
-import { start } from "repl";
 import { AppDataSource } from "@database";
 import { MeasurementDAO } from "@models/dao/MeasurementDAO";
 
