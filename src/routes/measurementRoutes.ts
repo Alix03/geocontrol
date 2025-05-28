@@ -6,7 +6,7 @@ import { create } from "domain";
 import { Router } from "express";
 import {
   createMeasurement,
-  getMeasurementByNetworkId,
+  getMeasurementsByNetworkId,
   getMeasurementBySensorId,
   getStatsByNetworkId,
   getStatsBySensorId,
@@ -45,7 +45,7 @@ router.get(
       const networkCode = req.params.networkCode;
       res
         .status(200)
-        .json(await getMeasurementByNetworkId(networkCode, req.query));
+        .json(await getMeasurementsByNetworkId(networkCode, req.query));
     } catch (error) {
       next(error);
     }
