@@ -5,6 +5,7 @@ import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
 import { NotFoundError } from "@models/errors/NotFoundError";
 import { ConflictError } from "@models/errors/ConflictError";
 import { NetworkDAO } from "@models/dao/NetworkDAO";
+import { SensorDAO } from "@models/dao/SensorDAO";
 
 export class GatewayRepository{
   private repo: Repository<GatewayDAO>;
@@ -50,6 +51,11 @@ export class GatewayRepository{
       await this.repo.find({where: {macAddress}}),
       () => true,
       `Gateway with MAC address ${macAddress} already exists`
+    );
+    throwConflictIfFound(
+      await AppDataSource.getRepository(SensorDAO).find({where: {macAddress}}),
+      () => true,
+      `Sensor with MAC address ${macAddress} already exists`
     );
 
     const network = findOrThrowNotFound(

@@ -66,6 +66,12 @@ export class SensorRepository {
       () => true,
       `Sensor with MAC address '${macAddress}' already exists`
     );
+    //per unicità del macAddress
+    throwConflictIfFound(
+      await AppDataSource.getRepository(GatewayDAO).find({ where: { macAddress } }),
+      () => true,
+      `Gateway with MAC address '${macAddress}' already exists`
+    );
 
     //verifica esistenza gateway e che il gateway faccia parte del network non fatta perchè già eseguita dal sensorController
     const gateway = await AppDataSource.getRepository(GatewayDAO).findOne({

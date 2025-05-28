@@ -6,12 +6,12 @@ import { InsufficientRightsError } from "@models/errors/InsufficientRightsError"
 import { Measurements } from "@models/dto/Measurements";
 import {
   createMeasurement,
-  getMeasurementsByNetworkId,
-  getMeasurementBySensorId,
-  getStatsByNetworkId,
-  getStatsBySensorId,
-  getOutliersByNetworkId,
-  getOutliersBySensorId,
+  getMeasurementsByNetwork,
+  getMeasurementsBySensor,
+  getStatsByNetwork,
+  getStatsBySensor,
+  getOutliersByNetwork,
+  getOutliersBySensor,
 } from "@controllers/measurementController";
 import { UserType } from "@models/UserType";
 import { NotFoundError } from "@models/errors/NotFoundError";
@@ -47,7 +47,7 @@ describe("MeasurementRoutes integration", () => {
   ];
 
   (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-  (getMeasurementsByNetworkId as jest.Mock).mockResolvedValue(mockMeasurements);
+  (getMeasurementsByNetwork as jest.Mock).mockResolvedValue(mockMeasurements);
 
   const response = await request(app)
     .get("/api/v1/networks/NET01/measurements")
@@ -65,7 +65,7 @@ describe("MeasurementRoutes integration", () => {
     UserType.Operator,
     UserType.Viewer
   ]);
-  expect(getMeasurementsByNetworkId).toHaveBeenCalledWith(
+  expect(getMeasurementsByNetwork).toHaveBeenCalledWith(
     "NET01",
     {
       startDate: "2025-05-20T14:40:00.000Z",
@@ -84,7 +84,7 @@ it("get all measurements: 400 Invalid input data", async () => {
     .query({
       startDate: "invalid-date"
     });
-  expect(getMeasurementsByNetworkId).not.toHaveBeenCalled();
+  expect(getMeasurementsByNetwork).not.toHaveBeenCalled();
 
   expect(response.status).toBe(400);
 });
@@ -106,7 +106,7 @@ it("get all measurements:404 Not Found", async () => {
   const mockMeasurements: Measurements[] = [];
 
   (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-  (getMeasurementsByNetworkId as jest.Mock).mockImplementation(() => {
+  (getMeasurementsByNetwork as jest.Mock).mockImplementation(() => {
     throw new NotFoundError("Not Found");
   });
 
@@ -139,7 +139,7 @@ it("get all measurements:404 Not Found", async () => {
     };
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getMeasurementBySensorId as jest.Mock).mockResolvedValue(mockMeasurements);
+    (getMeasurementsBySensor as jest.Mock).mockResolvedValue(mockMeasurements);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/gateways/gw1/sensors/71:B1:CE:01:C6:A9/measurements")
@@ -152,7 +152,7 @@ it("get all measurements:404 Not Found", async () => {
       UserType.Operator,
       UserType.Viewer
     ]);
-    expect(getMeasurementBySensorId).toHaveBeenCalledWith(
+    expect(getMeasurementsBySensor).toHaveBeenCalledWith(
       "NET01",
       "gw1",
       "71:B1:CE:01:C6:A9",
@@ -179,7 +179,7 @@ it("get all measurements:404 Not Found", async () => {
     };
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getMeasurementBySensorId as jest.Mock).mockResolvedValue(mockMeasurements);
+    (getMeasurementsBySensor as jest.Mock).mockResolvedValue(mockMeasurements);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/gateways/gw1/sensors/71:B1:CE:01:C6:A9/measurements")
@@ -192,7 +192,7 @@ it("get all measurements:404 Not Found", async () => {
   it("getMeasurementBySensor: invalid date format in query parameters:400", async () => {
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getMeasurementBySensorId as jest.Mock).mockResolvedValue({});
+    (getMeasurementsBySensor as jest.Mock).mockResolvedValue({});
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/gateways/gw1/sensors/71:B1:CE:01:C6:A9/measurements")
@@ -203,13 +203,13 @@ it("get all measurements:404 Not Found", async () => {
       });
 
     expect(response.status).toBe(400);
-    expect(getMeasurementBySensorId).not.toHaveBeenCalled();
+    expect(getMeasurementsBySensor).not.toHaveBeenCalled();
   });
 
   it("get measurements for a specific sensor: 404 Not Found", async () => {
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-      (getMeasurementBySensorId as jest.Mock).mockImplementation(() => {
+      (getMeasurementsBySensor as jest.Mock).mockImplementation(() => {
     throw new NotFoundError("Not Found");
   });
 
@@ -224,7 +224,7 @@ it("get all measurements:404 Not Found", async () => {
       UserType.Operator,
       UserType.Viewer
     ]);
-    expect(getMeasurementBySensorId).toHaveBeenCalledWith(
+    expect(getMeasurementsBySensor).toHaveBeenCalledWith(
       "NET01",
       "gw1",
       "71:B1:CE:01:C6:A9",
@@ -250,7 +250,7 @@ describe("Get stats by network ID", () => {
     ];
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getStatsByNetworkId as jest.Mock).mockResolvedValue(mockStats);
+    (getStatsByNetwork as jest.Mock).mockResolvedValue(mockStats);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/stats")
@@ -258,7 +258,7 @@ describe("Get stats by network ID", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockStats);
-    expect(getStatsByNetworkId).toHaveBeenCalledWith("NET01", {});
+    expect(getStatsByNetwork).toHaveBeenCalledWith("NET01", {});
   });
 
   it("should get stats for specific sensors with date range", async () => {
@@ -277,7 +277,7 @@ describe("Get stats by network ID", () => {
     ];
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getStatsByNetworkId as jest.Mock).mockResolvedValue(mockStats);
+    (getStatsByNetwork as jest.Mock).mockResolvedValue(mockStats);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/stats")
@@ -290,7 +290,7 @@ describe("Get stats by network ID", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockStats);
-    expect(getStatsByNetworkId).toHaveBeenCalledWith(
+    expect(getStatsByNetwork).toHaveBeenCalledWith(
       "NET01", 
       {
         startDate: "2025-05-20T14:40:00.000Z",
@@ -315,7 +315,7 @@ describe("Get stats by network ID", () => {
 
   it("should return 404 when network not found", async () => {
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getStatsByNetworkId as jest.Mock).mockImplementation(() => {
+    (getStatsByNetwork as jest.Mock).mockImplementation(() => {
       throw new NotFoundError("Network not found");
     });
 
@@ -340,7 +340,7 @@ describe("Get stats by network ID", () => {
     };
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getStatsBySensorId as jest.Mock).mockResolvedValue(mockStats);
+    (getStatsBySensor as jest.Mock).mockResolvedValue(mockStats);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/gateways/gw1/sensors/71:B1:CE:01:C6:A9/stats")
@@ -348,7 +348,7 @@ describe("Get stats by network ID", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockStats);
-    expect(getStatsBySensorId).toHaveBeenCalledWith(
+    expect(getStatsBySensor).toHaveBeenCalledWith(
       "NET01",
       "gw1",
       "71:B1:CE:01:C6:A9",
@@ -367,7 +367,7 @@ describe("Get stats by network ID", () => {
     };
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getStatsBySensorId as jest.Mock).mockResolvedValue(mockStats);
+    (getStatsBySensor as jest.Mock).mockResolvedValue(mockStats);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/gateways/gw1/sensors/71:B1:CE:01:C6:A9/stats")
@@ -379,7 +379,7 @@ describe("Get stats by network ID", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockStats);
-    expect(getStatsBySensorId).toHaveBeenCalledWith(
+    expect(getStatsBySensor).toHaveBeenCalledWith(
       "NET01",
       "gw1",
       "71:B1:CE:01:C6:A9",
@@ -405,7 +405,7 @@ describe("Get stats by network ID", () => {
 
   it("getStatsBySensorId: return 404 when sensor not found", async () => {
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getStatsBySensorId as jest.Mock).mockImplementation(() => {
+    (getStatsBySensor as jest.Mock).mockImplementation(() => {
       throw new NotFoundError("Not found");
     });
 
@@ -426,7 +426,7 @@ describe("Get stats by network ID", () => {
     };
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getStatsBySensorId as jest.Mock).mockResolvedValue(mockStats);
+    (getStatsBySensor as jest.Mock).mockResolvedValue(mockStats);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/gateways/gw1/sensors/71:B1:CE:01:C6:A9/stats")
@@ -461,7 +461,7 @@ describe("Get stats by network ID", () => {
     ];
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getOutliersByNetworkId as jest.Mock).mockResolvedValue(mockMeasurements);
+    (getOutliersByNetwork as jest.Mock).mockResolvedValue(mockMeasurements);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/outliers")
@@ -469,7 +469,7 @@ describe("Get stats by network ID", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockMeasurements);
-    expect(getOutliersByNetworkId).toHaveBeenCalledWith("NET01", {});
+    expect(getOutliersByNetwork).toHaveBeenCalledWith("NET01", {});
   });
 
   it("getOutliersByNetworkId with date range filter: 200", async () => {
@@ -495,7 +495,7 @@ describe("Get stats by network ID", () => {
     ];
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getOutliersByNetworkId as jest.Mock).mockResolvedValue(mockMeasurements);
+    (getOutliersByNetwork as jest.Mock).mockResolvedValue(mockMeasurements);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/outliers")
@@ -508,7 +508,7 @@ describe("Get stats by network ID", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockMeasurements);
-    expect(getOutliersByNetworkId).toHaveBeenCalledWith(
+    expect(getOutliersByNetwork).toHaveBeenCalledWith(
       "NET01", 
       {
         startDate: "2025-05-20T14:40:00.000Z",
@@ -533,7 +533,7 @@ describe("Get stats by network ID", () => {
 
   it("should return 404 when network not found", async () => {
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getOutliersByNetworkId as jest.Mock).mockImplementation(() => {
+    (getOutliersByNetwork as jest.Mock).mockImplementation(() => {
       throw new NotFoundError("Network not found");
     });
 
@@ -560,7 +560,7 @@ describe("Get stats by network ID", () => {
     ];
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getOutliersByNetworkId as jest.Mock).mockResolvedValue(mockMeasurements);
+    (getOutliersByNetwork as jest.Mock).mockResolvedValue(mockMeasurements);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/outliers")
@@ -593,7 +593,7 @@ describe("Get stats by network ID", () => {
     };
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getOutliersBySensorId as jest.Mock).mockResolvedValue(mockMeasurements);
+    (getOutliersBySensor as jest.Mock).mockResolvedValue(mockMeasurements);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/gateways/gw1/sensors/71:B1:CE:01:C6:A9/outliers")
@@ -601,7 +601,7 @@ describe("Get stats by network ID", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockMeasurements);
-    expect(getOutliersBySensorId).toHaveBeenCalledWith(
+    expect(getOutliersBySensor).toHaveBeenCalledWith(
       "NET01",
       "gw1",
       "71:B1:CE:01:C6:A9",
@@ -630,7 +630,7 @@ describe("Get stats by network ID", () => {
     };
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getOutliersBySensorId as jest.Mock).mockResolvedValue(mockMeasurements);
+    (getOutliersBySensor as jest.Mock).mockResolvedValue(mockMeasurements);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/gateways/gw1/sensors/71:B1:CE:01:C6:A9/outliers")
@@ -642,7 +642,7 @@ describe("Get stats by network ID", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockMeasurements);
-    expect(getOutliersBySensorId).toHaveBeenCalledWith(
+    expect(getOutliersBySensor).toHaveBeenCalledWith(
       "NET01",
       "gw1",
       "71:B1:CE:01:C6:A9",
@@ -668,7 +668,7 @@ describe("Get stats by network ID", () => {
 
   it("getOutliersBySensorId: return 404 when entity not found", async () => {
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getOutliersBySensorId as jest.Mock).mockImplementation(() => {
+    (getOutliersBySensor as jest.Mock).mockImplementation(() => {
       throw new NotFoundError("Not found");
     });
 
@@ -693,7 +693,7 @@ describe("Get stats by network ID", () => {
     };
 
     (authService.processToken as jest.Mock).mockResolvedValue(undefined);
-    (getOutliersBySensorId as jest.Mock).mockResolvedValue(mockMeasurements);
+    (getOutliersBySensor as jest.Mock).mockResolvedValue(mockMeasurements);
 
     const response = await request(app)
       .get("/api/v1/networks/NET01/gateways/gw1/sensors/71:B1:CE:01:C6:A9/outliers")
