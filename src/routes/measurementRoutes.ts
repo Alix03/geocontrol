@@ -111,11 +111,16 @@ router.get(
       const networkCode = req.params.networkCode;
       const gatewayMac = req.params.gatewayMac;
       const sensorMac = req.params.sensorMac;
-      res.status(200).json(await getOutliersBySensorId(
-        networkCode,
-        gatewayMac,
-        sensorMac,
-        req.query));
+      res
+        .status(200)
+        .json(
+          await getOutliersBySensorId(
+            networkCode,
+            gatewayMac,
+            sensorMac,
+            req.query
+          )
+        );
     } catch (error) {
       next(error);
     }
@@ -143,7 +148,9 @@ router.get(
   async (req, res, next) => {
     try {
       const networkCode = req.params.networkCode;
-      res.status(200).json(await getOutliersByNetworkId(networkCode, req.query));
+      res
+        .status(200)
+        .json(await getOutliersByNetworkId(networkCode, req.query));
     } catch (error) {
       next(error);
     }
