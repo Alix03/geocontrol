@@ -24,6 +24,7 @@ beforeEach(async () => {
 describe("UserRepository: SQLite in-memory", () => {
   const repo = new UserRepository();
 
+  describe("Create user", () => {
   it("create user", async () => {
     const user = await repo.createUser("john", "pass123", UserType.Admin);
     expect(user).toMatchObject({
@@ -35,6 +36,273 @@ describe("UserRepository: SQLite in-memory", () => {
     const found = await repo.getUserByUsername("john");
     expect(found.username).toBe("john");
   });
+
+
+  it("Create user: success (admin, operator, viewer)", async () => {
+      // Test per ogni tipo di utente
+      const adminUser = await repo.createUser("admin", "adminpass", UserType.Admin);
+      expect(adminUser.type).toBe(UserType.Admin);
+      
+      const operatorUser = await repo.createUser("operator", "operatorpass", UserType.Operator);
+      expect(operatorUser.type).toBe(UserType.Operator);
+      
+      const viewerUser = await repo.createUser("viewer", "viewerpass", UserType.Viewer);
+      expect(viewerUser.type).toBe(UserType.Viewer);
+      
+      // Verifica che tutti siano stati salvati correttamente
+      const allUsers = await repo.getAllUsers();
+      expect(allUsers).toHaveLength(3);
+    });
+
+
+    it("Create User: success (caratteri speciali)", async () => {
+      const specialUsername = "user@test.com";
+      const specialPassword = "p@ssw0rd!#$%";
+      
+      const user = await repo.createUser(specialUsername, specialPassword, UserType.Admin);
+      
+      expect(user.username).toBe(specialUsername);
+      expect(user.password).toBe(specialPassword);
+      
+      // Verifica che possa essere recuperato
+      const foundUser = await repo.getUserByUsername(specialUsername);
+      expect(foundUser.password).toBe(specialPassword);
+    });
+
+    it("ConflictError: user già esistente", async () => {
+      const username = "duplicate";
+      await repo.createUser(username, "first", UserType.Admin);
+      
+      await expect(
+        repo.createUser(username, "second", UserType.Viewer)
+      ).rejects.toThrow(
+        new ConflictError(`User with username '${username}' already exists`)
+      );
+    });
+
+    it("Create user: Non deve modificare user esistente in caso di conflitti", async () => {
+      const username = "original";
+      const originalUser = await repo.createUser(username, "originalpass", UserType.Admin);
+      
+      try {
+        await repo.createUser(username, "newpass", UserType.Viewer);
+      } catch (error) {
+        // Ignora l'errore, vogliamo solo verificare che l'utente originale non sia cambiato
+      }
+      
+      const unchangedUser = await repo.getUserByUsername(username);
+      expect(unchangedUser).toMatchObject({
+        username: "original",
+        password: "originalpass",
+        type: UserType.Admin
+      });
+    });
+
+  });
+
+
+    describe("Get All Users", () => {
+    it("Get All Users: success (array vuoto)", async () => {
+      const users = await repo.getAllUsers();
+      expect(users).toEqual([]);
+      expect(users).toHaveLength(0);
+    });
+
+    it("Get All Users: success", async () => {
+      // Crea diversi utenti con tipi diversi
+      await repo.createUser("admin1", "adminpass", UserType.Admin);
+      await repo.createUser("operator1", "operatorpass", UserType.Operator);
+      await repo.createUser("viewer1", "viewerpass", UserType.Viewer);
+
+      const users = await repo.getAllUsers();
+      
+      expect(users).toHaveLength(3);
+      expect(users.map(u => u.username)).toContain("admin1");
+      expect(users.map(u => u.username)).toContain("operator1");
+      expect(users.map(u => u.username)).toContain("viewer1");
+      
+      // Verifica che tutti i tipi di utente siano presenti
+      const userTypes = users.map(u => u.type);
+      expect(userTypes).toContain(UserType.Admin);
+      expect(userTypes).toContain(UserType.Operator);
+      expect(userTypes).toContain(UserType.Viewer);
+    });
+
+    it("Get All Users: ritona un array con un solo user se ne esiste solo 1", async () => {
+      await repo.createUser("singleuser", "password123", UserType.Admin);
+      
+      const users = await repo.getAllUsers();
+      expect(users).toHaveLength(1);
+      expect(users[0].username).toBe("singleuser");
+      expect(users[0].type).toBe(UserType.Admin);
+    });
+
+  });
+
+
+   describe("Get User By Username", () => {
+    it("Get User By Username: success", async () => {
+      const createdUser = await repo.createUser("testuser", "testpass", UserType.Operator);
+      
+      const foundUser = await repo.getUserByUsername("testuser");
+      
+      expect(foundUser).toMatchObject({
+        username: "testuser",
+        password: "testpass",
+        type: UserType.Operator
+      });
+      expect(foundUser.username).toBe(createdUser.username);
+      expect(foundUser.password).toBe(createdUser.password);
+      expect(foundUser.type).toBe(createdUser.type);
+    });
+
+    it("Get User By Username: success (caseSensitive)", async () => {
+      await repo.createUser("CaseSensitive", "pass123", UserType.Admin);
+      
+      // Username con case diverso dovrebbe fallire
+      await expect(repo.getUserByUsername("casesensitive")).rejects.toThrow(NotFoundError);
+      await expect(repo.getUserByUsername("CASESENSITIVE")).rejects.toThrow(NotFoundError);
+      
+      // Case corretto dovrebbe funzionare
+      const user = await repo.getUserByUsername("CaseSensitive");
+      expect(user.username).toBe("CaseSensitive");
+    });
+
+    it("Get User By Username: NotFoundError", async () => {
+      const username = "nonexistentuser";
+      
+      await expect(repo.getUserByUsername(username)).rejects.toThrow(
+        new NotFoundError(`User with username '${username}' not found`)
+      );
+    });
+  });
+
+
+  describe("Delete User", () => {
+    it("Delete User: success", async () => {
+      // Crea un utente
+      await repo.createUser("todelete", "password", UserType.Operator);
+      
+      // Verifica che esista
+      const userBefore = await repo.getUserByUsername("todelete");
+      expect(userBefore.username).toBe("todelete");
+      
+      // Elimina l'utente
+      await repo.deleteUser("todelete");
+      
+      // Verifica che non esista più
+      await expect(repo.getUserByUsername("todelete")).rejects.toThrow(NotFoundError);
+    });
+
+    it("Delete User: NotFoundError (utente inesistente)", async () => {
+      const username = "nonexistent";
+      
+      await expect(repo.deleteUser(username)).rejects.toThrow(
+        new NotFoundError(`User with username '${username}' not found`)
+      );
+    });
+
+    it("Delete user: success (se elimino un user gli altri rimangono invariati)", async () => {
+      // Crea più utenti
+      await repo.createUser("user1", "pass1", UserType.Admin);
+      await repo.createUser("user2", "pass2", UserType.Operator);
+      await repo.createUser("user3", "pass3", UserType.Viewer);
+      
+      // Elimina uno
+      await repo.deleteUser("user2");
+      
+      // Verifica che gli altri esistano ancora
+      const user1 = await repo.getUserByUsername("user1");
+      const user3 = await repo.getUserByUsername("user3");
+      
+      expect(user1.username).toBe("user1");
+      expect(user3.username).toBe("user3");
+      
+      // Verifica che user2 non esista
+      await expect(repo.getUserByUsername("user2")).rejects.toThrow(NotFoundError);
+      
+      // Verifica il conteggio totale
+      const allUsers = await repo.getAllUsers();
+      expect(allUsers).toHaveLength(2);
+    });
+
+    it("Delete User: username con caratteri speciali", async () => {
+      const specialUsername = "user@special.com";
+      
+      await repo.createUser(specialUsername, "password", UserType.Admin);
+      await repo.deleteUser(specialUsername);
+      
+      await expect(repo.getUserByUsername(specialUsername)).rejects.toThrow(NotFoundError);
+    });
+
+  });
+
+    describe("Casi limite", () => {
+    it("Gestione di più operazioni in cascata", async () => {
+      const username = "rapidtest";
+      
+      // Crea, elimina, ricrea
+      await repo.createUser(username, "pass1", UserType.Admin);
+      await repo.deleteUser(username);
+      await repo.createUser(username, "pass2", UserType.Viewer);
+      
+      const finalUser = await repo.getUserByUsername(username);
+      expect(finalUser.password).toBe("pass2");
+      expect(finalUser.type).toBe(UserType.Viewer);
+    });
+
+    it("Integrità dei dati con più operazioni in cascata", async () => {
+      // Scenario complesso che testa più operazioni insieme
+      
+      // Crea utenti iniziali
+      await repo.createUser("admin", "adminpass", UserType.Admin);
+      await repo.createUser("op1", "op1pass", UserType.Operator);
+      
+      let users = await repo.getAllUsers();
+      expect(users).toHaveLength(2);
+      
+      // Aggiungi altri utenti
+      await repo.createUser("viewer1", "v1pass", UserType.Viewer);
+      await repo.createUser("viewer2", "v2pass", UserType.Viewer);
+      
+      users = await repo.getAllUsers();
+      expect(users).toHaveLength(4);
+      
+      // Elimina un utente
+      await repo.deleteUser("op1");
+      
+      users = await repo.getAllUsers();
+      expect(users).toHaveLength(3);
+      
+      // Verifica che gli utenti rimanenti siano corretti
+      const usernames = users.map(u => u.username).sort();
+      expect(usernames).toEqual(["admin", "viewer1", "viewer2"]);
+      
+      // Tenta di creare conflitto
+      await expect(repo.createUser("admin", "newpass", UserType.Viewer))
+        .rejects.toThrow(ConflictError);
+      
+      // Verifica che l'admin originale sia invariato
+      const admin = await repo.getUserByUsername("admin");
+      expect(admin.password).toBe("adminpass");
+      expect(admin.type).toBe(UserType.Admin);
+    });
+
+    it("Username e password con lunghezza elevata", async () => {
+      const longUsername = "a".repeat(100);
+      const longPassword = "b".repeat(200);
+      
+      const user = await repo.createUser(longUsername, longPassword, UserType.Operator);
+      
+      expect(user.username).toBe(longUsername);
+      expect(user.password).toBe(longPassword);
+      
+      const foundUser = await repo.getUserByUsername(longUsername);
+      expect(foundUser.username).toBe(longUsername);
+      expect(foundUser.password).toBe(longPassword);
+    });
+  });
+    
 
   it("find user by username: not found", async () => {
     await expect(repo.getUserByUsername("ghost")).rejects.toThrow(

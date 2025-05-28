@@ -28,6 +28,7 @@ app.use(
 app.use(openApiValidator);
 
 app.use(CONFIG.ROUTES.V1_AUTH, authenticationRouter);
+
 app.use(CONFIG.ROUTES.V1_USERS, userRouter);
 app.use(CONFIG.ROUTES.V1_NETWORKS, networkRouter);
 app.use(CONFIG.ROUTES.V1_GATEWAYS, gatewayRouter);
