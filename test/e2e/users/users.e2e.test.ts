@@ -548,9 +548,87 @@ describe("GET /users (e2e)", () => {
     });
   });
 
+  describe("Scenari", () => {
+    it("Gestine user lifecycle completo (create, get, delete)", async () => {
+      const newUser = {
+        username: `lifecycle_user_${Date.now()}`,
+        password: "testpass123",
+        type: UserType.Operator
+      };
 
+      // Create user
+      const createRes = await request(app)
+        .post("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(newUser);
+      expect(createRes.status).toBe(201);
 
-  ///////
+      // Get user
+      const getRes = await request(app)
+        .get(`/api/v1/users/${newUser.username}`)
+        .set("Authorization", `Bearer ${adminToken}`);
+      expect(getRes.status).toBe(200);
+      expect(getRes.body.username).toBe(newUser.username);
+      expect(getRes.body.type).toBe(newUser.type);
+
+      
+      const listRes = await request(app)
+        .get("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`);
+      expect(listRes.status).toBe(200);
+      const usernames = listRes.body.map((u: any) => u.username);
+      expect(usernames).toContain(newUser.username);
+
+      // Delete user
+      const deleteRes = await request(app)
+        .delete(`/api/v1/users/${newUser.username}`)
+        .set("Authorization", `Bearer ${adminToken}`);
+      expect(deleteRes.status).toBe(204);
+
+      
+      const getDeletedRes = await request(app)
+        .get(`/api/v1/users/${newUser.username}`)
+        .set("Authorization", `Bearer ${adminToken}`);
+      expect(getDeletedRes.status).toBe(404);
+    });
+
+    it("Gestione di creazioni e cancellazioni multiple di user", async () => {
+      const users = [
+        { username: `multi_user_1_${Date.now()}`, password: "pass1", type: UserType.Viewer },
+        { username: `multi_user_2_${Date.now()}`, password: "pass2", type: UserType.Operator },
+        { username: `multi_user_3_${Date.now()}`, password: "pass3", type: UserType.Admin }
+      ];
+
+      // Create all users
+      for (const user of users) {
+        const res = await request(app)
+          .post("/api/v1/users")
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(user);
+        expect(res.status).toBe(201);
+      }
+
+      // Verifica user esistono
+      const listRes = await request(app)
+        .get("/api/v1/users")
+        .set("Authorization", `Bearer ${adminToken}`);
+      expect(listRes.status).toBe(200);
+      
+      const usernames = listRes.body.map((u: any) => u.username);
+      users.forEach(user => {
+        expect(usernames).toContain(user.username);
+      });
+
+      // Delete all users
+      for (const user of users) {
+        const res = await request(app)
+          .delete(`/api/v1/users/${user.username}`)
+          .set("Authorization", `Bearer ${adminToken}`);
+        expect(res.status).toBe(204);
+      }
+    });
+  });
+
 
   it("get all users", async () => {
     const res = await request(app)
