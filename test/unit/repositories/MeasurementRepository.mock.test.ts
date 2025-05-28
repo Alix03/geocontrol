@@ -577,12 +577,16 @@ it("get measurement by network with only end date", async () => {
       "NET01",
       "gmac1",
       "mac1",
-      
-        new Date( "2025-05-21T00:00:00.000Z")
+      undefined,
+      new Date( "2025-05-21T00:00:00.000Z")
       
     );
 
     expect(result).toHaveLength(1);
+    expect(result).toEqual([
+      {createdAt: new Date("2025-05-20T14:48:00.000Z"),
+         id: 1, value: 25.5, sensor: sensor}
+    ])
     expect(mockFind).toHaveBeenCalledWith(
       {
         where: expect.objectContaining({

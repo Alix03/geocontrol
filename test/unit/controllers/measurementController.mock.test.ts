@@ -9,8 +9,10 @@ import { SensorRepository } from "@repositories/SensorRepository";
 import { createMeasurement } from "@controllers/measurementController";
 
 jest.mock("@repositories/MeasurementRepository");
+jest.mock("@repositories/SensorRepository");
 jest.mock("@services/mapperService");
 jest.mock("@controllers/sensorController");
+jest.mock("@utils");
 
 describe("measurementController: mocked repositories and services", () => {
   beforeEach(() => {
@@ -62,7 +64,7 @@ describe("measurementController: mocked repositories and services", () => {
     const measurementDTO: Measurement = {createdAt:new Date ("2025-05-20T14:48:00.000Z"),
       value: 5
     }
-    const result = createMeasurement("NET01", "gw1", "mac1", [measurementDTO])
+    const result = await createMeasurement("NET01", "gw1", "mac1", [measurementDTO])
     expect(result).toBeUndefined();
     // Verifica che la funzione sia stata chiamata con i parametri corretti
     const measurementRepo = new MeasurementRepository();
