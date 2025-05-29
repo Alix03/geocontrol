@@ -3,6 +3,7 @@ import { GatewayDAO } from "@models/dao/GatewayDAO";
 import { NetworkDAO } from "@models/dao/NetworkDAO";
 import { SensorDAO } from "@models/dao/SensorDAO";
 import { Gateway as GatewayDTO } from "@models/dto/Gateway";
+import AppError from "@models/errors/AppError";
 import { GatewayRepository } from "@repositories/GatewayRepository";
 import { NetworkRepository } from "@repositories/NetworkRepository";
 
@@ -97,6 +98,19 @@ describe("GatewayController integration", () => {
         undefined,
         undefined
       );
+    });
+
+    it("Create gateway con mac address solo spazi", async () =>{
+      const networkCode = "NET001";
+      const gatewayDTO: GatewayDTO = {
+        macAddress: "    \t \n   "
+      };
+
+
+      await expect(
+        gatewayController.createGateway(networkCode, gatewayDTO)
+      ).rejects.toThrow(new AppError("MAC Address cannot be empty", 500));
+
     });
     
   });
@@ -365,6 +379,21 @@ describe("Get Gateway By MacAddress", () => {
         gatewayDTO.name,
         undefined
       );
+    });
+
+    it("Update gateway con mac address solo spazi", async () =>{
+      const networkCode = "NET001";
+      const oldAddress = "11:22:33:44:55:66";
+
+      const gatewayDTO: GatewayDTO = {
+        macAddress: "    \t \n   "
+      };
+
+
+      await expect(
+         gatewayController.updateGateway(networkCode, oldAddress, gatewayDTO)
+      ).rejects.toThrow(new AppError("MAC Address cannot be empty", 500));
+
     });
     
   });

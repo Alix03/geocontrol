@@ -3,6 +3,7 @@ import { GatewayRepository } from "@repositories/GatewayRepository";
 import { NetworkRepository } from "@repositories/NetworkRepository";
 import { SensorRepository } from "@repositories/SensorRepository";
 import { mapSensorDAOToDTO } from "@services/mapperService";
+import { AppError } from "@errors/AppError"
 
 export async function getAllSensors(
   networkCode: string,
@@ -44,20 +45,26 @@ export async function createSensor(
   gatewayMac: string,
   sensorDto: SensorDTO
 ): Promise<void> {
-  const sensorRepo = new SensorRepository();
 
-  //verifica esistenza network e gateway
-  const gatewayRepo = new GatewayRepository();
-  await gatewayRepo.getGatewayByMac(networkCode, gatewayMac);
+  if (sensorDto.macAddress.trim().length == 0) {
+    throw new AppError("MAC Address cannot be empty", 500);
+  }else{
 
-  await sensorRepo.createSensor(
-    gatewayMac,
-    sensorDto.macAddress,
-    sensorDto.name,
-    sensorDto.description,
-    sensorDto.variable,
-    sensorDto.unit
-  );
+    const sensorRepo = new SensorRepository();
+
+    //verifica esistenza network e gateway
+    const gatewayRepo = new GatewayRepository();
+    await gatewayRepo.getGatewayByMac(networkCode, gatewayMac);
+
+    await sensorRepo.createSensor(
+      gatewayMac,
+      sensorDto.macAddress,
+      sensorDto.name,
+      sensorDto.description,
+      sensorDto.variable,
+      sensorDto.unit
+    );
+  }
 }
 
 export async function deleteSensor(
@@ -82,22 +89,26 @@ export async function updateSensor(
   sensorMac: string,
   sensorDto: SensorDTO
 ): Promise<void> {
-  const sensorRepo = new SensorRepository();
+  if (sensorDto.macAddress.trim().length == 0) {
+    throw new AppError("MAC Address cannot be empty", 500);
+  }else{
+    const sensorRepo = new SensorRepository();
 
-  //verifica esistenza network e gateway
-  const gatewayRepo = new GatewayRepository();
-  const networkRepo = new NetworkRepository();
-  await networkRepo.getNetworkByCode(networkCode);
-  await gatewayRepo.getGatewayByMac(networkCode, gatewayMac);
+    //verifica esistenza network e gateway
+    const gatewayRepo = new GatewayRepository();
+    const networkRepo = new NetworkRepository();
+    await networkRepo.getNetworkByCode(networkCode);
+    await gatewayRepo.getGatewayByMac(networkCode, gatewayMac);
 
-  await sensorRepo.updateSensor(
-    networkCode,
-    gatewayMac,
-    sensorMac,
-    sensorDto.macAddress,
-    sensorDto.name,
-    sensorDto.description,
-    sensorDto.variable,
-    sensorDto.unit
-  );
+    await sensorRepo.updateSensor(
+      networkCode,
+      gatewayMac,
+      sensorMac,
+      sensorDto.macAddress,
+      sensorDto.name,
+      sensorDto.description,
+      sensorDto.variable,
+      sensorDto.unit
+    );
+  }
 }

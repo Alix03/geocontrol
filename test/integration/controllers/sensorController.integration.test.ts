@@ -7,6 +7,7 @@ import { NetworkDAO } from "@models/dao/NetworkDAO";
 import { GatewayDAO } from "@models/dao/GatewayDAO";
 import { NotFoundError } from "@models/errors/NotFoundError";
 import { ConflictError } from "@models/errors/ConflictError";
+import AppError from "@models/errors/AppError";
 
 jest.mock("@repositories/SensorRepository");
 jest.mock("@repositories/GatewayRepository");
@@ -200,6 +201,40 @@ describe("SensorController integration", () => {
         sensorDto.variable,
         sensorDto.unit
       );
+    });
+
+    it("should throw an error if MAC Address is unreadable", async () => {
+      // Arrange
+      const networkCode = "TEST_NET";
+      const gatewayMac = "GATEWAY_MAC";
+      const sensorDto = {
+        macAddress: "    \t   \n",
+        name: "Test Sensor",
+        description: "Test Sensor Description",
+        variable: "Temperature",
+        unit: "Celsius",
+      };
+
+      const fakeSensorDAO = {
+        id: 1,
+        macAddress: "SENSOR_MAC",
+        name: "Test Sensor",
+        description: "Test Sensor Description",
+        variable: "Temperature",
+        unit: "Celsius",
+      } as SensorDAO;
+
+      mockGatewayRepository.getGatewayByMac.mockResolvedValue({
+        macAddress: gatewayMac,
+        name: "Test Gateway",
+        description: "Test Gateway Description",
+      } as GatewayDAO);
+
+
+      // Act & Assert
+      await expect(
+        sensorController.createSensor(networkCode, gatewayMac, sensorDto)
+      ).rejects.toThrow(AppError);
     });
   });
 
@@ -819,6 +854,30 @@ describe("SensorController integration", () => {
         updatedSensorDto.variable,
         updatedSensorDto.unit
       );
+    });
+    it("should throw an error if the sensor does not exist", async () => {
+      // Arrange
+      const networkCode = "TEST_NET";
+      const gatewayMac = "GATEWAY_MAC";
+      const sensorMac = "INVALID_SENSOR";
+      const updatedSensorDto = {
+        macAddress: "     \t   \n  ",
+        name: "Updated Sensor",
+        description: "Updated Description",
+        variable: "Pressure",
+        unit: "Pascal",
+      };
+
+
+      // Act & Assert
+      await expect(
+        sensorController.updateSensor(
+          networkCode,
+          gatewayMac,
+          sensorMac,
+          updatedSensorDto
+        )
+      ).rejects.toThrow(AppError);
     });
   });
 });

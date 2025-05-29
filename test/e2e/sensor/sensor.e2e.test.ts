@@ -3,6 +3,7 @@ import { app } from "@app";
 import { generateToken } from "@services/authService";
 import { beforeAllE2e, afterAllE2e, TEST_USERS } from "@test/e2e/lifecycle";
 import { getAllSensors } from "@controllers/SensorController";
+import AppError from "@models/errors/AppError";
 
 describe("Sensor API (e2e)", () => {
   let adminToken: string;
@@ -355,6 +356,26 @@ describe("Sensor API (e2e)", () => {
         expect(res.body.code).toBe(409);
         expect(res.body.name).toBe("ConflictError");
       });
+
+      it("500 MAC address cannot be empty", async () => {
+        const sensorData = {
+          macAddress: "    \t  \n",
+          name: "Test Sensor",
+          description: "Sensor for testing purposes",
+          variable: "temperature",
+          unit: "°C",
+        };
+
+        const res = await request(app)
+          .post(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors`
+          )
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(sensorData);
+
+        expect(res.status).toBe(500);
+        expect(res.body.code).toBe(500);
+      });
     });
   });
 
@@ -592,6 +613,7 @@ describe("Sensor API (e2e)", () => {
 
       it("404 NotFoundError: sensore inesistente", async () => {
         const updateData = {
+          macAddress: testSensorMac,
           name: "Updated Sensor Name",
           description: "Updated description",
         };
@@ -635,6 +657,28 @@ describe("Sensor API (e2e)", () => {
         expect(res.status).toBe(409);
         expect(res.body.code).toBe(409);
         expect(res.body.name).toBe("ConflictError");
+      });
+
+      it("500 MAC address cannot be empty", async () => {
+        const sensorData = {
+          macAddress: "    \t   \n", 
+          name: "Another Sensor",
+          description: "Sensor for testing purposes",
+          variable: "pressure",
+          unit: "Pa",
+        };
+
+        const res = await request(app)
+          .patch(
+            `/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac}/sensors/${testSensorMac}` 
+          )
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(sensorData);
+
+        // Verifica che venga restituito un errore 500
+        expect(res.status).toBe(500);
+        expect(res.body.code).toBe(500);
+        expect(res.body.name).toBe("Error");
       });
     });
   });
