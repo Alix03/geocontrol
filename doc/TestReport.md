@@ -163,8 +163,7 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dell�
 | Update Sensor: campi opzionali vuoti | SensorRepository | Integration | WB/ Statement Coverage |
 | Update Sensor: macAddress già esistente | SensorRepository | Integration | WB/ Equivalence Partitioning |
 | Update Sensor: macAddress inesistente | SensorRepository | Integration | WB/ Boundary |
-
-| **Review Controller Integration test** | | |
+| **Review Controller Integration test** |
 | **User Controller Integration test** | | |
 | Create user: success | UserController | Integration | WB/ Statement Coverage |
 | Create user: success (admin user) | UserController | Integration | WB/ Statement Coverage |
@@ -278,6 +277,331 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dell�
 | AuthController: Create token - success | Controller | Integration | WB/ Statement Coverage |
 | AuthController: Create token - invalid password | Controller | Integration | WB/ Boundary |
 | **Review Routes Integration test** | | |
+| **User Routes integration test** | | |
+| POST /api/v1/users: Create user: success | UserRoutes | Integration | WB/ Statement Coverage |
+| POST /api/v1/users: Create user: 401 UnauthorizedError | UserRoutes | Integration | BB/ Boundary |
+| POST /api/v1/users: Create user: 403 InsufficientRightsError | UserRoutes | Integration | BB/ Boundary |
+| POST /api/v1/users: Create user: 400 BadRequest (missing fields) | UserRoutes | Integration | BB/ Boundary |
+| POST /api/v1/users: Create user: 400 BadRequest (invalid user type) | UserRoutes | Integration | BB/ Equivalence Partitioning |
+| POST /api/v1/users: Create user: 409 ConflictError | UserRoutes | Integration | BB/ Equivalence Partitioning |
+| POST /api/v1/users: Create user: 400 BadRequest (invalid JSON) | UserRoutes | Integration | BB/ Boundary |
+| GET /api/v1/users: Get All Users: success | UserRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/users: Get All Users: success (empty array) | UserRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/users: Get All Users: 401 UnauthorizedError | UserRoutes | Integration | BB/ Boundary |
+| GET /api/v1/users: Get All Users: 403 InsufficientRightsError | UserRoutes | Integration | BB/ Boundary |
+| GET /api/v1/users: Get All Users: 500 InternalServerError | UserRoutes | Integration | WB/ Boundary |
+| GET /api/v1/users/:username: Get User By Username: success | UserRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/users/:username: Get User By Username: 401 UnauthorizedError | UserRoutes | Integration | BB/ Boundary |
+| GET /api/v1/users/:username: Get User By Username: 403 InsufficientRightsError | UserRoutes | Integration | BB/ Boundary |
+| GET /api/v1/users/:username: Get User By Username: 404 NotFoundError | UserRoutes | Integration | BB/ Boundary |
+| GET /api/v1/users/:username: Get User By Username: username con caratteri speciali | UserRoutes | Integration | BB/ Equivalence Partitioning |
+| DELETE /api/v1/users/:username: Delete User: success | UserRoutes | Integration | WB/ Statement Coverage |
+| DELETE /api/v1/users/:username: Delete User: 401 UnauthorizedError | UserRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/users/:username: Delete User: 403 InsufficientRightsError | UserRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/users/:username: Delete User: 404 NotFoundError | UserRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/users/:username: Delete User: username con caratteri speciali | UserRoutes | Integration | BB/ Equivalence Partitioning |
+| GET /api/v1/users/:username: Username molto lunghi | UserRoutes | Integration | BB/ Boundary |
+| GET /api/v1/users/:username: URL encoded characters in username | UserRoutes | Integration | BB/ Equivalence Partitioning |
+| **Measurement Routes integration test** | | |
+| GET /api/v1/networks/:networkCode/measurements: success | MeasurementRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/measurements: success (with date range filter) | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/measurements: success (with sensorMacs filter) | MeasurementRoutes | Integration | BB/ Equivalence Partitioning |
+| GET /api/v1/networks/:networkCode/measurements: 400 Invalid input data | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/measurements: 401 UnauthorizedError | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/measurements: 404 Not Found | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: success | MeasurementRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: 401 UnauthorizedError | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: 404 Not Found | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: 400 Invalid date format | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/stats: success | MeasurementRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/stats: success (with date range filter) | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/stats: success (with sensorMacs filter) | MeasurementRoutes | Integration | BB/ Equivalence Partitioning |
+| GET /api/v1/networks/:networkCode/stats: 401 UnauthorizedError | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/stats: 404 Not Found | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/stats: success | MeasurementRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/stats: success (with date range filter) | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/stats: 401 UnauthorizedError | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/stats: 404 Not Found | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/outliers: success | MeasurementRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/outliers: success (with date range filter) | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/outliers: success (with sensorMacs filter) | MeasurementRoutes | Integration | BB/ Equivalence Partitioning |
+| GET /api/v1/networks/:networkCode/outliers: 401 UnauthorizedError | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/outliers: 404 Not Found | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/outliers: success | MeasurementRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/outliers: success (with date range filter) | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/outliers: 401 UnauthorizedError | MeasurementRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/outliers: 404 Not Found | MeasurementRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: success | MeasurementRoutes | Integration | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: success (multiple measurements) | MeasurementRoutes | Integration | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: 400 Invalid measurement data | MeasurementRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: 400 Invalid date format | MeasurementRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: 401 UnauthorizedError | MeasurementRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: 403 InsufficientRightsError | MeasurementRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: 404 Not Found | MeasurementRoutes | Integration | BB/ Boundary |
+| **Network Routes integration test** | | |
+| POST /api/v1/networks: Create network: ok | NetworkRoutes | Integration | WB/ Statement Coverage |
+| POST /api/v1/networks: Create network: ok, solo campi obbligatori | NetworkRoutes | Integration | WB/ Statement Coverage |
+| POST /api/v1/networks: Create network: 401 UnauthorizedError | NetworkRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks: Create network: 403 InsufficientRightsError | NetworkRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks: Create network: 409 Network code already in use | NetworkRoutes | Integration | BB/ Equivalence Partitioning |
+| GET /api/v1/networks: Get all networks: ok | NetworkRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks: Get all networks: 401 UnauthorizedError | NetworkRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks: Get all networks: AppError generico | NetworkRoutes | Integration | WB/ Boundary |
+| GET /api/v1/networks/:code: Get network by code: ok | NetworkRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks/:code: Get network by code: 401 UnauthorizedError | NetworkRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:code: Get network by code: 404 Network not found | NetworkRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:code: Update network: ok | NetworkRoutes | Integration | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:code: Update network: ok, cambio solo opzionali | NetworkRoutes | Integration | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:code: Update network: 401 UnauthorizedError | NetworkRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:code: Update network: 403 InsufficientRightsError | NetworkRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:code: Update network: 404 Network not found | NetworkRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:code: Update network: 409 Network code already in use | NetworkRoutes | Integration | BB/ Equivalence Partitioning |
+| DELETE /api/v1/networks/:code: Delete network: ok | NetworkRoutes | Integration | WB/ Statement Coverage |
+| DELETE /api/v1/networks/:code: Delete network: 401 UnauthorizedError | NetworkRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/networks/:code: Delete network: 403 InsufficientRightsError | NetworkRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/networks/:code: Delete network: 404 Network not found | NetworkRoutes | Integration | BB/ Boundary |
+| **Gateway Routes integration test** | | |
+| POST /api/v1/networks/:networkCode/gateways: Create Gateway: success (Admin user) | GatewayRoutes | Integration | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways: Create Gateway: success (Operator user) | GatewayRoutes | Integration | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways: Create Gateway: 401 UnauthorizedError | GatewayRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways: Create Gateway: 403 InsufficientRightsError | GatewayRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways: Create Gateway: 404 NotFoundError (network inesistente) | GatewayRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways: Create Gateway: 409 ConflictError (macAddress già in uso) | GatewayRoutes | Integration | BB/ Equivalence Partitioning |
+| GET /api/v1/networks/:networkCode/gateways: Get All Gateways: success (user autenticato) | GatewayRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways: Get All Gateways: 401 UnauthorizedError | GatewayRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways: Get All Gateways: 404 NotFoundError | GatewayRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac: Get Gateway By MacAddress: success (user autenticato) | GatewayRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac: Get Gateway By MacAddress: 401 UnauthorizedError | GatewayRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac: Get Gateway By MacAddress: 404 NotFoundError (network inesistente) | GatewayRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac: Get Gateway By MacAddress: 404 NotFoundError (macAddress inesistente) | GatewayRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update Gateway: success (Admin user) | GatewayRoutes | Integration | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update Gateway: success (Operator user) | GatewayRoutes | Integration | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update Gateway: 401 UnauthorizedError | GatewayRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update Gateway: 403 InsufficientRightsError | GatewayRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update Gateway: 404 NotFoundError (network inesistente) | GatewayRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update Gateway: 404 NotFoundError (macAddress inesistente) | GatewayRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update Gateway: 409 ConflictError (macAddress già in uso) | GatewayRoutes | Integration | BB/ Equivalence Partitioning |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete Gateway: success (Admin user) | GatewayRoutes | Integration | WB/ Statement Coverage |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete Gateway: success (Operator user) | GatewayRoutes | Integration | WB/ Statement Coverage |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete Gateway: 401 UnauthorizedError | GatewayRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete Gateway: 403 InsufficientRightsError | GatewayRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete Gateway: 404 NotFoundError (network inesistente) | GatewayRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete Gateway: 404 NotFoundError (macAddress inesistente) | GatewayRoutes | Integration | BB/ Boundary |
+| **Sensor Routes integration test** | | |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Create Sensor: success (Admin user) | SensorRoutes | Integration | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Create Sensor: success (Operator user) | SensorRoutes | Integration | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Create Sensor: 401 UnauthorizedError | SensorRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Create Sensor: 403 InsufficientRightsError | SensorRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Create Sensor: 404 NotFoundError (network inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Create Sensor: 404 NotFoundError (gateway inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Create Sensor: 409 ConflictError (macAddress già in uso) | SensorRoutes | Integration | BB/ Equivalence Partitioning |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Get All Sensors: success (authenticated user) | SensorRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Get All Sensors: 401 UnauthorizedError | SensorRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Get All Sensors: 404 NotFoundError (network inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Get All Sensors: 404 NotFoundError (gateway inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Get Sensor: success | SensorRoutes | Integration | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Get Sensor: 401 UnauthorizedError | SensorRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Get Sensor: 404 NotFoundError (sensor inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Get Sensor: 404 NotFoundError (gateway inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Delete Sensor: success (Admin user) | SensorRoutes | Integration | WB/ Statement Coverage |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Delete Sensor: success (Operator user) | SensorRoutes | Integration | WB/ Statement Coverage |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Delete Sensor: 401 UnauthorizedError | SensorRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Delete Sensor: 403 InsufficientRightsError | SensorRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Delete Sensor: 404 NotFoundError (network inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Delete Sensor: 404 NotFoundError (gateway inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Delete Sensor: 404 NotFoundError (sensor inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Update Sensor: success (Admin user) | SensorRoutes | Integration | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Update Sensor: success (Operator user) | SensorRoutes | Integration | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Update Sensor: 401 UnauthorizedError | SensorRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Update Sensor: 403 InsufficientRightsError | SensorRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Update Sensor: 404 NotFoundError (network inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Update Sensor: 404 NotFoundError (gateway inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Update Sensor: 404 NotFoundError (sensor inesistente) | SensorRoutes | Integration | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Update Sensor: 409 ConflictError (macAddress già in uso) | SensorRoutes | Integration | BB/ Equivalence Partitioning |
+| **Authentication Routes integration test** | | |
+| POST /api/v1/auth: Authenticate: ok | AuthenticationRoutes | Integration | WB/ Statement Coverage |
+| POST /api/v1/auth: Authenticate: 401 UnauthorizedError | AuthenticationRoutes | Integration | BB/ Boundary |
+| POST /api/v1/auth: Authenticate: 404 UserNotFound | AuthenticationRoutes | Integration | BB/ Boundary |
+| POST /api/v1/auth: Authenticate: Invalid token format | AuthenticationRoutes | Integration | BB/ Equivalence Partitioning |
+| POST /api/v1/auth: Authenticate: Missing username or password | AuthenticationRoutes | Integration | BB/ Boundary |
+| POST /api/v1/auth: Authenticate: Invalid JSON format | AuthenticationRoutes | Integration | BB/ Boundary |
+| POST /api/v1/auth: Authenticate: User with special characters in username | AuthenticationRoutes | Integration | BB/ Equivalence Partitioning |
+| POST /api/v1/auth: Authenticate: User with long username | AuthenticationRoutes | Integration | BB/ Boundary |
+| POST /api/v1/auth: Authenticate: User with unsupported UserType | AuthenticationRoutes | Integration | BB/ Equivalence Partitioning |
+| **Review e2e test** | | |
+| **Users E2E test** | | |
+| GET /api/v1/users: Get All Users: success (admin user) | UsersRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/users: Get All Users: 403 InsufficientRightsError (operator user) | UsersRoutes | E2E | BB/ Boundary |
+| GET /api/v1/users: Get All Users: 403 InsufficientRightsError (viewer user) | UsersRoutes | E2E | BB/ Boundary |
+| GET /api/v1/users: Get All Users: 401 UnauthorizedError (token non presente) | UsersRoutes | E2E | BB/ Boundary |
+| GET /api/v1/users: Get All Users: 401 UnauthorizedError (token non valido) | UsersRoutes | E2E | BB/ Boundary |
+| GET /api/v1/users: Get All Users: 401 UnauthorizedError (token formato invalido) | UsersRoutes | E2E | BB/ Boundary |
+| POST /api/v1/users: Create user: success (admin user) | UsersRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/users: Create user: 403 InsufficientRightsError (operator user) | UsersRoutes | E2E | BB/ Boundary |
+| POST /api/v1/users: Create user: 403 InsufficientRightsError (viewer user) | UsersRoutes | E2E | BB/ Boundary |
+| POST /api/v1/users: Create user: 401 UnauthorizedError (token non presente) | UsersRoutes | E2E | BB/ Boundary |
+| POST /api/v1/users: Create user: 409 ConflictError (username già esistente) | UsersRoutes | E2E | BB/ Equivalence Partitioning |
+| POST /api/v1/users: Create user: 400 BadRequest (username mancante) | UsersRoutes | E2E | BB/ Boundary |
+| POST /api/v1/users: Create user: 400 BadRequest (password mancante) | UsersRoutes | E2E | BB/ Boundary |
+| POST /api/v1/users: Create user: 400 BadRequest (type user mancante) | UsersRoutes | E2E | BB/ Boundary |
+| POST /api/v1/users: Create user: 400 BadRequest (user type non valido) | UsersRoutes | E2E | BB/ Equivalence Partitioning |
+| POST /api/v1/users: Create user: success (crea user di tipo admin) | UsersRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/users: Create user: success (crea user di tipo operator) | UsersRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/users/{userName}: Get User: success (admin user) | UsersRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/users/{userName}: Get User: success (operator user) | UsersRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/users/{userName}: Get User: success (viewer user) | UsersRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/users/{userName}: Get User: 404 NotFoundError (user inesistente) | UsersRoutes | E2E | BB/ Boundary |
+| GET /api/v1/users/{userName}: Get User: 403 InsufficientRightsError (operator user) | UsersRoutes | E2E | BB/ Boundary |
+| GET /api/v1/users/{userName}: Get User: 403 InsufficientRightsError (viewer user) | UsersRoutes | E2E | BB/ Boundary |
+| GET /api/v1/users/{userName}: Get User: 401 UnauthorizedError (token assente) | UsersRoutes | E2E | BB/ Boundary |
+| GET /api/v1/users/{userName}: Get User: 401 UnauthorizedError (token non valido) | UsersRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/users/{userName}: Delete user: success | UsersRoutes | E2E | WB/ Statement Coverage |
+| DELETE /api/v1/users/{userName}: Delete user: 404 NotFoundError (user inesistente) | UsersRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/users/{userName}: Delete user: 403 InsufficientRightsError (operator user) | UsersRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/users/{userName}: Delete user: 403 InsufficientRightsError (viewer user) | UsersRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/users/{userName}: Delete user: 401 UnauthorizedError (token non presente) | UsersRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/users/{userName}: Delete user: 401 UnauthorizedError (token non valido) | UsersRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/users/{userName}: Delete user: success (admin elimina admin) | UsersRoutes | E2E | WB/ Statement Coverage |
+| DELETE /api/v1/users/{userName}: Delete user: success (admin elimina operator) | UsersRoutes | E2E | WB/ Statement Coverage |
+| Authentication: 401 UnauthorizedError: authorization header vuoto | UsersRoutes | E2E | BB/ Boundary |
+| Authentication: 401 UnauthorizedError: bearer token vuoto | UsersRoutes | E2E | BB/ Boundary |
+| Authentication: 401 UnauthorizedError: formato del token sbagliato | UsersRoutes | E2E | BB/ Boundary |
+| Authentication: 401 UnauthorizedError: Token malformato | UsersRoutes | E2E | BB/ Boundary |
+| Gestione user lifecycle completo (create, get, delete) | UsersRoutes | E2E | WB/ Statement Coverage |
+| Gestione di creazioni e cancellazioni multiple di user | UsersRoutes | E2E | WB/ Statement Coverage |
+| **Measurements E2E test** | | |
+| GET /api/v1/networks/:networkCode/measurements: Get all measurements: success | MeasurementsRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/measurements: Get all measurements with date range filter | MeasurementsRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/measurements: Get measurements with specific sensor filter | MeasurementsRoutes | E2E | BB/ Equivalence Partitioning |
+| GET /api/v1/networks/:networkCode/measurements: Get measurements with unauthorized token | MeasurementsRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/measurements: Get measurements for non-existent network | MeasurementsRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/measurements: Get measurements with viewer token | MeasurementsRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: Create measurements with operator token | MeasurementsRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: Create measurements with viewer token should fail | MeasurementsRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: Create measurement with invalid data format | MeasurementsRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: Create measurement with missing required field | MeasurementsRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: Create measurement for non-existent sensor | MeasurementsRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/stats: Get stats for all sensors | MeasurementsRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/stats: Get stats with date range | MeasurementsRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/outliers: Get outliers for all sensors | MeasurementsRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/outliers: Get outliers with date filter | MeasurementsRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: Get measurements for specific sensor | MeasurementsRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: Get measurements for specific sensor with date range | MeasurementsRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: Get measurements for non-existent sensor | MeasurementsRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/measurements: Get measurements with invalid date format | MeasurementsRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/stats: Get stats for specific sensor | MeasurementsRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/stats: Get stats with date range | MeasurementsRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/outliers: Get outliers for specific sensor | MeasurementsRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/outliers: Get outliers with date filter | MeasurementsRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac/outliers: Get outliers for non-existent sensor | MeasurementsRoutes | E2E | BB/ Boundary |
+| **Networks E2E test** | | |
+| GET /api/v1/networks: Get all networks: success (admin user, empty array) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks: Get all networks: success (operator user, empty array) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks: Get all networks: success (viewer user, empty array) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks: Get all networks: success (admin user, with entries) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks: Get all networks: success (operator user, with entries) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks: Get all networks: success (viewer user, with entries) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks: Get all networks: 401 UnauthorizedError (token non presente) | NetworksRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks: Create network: success (admin user, all fields) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks: Create network: success (admin user, required fields only) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks: Create network: success (operator user, all fields) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks: Create network: success (operator user, required fields only) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks: Create network: 400 Invalid input data (missing networkCode) | NetworksRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks: Create network: 401 UnauthorizedError (invalid token format) | NetworksRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks: Create network: 403 InsufficientRightsError (viewer user) | NetworksRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks: Create network: 409 ConflictError (network code already in use) | NetworksRoutes | E2E | BB/ Equivalence Partitioning |
+| GET /api/v1/networks/:networkCode: Get network by code: success (admin user) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode: Get network by code: success (operator user) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode: Get network by code: success (viewer user) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode: Get network by code: 401 UnauthorizedError (invalid token format) | NetworksRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode: Get network by code: 404 NotFoundError (network inesistente) | NetworksRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode: Delete network: success (admin user) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| DELETE /api/v1/networks/:networkCode: Delete network: success (operator user) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| DELETE /api/v1/networks/:networkCode: Delete network: 401 UnauthorizedError (token non presente) | NetworksRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode: Delete network: 403 InsufficientRightsError (viewer user) | NetworksRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode: Delete network: 404 NotFoundError (network inesistente) | NetworksRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode: Update network: success (admin user, all fields updated) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode: Update network: success (operator user, code unchanged) | NetworksRoutes | E2E | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode: Update network: 401 UnauthorizedError (invalid token format) | NetworksRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode: Update network: 403 InsufficientRightsError (viewer user) | NetworksRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode: Update network: 404 NotFoundError (network inesistente) | NetworksRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode: Update network: 409 ConflictError (network code already in use) | NetworksRoutes | E2E | BB/ Equivalence Partitioning |
+| **Gateways E2E test** | | |
+| GET /api/v1/networks/:networkCode/gateways: Get all gateways: success (admin user, empty array) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways: Get all gateways: success (operator user, empty array) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways: Get all gateways: success (viewer user, empty array) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways: Get all gateways: success (admin user, with entries) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways: Get all gateways: success (operator user, with entries) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways: Get all gateways: success (viewer user, with entries) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways: Get all gateways: 401 UnauthorizedError (token non presente) | GatewaysRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways: Get all gateways: 401 UnauthorizedError (token non valido) | GatewaysRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways: Get all gateways: 401 UnauthorizedError (formato del token non valido) | GatewaysRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways: Get all gateways: 404 NotFoundError (network inesistente) | GatewaysRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways: Create gateway: success (admin user, all fields) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways: Create gateway: success (operator user, required fields only) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways: Create gateway: success (admin user, ignoring nested sensors) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways: Create gateway: 400 Invalid input data (missing macAddress) | GatewaysRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways: Create gateway: 400 Invalid input data (empty macAddress) | GatewaysRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways: Create gateway: 401 UnauthorizedError (token non presente) | GatewaysRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways: Create gateway: 403 InsufficientRightsError (viewer user) | GatewaysRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways: Create gateway: 404 NotFoundError (network inesistente) | GatewaysRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways: Create gateway: 409 ConflictError (macAddress già in uso) | GatewaysRoutes | E2E | BB/ Equivalence Partitioning |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac: Get gateway by macAddress: success (admin user) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac: Get gateway by macAddress: success (operator user) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac: Get gateway by macAddress: success (viewer user) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac: Get gateway by macAddress: 401 UnauthorizedError (token non presente) | GatewaysRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac: Get gateway by macAddress: 404 NotFoundError (network inesistente) | GatewaysRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac: Get gateway by macAddress: 404 NotFoundError (gateway inesistente) | GatewaysRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update gateway: success (admin user, update name and description) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update gateway: success (operator user, update macAddress) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update gateway: success (admin user, ignoring nested sensors) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update gateway: 401 UnauthorizedError (token non presente) | GatewaysRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update gateway: 403 InsufficientRightsError (viewer user) | GatewaysRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update gateway: 404 NotFoundError (network inesistente) | GatewaysRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update gateway: 404 NotFoundError (gateway inesistente) | GatewaysRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac: Update gateway: 409 ConflictError (macAddress già in uso) | GatewaysRoutes | E2E | BB/ Equivalence Partitioning |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete gateway: success (admin user) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete gateway: success (operator user) | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete gateway: 401 UnauthorizedError (token non presente) | GatewaysRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete gateway: 403 InsufficientRightsError (viewer user) | GatewaysRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete gateway: 404 NotFoundError (network inesistente) | GatewaysRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac: Delete gateway: 404 NotFoundError (gateway inesistente) | GatewaysRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways: Get all gateways after CRUD operations: success | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways: Get gateways with correct structure | GatewaysRoutes | E2E | WB/ Statement Coverage |
+| **Sensor E2E test** | | |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Get all sensors: success (admin user) | SensorRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Get all sensors: success (operator user) | SensorRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Get all sensors: success (viewer user) | SensorRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Get all sensors: empty array (admin user) | SensorRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Get all sensors: empty array (operator user) | SensorRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Get all sensors: empty array (viewer user) | SensorRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: 401 UnauthorizedError (token non presente) | SensorRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: 404 NotFoundError (gateway inesistente) | SensorRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Create sensor: success (admin user, all fields) | SensorRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Create sensor: success (operator user, all fields) | SensorRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Create sensor: success (admin user, required fields only) | SensorRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: Create sensor: success (operator user, required fields only) | SensorRoutes | E2E | WB/ Statement Coverage |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: 400 Invalid input data (missing macAddress) | SensorRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: 401 UnauthorizedError (token non presente) | SensorRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: 403 InsufficientRightsError (viewer user) | SensorRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: 404 NotFoundError (gateway inesistente) | SensorRoutes | E2E | BB/ Boundary |
+| POST /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors: 409 ConflictError (macAddress già in uso) | SensorRoutes | E2E | BB/ Equivalence Partitioning |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Get specific sensor: success (admin user) | SensorRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Get specific sensor: success (operator user) | SensorRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Get specific sensor: success (viewer user) | SensorRoutes | E2E | WB/ Statement Coverage |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 401 UnauthorizedError (token non presente) | SensorRoutes | E2E | BB/ Boundary |
+| GET /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 404 NotFoundError (sensor inesistente) | SensorRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Delete sensor: success (admin user) | SensorRoutes | E2E | WB/ Statement Coverage |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 401 UnauthorizedError (token non presente) | SensorRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 403 InsufficientRightsError (viewer user) | SensorRoutes | E2E | BB/ Boundary |
+| DELETE /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 404 NotFoundError (sensor inesistente) | SensorRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Update sensor: success (admin user, update name and description) | SensorRoutes | E2E | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Update sensor: success (operator user, update name and description) | SensorRoutes | E2E | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: Update sensor: success (admin user, update all fields) | SensorRoutes | E2E | WB/ Statement Coverage |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 401 UnauthorizedError (token non presente) | SensorRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 403 InsufficientRightsError (viewer user) | SensorRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 404 NotFoundError (sensor inesistente) | SensorRoutes | E2E | BB/ Boundary |
+| PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 409 ConflictError (macAddress già in uso) | SensorRoutes | E2E | BB/ Equivalence Partitioning |
 
 # Coverage
 
