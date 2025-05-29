@@ -21,7 +21,7 @@
 
 **General approach:**
 
-AWBiamo adottato un approccio misto al testing, combinando tecniche white-box e black-box, seguendo una progressione strutturata:
+Abbiamo adottato un approccio misto al testing, combinando tecniche white-box e black-box, seguendo una progressione strutturata:
 
 Bottom-Up white-box per unit test e integration test interni (Repository â†’ Controller â†’ Route)
 Top-Down black-box per i test end-to-end, simulando vere richieste HTTP
@@ -65,7 +65,7 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 <in the table below list the test cases defined For each test report the object tested, the test level (API, integration, unit) and the technique used to define the test case (WB/ eq partitioning, WB/ boundary, WB/ statement coverage, etc)> <split the table if needed>
 | Test case name | Object(s) tested | Test level | Technique used |
 | :------------------------------------------------------------------------------------------------------------------------------------: | :----------------------: | :--------------: | :-------------------------------------------: |
-| **Review unit test** | | | |
+| **UNIT TEST** | | | |
 | **User DAO unit test** | | | |
 | Create user - success | UserRepository | Unit | WB/ Statement Coverage |
 | Create user - ConflictError | UserRepository | Unit | WB/ Equivalence Partitioning |
@@ -163,7 +163,7 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 | Update Sensor: campi opzionali vuoti | SensorRepository | Integration | WB/ Statement Coverage |
 | Update Sensor: macAddress giÃ  esistente | SensorRepository | Integration | WB/ Equivalence Partitioning |
 | Update Sensor: macAddress inesistente | SensorRepository | Integration | WB/ Boundary |
-| **Review Controller Integration test** |
+| **INTEGRATION TEST - CONTROLLER** |
 | **User Controller Integration test** | | |
 | Create user: success | UserController | Integration | WB/ Statement Coverage |
 | Create user: success (admin user) | UserController | Integration | WB/ Statement Coverage |
@@ -276,7 +276,7 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 | **Auth Controller Integration test** | | |
 | AuthController: Create token - success | Controller | Integration | WB/ Statement Coverage |
 | AuthController: Create token - invalid password | Controller | Integration | WB/ Boundary |
-| **Review Routes Integration test** | | |
+| **INTEGRATION TEST - ROUTES** |
 | **User Routes integration test** | | |
 | POST /api/v1/users: Create user: success | UserRoutes | Integration | WB/ Statement Coverage |
 | POST /api/v1/users: Create user: 401 UnauthorizedError | UserRoutes | Integration | BB/ Boundary |
@@ -428,7 +428,7 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 | POST /api/v1/auth: Authenticate: User with special characters in username | AuthenticationRoutes | Integration | BB/ Equivalence Partitioning |
 | POST /api/v1/auth: Authenticate: User with long username | AuthenticationRoutes | Integration | BB/ Boundary |
 | POST /api/v1/auth: Authenticate: User with unsupported UserType | AuthenticationRoutes | Integration | BB/ Equivalence Partitioning |
-| **Review e2e test** | | |
+| **E2E TEST** |
 | **Users E2E test** | | |
 | GET /api/v1/users: Get All Users: success (admin user) | UsersRoutes | E2E | WB/ Statement Coverage |
 | GET /api/v1/users: Get All Users: 403 InsufficientRightsError (operator user) | UsersRoutes | E2E | BB/ Boundary |
