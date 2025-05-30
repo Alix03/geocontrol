@@ -609,11 +609,41 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 
 <Report in the following table the coverage of functional requirements and scenarios(from official requirements) >
 
-| Functional Requirement or scenario | Test(s) |
-| :--------------------------------: | :-----: |
-|                FRx                 |         |
-|                FRy                 |         |
-|                ...                 |         |
+|                   Functional Requirement or scenario                   | Test(s) |
+| :--------------------------------------------------------------------: | :-----: |
+|                         **FR1 Authentication**                         |         |
+|                        FR1.1 Authenticate user                         |   17    |
+|                          **FR2 Manage users**                          |         |
+|                        FR2.1 Retrieve all users                        |    12     |
+|                        FR2.2 Create a new user                         |    17     |
+|                     FR2.3 Retrieve a specific user                     |    17     |
+|                      FR2.4 Delete a specific user                      |    13     |
+|                        **FR3 Manage networks**                         |         |
+|                      FR3.1 Retrieve all networks                       |         |
+|                       FR3.2 Create a new network                       |         |
+|                   FR3.3 Retrieve a specific network                    |         |
+|                         FR3.4 Update a network                         |         |
+|                    FR3.5 Delete a specific network                     |         |
+|                        **FR4 Manage gateways**                         |         |
+|                FR4.1 Retrieve all gateways of a network                |         |
+|                FR4.2 Create a new gateway for a network                |         |
+|                   FR4.3 Retrieve a specific gateway                    |         |
+|                         FR4.4 Update a gateway                         |         |
+|                    FR4.5 Delete a specific gateway                     |         |
+|                         **FR5 Manage sensors**                         |         |
+|                FR5.1 Retrieve all sensors of a gateway                 |         |
+|                FR5.2 Create a new sensor for a gateway                 |         |
+|                    FR5.3 Retrieve a specific sensor                    |         |
+|                         FR5.4 Update a sensor                          |         |
+|                     FR5.5 Delete a specific sensor                     |         |
+|                      **FR6 Manage measurements**                       |         |
+| FR6.1 Retrieve measurements for a set of sensors of a specific network |         |
+|  FR6.2 Retrieve statistics for a set of sensors of a specific network  |         |
+|   FR6.3 Retrieve outliers for a set of sensors of a specific network   |         |
+|             FR6.4 Store measurements for a specific sensor             |         |
+|           FR6.5 Retrieve measurements for a specific sensor            |         |
+|            FR6.6 Retrieve statistics for a specific sensor             |         |
+|             FR6.7 Retrieve outliers for a specific sensor              |         |
 
 ## Coverage white box
 
