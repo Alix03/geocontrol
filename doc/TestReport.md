@@ -62,7 +62,6 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 
 # Tests
 
-<<<<<<< HEAD
 <in the table below list the test cases defined For each test report the object tested, the test level (API, integration, unit) and the technique used to define the test case (WB/ eq partitioning, WB/ boundary, WB/ statement coverage, etc)> <split the table if needed>
 
 ### DAO unit test
@@ -903,7 +902,6 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 | PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 403 InsufficientRightsError (viewer user) | SensorRoutes | E2E | BB/ Boundary |
 | PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 404 NotFoundError (sensor inesistente) | SensorRoutes | E2E | BB/ Boundary |
 | PATCH /api/v1/networks/:networkCode/gateways/:gatewayMac/sensors/:sensorMac: 409 ConflictError (macAddress giÃ  in uso) | SensorRoutes | E2E | BB/ Equivalence Partitioning |
->>>>>>> 652db4c590cff8643bcc46617fb7774624166e58
 
 # Coverage
 
