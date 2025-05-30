@@ -616,5 +616,3 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 |                ...                 |         |
 
 ## Coverage white box
-
-Report here the screenshot of coverage values obtained with jest-- coverage
