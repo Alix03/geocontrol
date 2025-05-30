@@ -2,8 +2,6 @@ import request from "supertest";
 import { app } from "@app";
 import { generateToken } from "@services/authService";
 import { beforeAllE2e, afterAllE2e, TEST_USERS } from "@test/e2e/lifecycle";
-import { getAllSensors } from "@controllers/SensorController";
-import AppError from "@models/errors/AppError";
 
 describe("Sensor API (e2e)", () => {
   let adminToken: string;

@@ -62,7 +62,7 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 
 # Tests
 
-<in the table below list the test cases defined For each test report the object tested, the test level (API, integration, unit) and the technique used to define the test case (WB/ eq partitioning, WB/ boundary, WB/ statement coverage, etc)> <split the table if needed>
+<in the table below list the test cases defined For each test report the object tested, the test level (API, integration, unit) and the technique used to define the test case (WB eq partitioning, WB boundary, WB statement coverage, etc)> <split the table if needed>
 | Test case name | Object(s) tested | Test level | Technique used |
 | :------------------------------------------------------------------------------------------------------------------------------------: | :----------------------: | :--------------: | :-------------------------------------------: |
 | **Review unit test** | | | |
@@ -614,36 +614,39 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 |                         **FR1 Authentication**                         |         |
 |                        FR1.1 Authenticate user                         |   17    |
 |                          **FR2 Manage users**                          |         |
-|                        FR2.1 Retrieve all users                        |    12     |
-|                        FR2.2 Create a new user                         |    17     |
-|                     FR2.3 Retrieve a specific user                     |    17     |
-|                      FR2.4 Delete a specific user                      |    13     |
+|                        FR2.1 Retrieve all users                        |   29    |
+|                        FR2.2 Create a new user                         |   40    |
+|                     FR2.3 Retrieve a specific user                     |   36    |
+|                      FR2.4 Delete a specific user                      |   30    |
 |                        **FR3 Manage networks**                         |         |
-|                      FR3.1 Retrieve all networks                       |         |
-|                       FR3.2 Create a new network                       |         |
-|                   FR3.3 Retrieve a specific network                    |         |
-|                         FR3.4 Update a network                         |         |
-|                    FR3.5 Delete a specific network                     |         |
+|                      FR3.1 Retrieve all networks                       |   20    |
+|                       FR3.2 Create a new network                       |   28    |
+|                   FR3.3 Retrieve a specific network                    |   12    |
+|                         FR3.4 Update a network                         |   29    |
+|                    FR3.5 Delete a specific network                     |   15    |
 |                        **FR4 Manage gateways**                         |         |
-|                FR4.1 Retrieve all gateways of a network                |         |
-|                FR4.2 Create a new gateway for a network                |         |
-|                   FR4.3 Retrieve a specific gateway                    |         |
-|                         FR4.4 Update a gateway                         |         |
-|                    FR4.5 Delete a specific gateway                     |         |
+|                FR4.1 Retrieve all gateways of a network                |   25    |
+|                FR4.2 Create a new gateway for a network                |   36    |
+|                   FR4.3 Retrieve a specific gateway                    |   22    |
+|                         FR4.4 Update a gateway                         |   32    |
+|                    FR4.5 Delete a specific gateway                     |   21    |
 |                         **FR5 Manage sensors**                         |         |
-|                FR5.1 Retrieve all sensors of a gateway                 |         |
-|                FR5.2 Create a new sensor for a gateway                 |         |
-|                    FR5.3 Retrieve a specific sensor                    |         |
-|                         FR5.4 Update a sensor                          |         |
-|                     FR5.5 Delete a specific sensor                     |         |
+|                FR5.1 Retrieve all sensors of a gateway                 |   18    |
+|                FR5.2 Create a new sensor for a gateway                 |   24    |
+|                    FR5.3 Retrieve a specific sensor                    |   14    |
+|                         FR5.4 Update a sensor                          |   20    |
+|                     FR5.5 Delete a specific sensor                     |   22    |
 |                      **FR6 Manage measurements**                       |         |
-| FR6.1 Retrieve measurements for a set of sensors of a specific network |         |
-|  FR6.2 Retrieve statistics for a set of sensors of a specific network  |         |
-|   FR6.3 Retrieve outliers for a set of sensors of a specific network   |         |
-|             FR6.4 Store measurements for a specific sensor             |         |
-|           FR6.5 Retrieve measurements for a specific sensor            |         |
-|            FR6.6 Retrieve statistics for a specific sensor             |         |
-|             FR6.7 Retrieve outliers for a specific sensor              |         |
+| FR6.1 Retrieve measurements for a set of sensors of a specific network |   34    |
+|  FR6.2 Retrieve statistics for a set of sensors of a specific network  |   12    |
+|   FR6.3 Retrieve outliers for a set of sensors of a specific network   |   12    |
+|             FR6.4 Store measurements for a specific sensor             |   17    |
+|           FR6.5 Retrieve measurements for a specific sensor            |   22    |
+|            FR6.6 Retrieve statistics for a specific sensor             |   14    |
+|             FR6.7 Retrieve outliers for a specific sensor              |   12    |
+|                                                                        |   613   |
+
+There are other 5 tests for errorService and utils
 
 ## Coverage white box
 
