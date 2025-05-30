@@ -392,7 +392,7 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 |                         **FR5 Manage sensors**                         |         |
 |                FR5.1 Retrieve all sensors of a gateway                 |   18    |
 |                FR5.2 Create a new sensor for a gateway                 |   24    |
-|                    FR5.3 Retrieve a specific sensor                    |   14    |
+|                    FR5.3 Retrieve a specific sensor                    |   13    |
 |                         FR5.4 Update a sensor                          |   20    |
 |                     FR5.5 Delete a specific sensor                     |   22    |
 |                      **FR6 Manage measurements**                       |         |
@@ -403,7 +403,7 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dellâ
 |           FR6.5 Retrieve measurements for a specific sensor            |   22    |
 |            FR6.6 Retrieve statistics for a specific sensor             |   14    |
 |             FR6.7 Retrieve outliers for a specific sensor              |   12    |
-|                                                                        |   613   |
+|                                                                        |   612   |
 
 There are other 5 tests for errorService and utils
 
