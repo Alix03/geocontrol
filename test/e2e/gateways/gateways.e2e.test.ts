@@ -269,7 +269,19 @@ describe("POST /networks/{networkCode}/gateways", () => {
       });
     });
 
+    it("500 Network cannot be empty", async () =>{
+      const gatewayData = {
+        macAddress: "     \t    \n  ",
+      };
 
+      const res = await request(app)
+          .post(`/api/v1/networks/${testNetworkCode}/gateways`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(gatewayData);
+
+      expect(res.status).toBe(500);
+      expect(res.body.code).toBe(500);
+    });
   });
 
   // get Gateway By MacAddress
@@ -505,6 +517,20 @@ describe("POST /networks/{networkCode}/gateways", () => {
         expect(res.status).toBe(409);
         expect(res.body.code).toBe(409);
         expect(res.body.name).toBe("ConflictError");
+      });
+
+      it("500 Network cannot be empty", async () =>{
+      const updateData = {
+        macAddress: "     \t    \n  ",
+      };
+
+      const res = await request(app)
+          .patch(`/api/v1/networks/${testNetworkCode}/gateways/${testGatewayMac2}`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(updateData);
+
+      expect(res.status).toBe(500);
+      expect(res.body.code).toBe(500);
       });
     });
 

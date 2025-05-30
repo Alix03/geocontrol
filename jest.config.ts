@@ -21,26 +21,30 @@ const config: Config = {
     "<rootDir>/src/database/",
     "<rootDir>/test/"
   ],
-  reporters:
-    process.env.CI === "true"
-      ? [
-          "default",
-          [
-            "jest-junit",
-            {
-              outputDirectory: "reports/junit",
-              outputName: "jest-results.xml"
-            }
-          ]
-        ]
-      : ["default"],
-  moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
-    prefix: "<rootDir>/src/"
-  }),
-  transform: {
-    "^.+\\.tsx?$": "ts-jest"
-  },
-  maxWorkers: 1
+reporters: [
+  "default",
+  [
+    "jest-junit",
+    {
+      outputDirectory: "reports/junit",
+      outputName: "jest-results.xml"
+    }
+  ],
+  [
+    'jest-html-reporter',
+    {
+      pageTitle: 'Test Report',
+      outputPath: './test-report.html'
+    }
+  ]
+],
+moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
+  prefix: "<rootDir>/src/"
+}),
+transform: {
+  "^.+\\.tsx?$": "ts-jest"
+},
+maxWorkers: 1
 };
 
 export default config;

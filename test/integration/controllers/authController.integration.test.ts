@@ -1,7 +1,6 @@
 import { getToken } from "@controllers/authController";
 import { UserType } from "@models/UserType";
 import { UserRepository } from "@repositories/UserRepository";
-import {Token as TokenDTO} from "@models/dto/Token"
 import { UnauthorizedError } from "@models/errors/UnauthorizedError";
 
 

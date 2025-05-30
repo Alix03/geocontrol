@@ -246,6 +246,22 @@ describe("Gateway API (e2e)", () => {
                 expect(resp.status).toBe(409);
                 expect(resp.body.code).toBe(409);
             });
+
+            it("500 Network code cannot be empty" , async () =>{
+                const usedNetwork = {
+                    code: "   \t   ",
+                    name: "NAME01",
+                    description: "first network",
+                };
+
+                const resp = await request(app)
+                    .post("/api/v1/networks")
+                    .set("Authorization", `Bearer ${adminToken}`)
+                    .send(usedNetwork);
+
+                expect(resp.status).toBe(500);
+                expect(resp.body.code).toBe(500);
+            });
         });
     });
     describe("GET /networks/{networkCode}",  () =>{
@@ -529,6 +545,23 @@ describe("Gateway API (e2e)", () => {
 
                 expect(res.status).toBe(409);
                 expect(res.body.code).toBe(409);
+            });
+
+            it("500 Network cannot be empty", async () =>{
+                const updatedNetwork = {
+                    code: "   \t \n   ",
+                    name: "NAME02",
+                    description: "updated network"
+                };
+
+                const res = await request(app)
+                    .patch(
+                        "/api/v1/networks/NET01")
+                    .set("Authorization", `Bearer ${adminToken}`)
+                    .send(updatedNetwork);
+
+                expect(res.status).toBe(500);
+                expect(res.body.code).toBe(500);
             });
         });
     });

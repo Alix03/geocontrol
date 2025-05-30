@@ -549,7 +549,7 @@ describe("GET /users (e2e)", () => {
   });
 
   describe("Scenari", () => {
-    it("Gestine user lifecycle completo (create, get, delete)", async () => {
+    it("Gestione user lifecycle completo (create, get, delete)", async () => {
       const newUser = {
         username: `lifecycle_user_${Date.now()}`,
         password: "testpass123",

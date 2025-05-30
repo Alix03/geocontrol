@@ -4,6 +4,7 @@ import { MeasurementDAO } from "@models/dao/MeasurementDAO";
 import { NetworkDAO } from "@models/dao/NetworkDAO";
 import { SensorDAO } from "@models/dao/SensorDAO";
 import { Network as NetworkDTO } from "@models/dto/Network";
+import AppError from "@models/errors/AppError";
 import { ConflictError } from "@models/errors/ConflictError";
 import { NotFoundError } from "@models/errors/NotFoundError";
 import { NetworkRepository } from "@repositories/NetworkRepository";
@@ -83,6 +84,21 @@ describe("NetworkController integration", () =>{
                 networkController.createNetwork(fakeNetworkDAO)
             ).rejects.toThrow(new ConflictError("Entity with code NET01 already exists"));
         });
+
+        it("Create network: code as unreadable string", async () =>{
+            const fakeNetworkDAO: NetworkDAO = {
+                id: 1,
+                code: "   \t  ",
+                name: undefined,
+                description: undefined,
+                gateways: []
+            };
+
+            await expect(
+                networkController.createNetwork(fakeNetworkDAO)
+            ).rejects.toThrow(new AppError("Network code cannot be empty", 500));
+        });
+
     });
 
     describe("Get all networks", () =>{
@@ -390,6 +406,22 @@ describe("NetworkController integration", () =>{
                 networkController.updateNetwork("NET01", newNetwork)
             ).rejects.toThrow(new ConflictError("Entity with code NET01 already exists"));
         });
+
+        it("Update network: code as unreadable string", async () =>{
+            const fakeNetworkDAO: NetworkDAO = {
+                id: 1,
+                code: "   \t  ",
+                name: undefined,
+                description: undefined,
+                gateways: []
+            };
+
+            await expect(
+                networkController.updateNetwork("NET01", fakeNetworkDAO)
+            ).rejects.toThrow(new AppError("Network code cannot be empty", 500));
+        });
+
+
     });
 
     describe("Delete network", () =>{
