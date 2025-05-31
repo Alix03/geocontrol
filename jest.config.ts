@@ -12,39 +12,22 @@ const config: Config = {
     "!src/models/**",
     "!src/config/**",
     "!src/database/connection.ts",
-    "!test/**"
+    "!test/**",
   ],
   coveragePathIgnorePatterns: [
     "<rootDir>/src/models/",
     "<rootDir>/src/services/loggingService.ts",
     "<rootDir>/src/config/",
     "<rootDir>/src/database/",
-    "<rootDir>/test/"
+    "<rootDir>/test/",
   ],
-reporters: [
-  "default",
-  [
-    "jest-junit",
-    {
-      outputDirectory: "reports/junit",
-      outputName: "jest-results.xml"
-    }
-  ],
-  [
-    'jest-html-reporter',
-    {
-      pageTitle: 'Test Report',
-      outputPath: './test-report.html'
-    }
-  ]
-],
-moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
-  prefix: "<rootDir>/src/"
-}),
-transform: {
-  "^.+\\.tsx?$": "ts-jest"
-},
-maxWorkers: 1
+  moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
+    prefix: "<rootDir>/src/",
+  }),
+  transform: {
+    "^.+\\.tsx?$": "ts-jest",
+  },
+  maxWorkers: 1,
 };
 
 export default config;
