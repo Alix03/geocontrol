@@ -32,7 +32,7 @@ Questo ci ha permesso di testare in modo approfondito sia le singole componenti,
 
 • Affidabilità progressiva: ogni componente viene testata singolarmente prima di essere integrata, riducendo il rischio di errori non localizzati.
 
-• Copertura completa: combinando white-box e black-box, aWBiamo ottenuto una copertura sia della logica interna che del comportamento esterno del sistema.
+• Copertura completa: combinando white-box e black-box, abbiamo ottenuto una copertura sia della logica interna che del comportamento esterno del sistema.
 
 • Individuazione rapida degli errori: i test white-box aiutano a trovare bug a livello di implementazione, mentre i test end-to-end evidenziano problemi nei flussi reali.
 
@@ -44,21 +44,21 @@ Questo ci ha permesso di testare in modo approfondito sia le singole componenti,
 
 • Manutenzione: modifiche interne possono richiedere aggiornamenti su più livelli di test, specie quelli white-box.
 
-• E2E più lenti e fragili: i test end-to-end, pur essendo utili, sono spesso più lenti da eseguire e più sensibili a cambiamenti nell'interfaccia o nei dati.
+• E2E più lenti e fragili: i test end-to-end, pur essendo utili, sono spesso più lenti da eseguire e più sensibili a cambiamenti nei dati.
 
 **Sequenza di testing:**
 
 **Step 1:**
-Unit testing (white-box) della Repository, testando in isolamento i metodi che interagiscono con il database.
+Unit testing (white-box) delle Repositories e dei Services, testando in isolamento i metodi che interagiscono con il database e le funzioni che implementano la logica di business.
 
 **Step 2:**
-Integration testing (white-box) dei Controller, verificandone il comportamento integrato con la Repository.
+Integration testing (white-box) dei Controllers, verificandone il comportamento integrato con i Services.
 
 **Step 3:**
-Integration testing (white-box) delle Route, testando i flussi tra Route, Controller e Repository.
+Integration testing (white-box) delle Routes, testando i flussi tra Route, Controller e Repository.
 
 **Step 4:**
-End-to-End testing (black-box), effettuando chiamate HTTP reali alle Route dell’applicazione e confrontando i risultati ottenuti con quelli attesi, senza conoscere l’implementazione interna.
+End-to-End testing (black-box), effettuando chiamate HTTP reali alle Routes dell’applicazione e confrontando i risultati ottenuti con quelli attesi, senza conoscere l’implementazione interna.
 
 # Tests
 
