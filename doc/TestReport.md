@@ -139,31 +139,31 @@ End-to-End testing (black-box), che hanno permesso di validare i flussi di contr
 |              Gestione username lunghi - success               |        UserController + Utils + mapperService        | Integration |    WB/ Statement Coverage    |
 |               Gestione username lunghi - error                |        UserController + Utils + mapperService        | Integration |         WB/ Boundary         |
 |          **Measurement Controller Integration test**          |                                                      |             |
-|               getMeasurementsByNetwork: success               |    MeasurementController + Utils + mapperService     |    Unit     |    WB/ Statement Coverage    |
-|    getMeasurementsByNetwork: success (con filtri per date)    |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-| getMeasurementsByNetwork: success (con filtri per sensorMacs) |    MeasurementController + Utils + mapperService     |    Unit     | WB/ Equivalence Partitioning |
-|         getMeasurementsByNetwork: network inesistente         |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-| getMeasurementsByNetwork: nessun sensore associato alla rete  |    MeasurementController + Utils + mapperService     |    Unit     |    WB/ Statement Coverage    |
-|               getMeasurementsBySensor: success                |    MeasurementController + Utils + mapperService     |    Unit     |    WB/ Statement Coverage    |
-|    getMeasurementsBySensor: success (con filtri per date)     |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-|          getMeasurementsBySensor: sensor inesistente          |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-|                  getStatsByNetwork: success                   |    MeasurementController + Utils + mapperService     |    Unit     |    WB/ Statement Coverage    |
-|       getStatsByNetwork: success (con filtri per date)        |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-|    getStatsByNetwork: success (con filtri per sensorMacs)     |    MeasurementController + Utils + mapperService     |    Unit     | WB/ Equivalence Partitioning |
-|            getStatsByNetwork: network inesistente             |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-|                   getStatsBySensor: success                   |    MeasurementController + Utils + mapperService     |    Unit     |    WB/ Statement Coverage    |
-|        getStatsBySensor: success (con filtri per date)        |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-|             getStatsBySensor: sensor inesistente              |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-|                 getOutliersByNetwork: success                 |    MeasurementController + Utils + mapperService     |    Unit     |    WB/ Statement Coverage    |
-|      getOutliersByNetwork: success (con filtri per date)      |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-|   getOutliersByNetwork: success (con filtri per sensorMacs)   |    MeasurementController + Utils + mapperService     |    Unit     | WB/ Equivalence Partitioning |
-|           getOutliersByNetwork: network inesistente           |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-|                 getOutliersBySensor: success                  |    MeasurementController + Utils + mapperService     |    Unit     |    WB/ Statement Coverage    |
-|      getOutliersBySensor: success (con filtri per date)       |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-|            getOutliersBySensor: sensor inesistente            |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-|                  createMeasurement: success                   |    MeasurementController + Utils + mapperService     |    Unit     |    WB/ Statement Coverage    |
-|             createMeasurement: sensor inesistente             |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
-|           createMeasurement: errore nel repository            |    MeasurementController + Utils + mapperService     |    Unit     |         WB/ Boundary         |
+|               getMeasurementsByNetwork: success               |    MeasurementController + Utils + mapperService     | Integration |    WB/ Statement Coverage    |
+|    getMeasurementsByNetwork: success (con filtri per date)    |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+| getMeasurementsByNetwork: success (con filtri per sensorMacs) |    MeasurementController + Utils + mapperService     | Integration | WB/ Equivalence Partitioning |
+|         getMeasurementsByNetwork: network inesistente         |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+| getMeasurementsByNetwork: nessun sensore associato alla rete  |    MeasurementController + Utils + mapperService     | Integration |    WB/ Statement Coverage    |
+|               getMeasurementsBySensor: success                |    MeasurementController + Utils + mapperService     | Integration |    WB/ Statement Coverage    |
+|    getMeasurementsBySensor: success (con filtri per date)     |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+|          getMeasurementsBySensor: sensor inesistente          |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+|                  getStatsByNetwork: success                   |    MeasurementController + Utils + mapperService     | Integration |    WB/ Statement Coverage    |
+|       getStatsByNetwork: success (con filtri per date)        |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+|    getStatsByNetwork: success (con filtri per sensorMacs)     |    MeasurementController + Utils + mapperService     | Integration | WB/ Equivalence Partitioning |
+|            getStatsByNetwork: network inesistente             |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+|                   getStatsBySensor: success                   |    MeasurementController + Utils + mapperService     | Integration |    WB/ Statement Coverage    |
+|        getStatsBySensor: success (con filtri per date)        |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+|             getStatsBySensor: sensor inesistente              |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+|                 getOutliersByNetwork: success                 |    MeasurementController + Utils + mapperService     | Integration |    WB/ Statement Coverage    |
+|      getOutliersByNetwork: success (con filtri per date)      |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+|   getOutliersByNetwork: success (con filtri per sensorMacs)   |    MeasurementController + Utils + mapperService     | Integration | WB/ Equivalence Partitioning |
+|           getOutliersByNetwork: network inesistente           |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+|                 getOutliersBySensor: success                  |    MeasurementController + Utils + mapperService     | Integration |    WB/ Statement Coverage    |
+|      getOutliersBySensor: success (con filtri per date)       |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+|            getOutliersBySensor: sensor inesistente            |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+|                  createMeasurement: success                   |    MeasurementController + Utils + mapperService     | Integration |    WB/ Statement Coverage    |
+|             createMeasurement: sensor inesistente             |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
+|           createMeasurement: errore nel repository            |    MeasurementController + Utils + mapperService     | Integration |         WB/ Boundary         |
 |            **Network Controller Integration test**            |                                                      |             |
 |                      Create network: ok                       |      NetworkController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
 |          Create network: ok, solo campi oWBligatori           |      NetworkController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
@@ -181,48 +181,48 @@ End-to-End testing (black-box), che hanno permesso di validare i flussi di contr
 |                      Delete network: ok                       |      NetworkController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
 |                Delete network: code not found                 |      NetworkController + Utils + mapperService       | Integration |         WB/ Boundary         |
 |            **Gateway Controller Integration test**            |                                                      |             |
-|                    Create Gateway: success                    |      GatewayController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-|              Create Gateway: network inesistente              |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|           Create Gateway: macAddress già esistente            |      GatewayController + Utils + mapperService       |    Unit     | WB/ Equivalence Partitioning |
-|            Create Gateway: Errore nella repository            |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|                   Get All Gateways: success                   |      GatewayController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-| Get All Gateways: network senza gateways ritorna array vuoto  |      GatewayController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-|             Get All Gateways: network inesistente             |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|           Get All Gateways: Errore nella repository           |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|              Get Gateway By MacAddress: success               |      GatewayController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-|        Get Gateway By MacAddress: network inesistente         |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|        Get Gateway By MacAddress: gateway inesistente         |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|      Get Gateway By MacAddress: Errore nella repository       |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|                    Delete Gateway: success                    |      GatewayController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-|              Delete Gateway: network inesistente              |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|              Delete Gateway: gateway inesistente              |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|            Delete Gateway: Errore nella repository            |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|                    Update Gateway: success                    |      GatewayController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-|           Update Gateway senza cambiare macAddress            |      GatewayController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-|              Update Gateway: network inesistente              |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|            Update Gateway: macAddress inesistente             |      GatewayController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|                **Sensor Controller unit test**                |                                                      |             |
-|                    getAllSensors: success                     |       SensorController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-| getAllSensors: success (nessun sensore associato al gateway)  |       SensorController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-|              getAllSensors: network inesistente               |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|              getAllSensors: gateway inesistente               |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|                      getSensor: success                       |       SensorController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-|                getSensor: network inesistente                 |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|                getSensor: gateway inesistente                 |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|                 getSensor: sensor inesistente                 |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|                     createSensor: success                     |       SensorController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-|               createSensor: network inesistente               |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|               createSensor: gateway inesistente               |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|            createSensor: macAddress già esistente             |       SensorController + Utils + mapperService       |    Unit     | WB/ Equivalence Partitioning |
-|                     deleteSensor: success                     |       SensorController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-|               deleteSensor: network inesistente               |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|               deleteSensor: gateway inesistente               |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|               deleteSensor: sensor inesistente                |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|                     updateSensor: success                     |       SensorController + Utils + mapperService       |    Unit     |    WB/ Statement Coverage    |
-|               updateSensor: network inesistente               |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|               updateSensor: gateway inesistente               |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|               updateSensor: sensor inesistente                |       SensorController + Utils + mapperService       |    Unit     |         WB/ Boundary         |
-|            updateSensor: macAddress già esistente             |       SensorController + Utils + mapperService       |    Unit     | WB/ Equivalence Partitioning |
+|                    Create Gateway: success                    |      GatewayController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+|              Create Gateway: network inesistente              |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|           Create Gateway: macAddress già esistente            |      GatewayController + Utils + mapperService       | Integration | WB/ Equivalence Partitioning |
+|            Create Gateway: Errore nella repository            |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|                   Get All Gateways: success                   |      GatewayController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+| Get All Gateways: network senza gateways ritorna array vuoto  |      GatewayController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+|             Get All Gateways: network inesistente             |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|           Get All Gateways: Errore nella repository           |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|              Get Gateway By MacAddress: success               |      GatewayController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+|        Get Gateway By MacAddress: network inesistente         |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|        Get Gateway By MacAddress: gateway inesistente         |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|      Get Gateway By MacAddress: Errore nella repository       |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|                    Delete Gateway: success                    |      GatewayController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+|              Delete Gateway: network inesistente              |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|              Delete Gateway: gateway inesistente              |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|            Delete Gateway: Errore nella repository            |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|                    Update Gateway: success                    |      GatewayController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+|           Update Gateway senza cambiare macAddress            |      GatewayController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+|              Update Gateway: network inesistente              |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|            Update Gateway: macAddress inesistente             |      GatewayController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|            **Sensor Controller Integration test**             |                                                      |             |
+|                    getAllSensors: success                     |       SensorController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+| getAllSensors: success (nessun sensore associato al gateway)  |       SensorController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+|              getAllSensors: network inesistente               |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|              getAllSensors: gateway inesistente               |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|                      getSensor: success                       |       SensorController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+|                getSensor: network inesistente                 |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|                getSensor: gateway inesistente                 |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|                 getSensor: sensor inesistente                 |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|                     createSensor: success                     |       SensorController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+|               createSensor: network inesistente               |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|               createSensor: gateway inesistente               |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|            createSensor: macAddress già esistente             |       SensorController + Utils + mapperService       | Integration | WB/ Equivalence Partitioning |
+|                     deleteSensor: success                     |       SensorController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+|               deleteSensor: network inesistente               |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|               deleteSensor: gateway inesistente               |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|               deleteSensor: sensor inesistente                |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|                     updateSensor: success                     |       SensorController + Utils + mapperService       | Integration |    WB/ Statement Coverage    |
+|               updateSensor: network inesistente               |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|               updateSensor: gateway inesistente               |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|               updateSensor: sensor inesistente                |       SensorController + Utils + mapperService       | Integration |         WB/ Boundary         |
+|            updateSensor: macAddress già esistente             |       SensorController + Utils + mapperService       | Integration | WB/ Equivalence Partitioning |
 |             **Auth Controller Integration test**              |                                                      |             |
 |                    Create token - success                     | AuthController + Utils + mapperService + AuthService | Integration |    WB/ Statement Coverage    |
 |                Create token - invalid password                | AuthController + Utils + mapperService + AuthService | Integration |         WB/ Boundary         |
