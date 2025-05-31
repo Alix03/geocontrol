@@ -1,12 +1,7 @@
 import { AppDataSource } from "@database";
 import { Repository } from "typeorm";
 import { MeasurementDAO } from "@dao/MeasurementDAO";
-import { Measurement as MeasurementDTO } from "@dto/Measurement";
 import { SensorDAO } from "@dao/SensorDAO";
-import { findOrThrowNotFound, throwConflictIfFound } from "@utils";
-import { NetworkDAO } from "@dao/NetworkDAO";
-import { parseISODateParamToUTC, parseStringArrayParam } from "@utils";
-import { GatewayDAO } from "@models/dao/GatewayDAO";
 import { Between, MoreThanOrEqual, LessThanOrEqual, In } from "typeorm";
 import { NotFoundError } from "@models/errors/NotFoundError";
 export class MeasurementRepository {

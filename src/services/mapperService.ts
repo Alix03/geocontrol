@@ -12,7 +12,6 @@ import { Sensor as SensorDTO } from "@models/dto/Sensor";
 import { Measurement as MeasurementDTO } from "@dto/Measurement";
 import { MeasurementDAO } from "@models/dao/MeasurementDAO";
 import { Stats as StatsDTO } from "@dto/Stats";
-import { createMeasurement } from "@controllers/measurementController";
 import { Measurements as MeasurementsDTO } from "@models/dto/Measurements";
 
 export function createErrorDTO(
