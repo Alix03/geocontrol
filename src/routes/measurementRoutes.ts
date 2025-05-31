@@ -1,8 +1,6 @@
 import { CONFIG } from "@config";
 import { authenticateUser } from "@middlewares/authMiddleware";
-import AppError from "@models/errors/AppError";
 import { UserType } from "@models/UserType";
-import { create } from "domain";
 import { Router } from "express";
 import {
   createMeasurement,
@@ -13,7 +11,6 @@ import {
   getOutliersByNetwork,
   getOutliersBySensor,
 } from "@controllers/measurementController";
-import { query } from "winston";
 
 const router = Router();
 

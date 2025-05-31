@@ -405,3 +405,5 @@ End-to-End testing (black-box), che hanno permesso di validare i flussi di contr
 There are other 5 tests for errorService and utils
 
 ## Coverage white box
+
+![Test coverage](./images/TestCoverage.png)

@@ -10,19 +10,12 @@ import {
 } from "@services/mapperService";
 import {
   Measurements as MeasurementsDTO,
-  MeasurementsToJSON,
 } from "@models/dto/Measurements";
-import { getNetwork } from "@controllers/networkController";
-import { getSensor } from "@controllers/SensorController";
 import { SensorDAO } from "@models/dao/SensorDAO";
 import { SensorRepository } from "@repositories/SensorRepository";
-import { Stats as StatsDTO, StatsToJSON } from "@models/dto/Stats";
+import { Stats as StatsDTO } from "@models/dto/Stats";
 import { parseStringArrayParam, parseISODateParamToUTC } from "@utils";
-import { AppDataSource } from "@database";
-import { In } from "typeorm";
 import { NetworkRepository } from "@repositories/NetworkRepository";
-import { NotFoundError } from "@models/errors/NotFoundError";
-import { start } from "repl";
 
 export async function getMeasurementsByNetwork(
   networkCode: string,
