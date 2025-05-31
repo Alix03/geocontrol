@@ -408,3 +408,5 @@ End-to-End testing (black-box), effettuando chiamate HTTP reali alle Routes dell
 There are other 5 tests for errorService and utils
 
 ## Coverage white box
+
+![Test coverage](./images/TestCoverage.png)
