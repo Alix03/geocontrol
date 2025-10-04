@@ -1,0 +1,74 @@
+import { Router } from "express";
+import { authenticateUser } from "@middlewares/authMiddleware";
+import { UserType } from "@models/UserType";
+
+import {
+  createNetwork,
+  getAllNetworks,
+  getNetwork,
+  deleteNetwork,
+  updateNetwork
+} from "@controllers/networkController";
+import { NetworkFromJSON } from "@models/dto/Network";
+
+const router = Router();
+
+// Get all networks (Any authenticated user)
+router.get("", authenticateUser([UserType.Admin, UserType.Operator, UserType.Viewer]), async (req, res, next) => {
+   try {
+      res.status(200).json(await getAllNetworks());
+    } catch (error) {
+      next(error);
+    }
+});
+
+// Create a new network (Admin & Operator)
+router.post("", authenticateUser([UserType.Admin, UserType.Operator]), async (req, res, next) => {
+  try {
+      await createNetwork(NetworkFromJSON(req.body));
+      res.status(201).send();
+    } catch (error) {
+      next(error);
+    }
+});
+
+// Get a specific network (Any authenticated user)
+router.get("/:networkCode", authenticateUser([UserType.Admin, UserType.Operator, UserType.Viewer]), async (req, res, next) => {
+   try {
+        res.status(200).json(await getNetwork(req.params.networkCode));
+      } catch (error) {
+        next(error);
+      }
+});
+
+// Update a network (Admin & Operator)
+router.patch("/:networkCode",authenticateUser([UserType.Admin, UserType.Operator]), async (req, res, next) => {
+  try {
+    const { code, name, description } = req.body;
+    const { networkCode: currentCode } = req.params;
+
+    await updateNetwork(
+      currentCode, 
+      {code,
+      name,
+      description}
+    );
+
+    res.sendStatus(204); // Successo senza body
+  } catch (error) {
+    next(error); 
+  }
+  
+});
+
+// Delete a network (Admin & Operator)
+router.delete("/:networkCode", authenticateUser([UserType.Admin, UserType.Operator]), async (req, res, next) => {
+  try {
+        await deleteNetwork(req.params.networkCode);
+        res.status(204).send();
+      } catch (error) {
+        next(error);
+      }
+});
+
+export default router;

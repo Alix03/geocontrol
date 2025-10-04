@@ -1,0 +1,150 @@
+import { CONFIG } from "@config";
+import { authenticateUser } from "@middlewares/authMiddleware";
+import { UserType } from "@models/UserType";
+import { Router } from "express";
+import {
+  createMeasurement,
+  getMeasurementsByNetwork,
+  getMeasurementsBySensor,
+  getStatsByNetwork,
+  getStatsBySensor,
+  getOutliersByNetwork,
+  getOutliersBySensor,
+} from "@controllers/measurementController";
+
+const router = Router();
+
+// Store a measurement for a sensor (Admin & Operator)
+
+router.post(
+  CONFIG.ROUTES.V1_SENSORS + "/:sensorMac/measurements",
+  authenticateUser([UserType.Admin, UserType.Operator]),
+  async (req, res, next) => {
+    try {
+      const networkCode = req.params.networkCode;
+      const gatewayMac = req.params.gatewayMac;
+      const sensorMac = req.params.sensorMac;
+      const measurement = req.body;
+      await createMeasurement(networkCode, gatewayMac, sensorMac, measurement);
+      res.status(201).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Retrieve measurements for a set of sensors of a specific network
+router.get(
+  CONFIG.ROUTES.V1_NETWORKS + "/:networkCode/measurements",
+  authenticateUser([UserType.Admin, UserType.Operator, UserType.Viewer]),
+  async (req, res, next) => {
+    try {
+      const networkCode = req.params.networkCode;
+      res
+        .status(200)
+        .json(await getMeasurementsByNetwork(networkCode, req.query));
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Retrieve measurements for a specific sensor
+router.get(
+  CONFIG.ROUTES.V1_SENSORS + "/:sensorMac/measurements",
+  authenticateUser([UserType.Admin, UserType.Operator, UserType.Viewer]),
+  async (req, res, next) => {
+    try {
+      const networkCode = req.params.networkCode;
+      const gatewayMac = req.params.gatewayMac;
+      const sensorMac = req.params.sensorMac;
+      res
+        .status(200)
+        .json(
+          await getMeasurementsBySensor(
+            networkCode,
+            gatewayMac,
+            sensorMac,
+            req.query
+          )
+        );
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Retrieve statistics for a specific sensor
+router.get(
+  CONFIG.ROUTES.V1_SENSORS + "/:sensorMac/stats",
+  authenticateUser([UserType.Admin, UserType.Operator, UserType.Viewer]),
+  async (req, res, next) => {
+    try {
+      const networkCode = req.params.networkCode;
+      const gatewayMac = req.params.gatewayMac;
+      const sensorMac = req.params.sensorMac;
+      res
+        .status(200)
+        .json(
+          await getStatsBySensor(networkCode, gatewayMac, sensorMac, req.query)
+        );
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Retrieve only outliers for a specific sensor
+router.get(
+  CONFIG.ROUTES.V1_SENSORS + "/:sensorMac/outliers",
+  authenticateUser([UserType.Admin, UserType.Operator, UserType.Viewer]),
+  async (req, res, next) => {
+    try {
+      const networkCode = req.params.networkCode;
+      const gatewayMac = req.params.gatewayMac;
+      const sensorMac = req.params.sensorMac;
+      res
+        .status(200)
+        .json(
+          await getOutliersBySensor(
+            networkCode,
+            gatewayMac,
+            sensorMac,
+            req.query
+          )
+        );
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Retrieve statistics for a set of sensors of a specific network
+router.get(
+  CONFIG.ROUTES.V1_NETWORKS + "/:networkCode/stats",
+  authenticateUser([UserType.Admin, UserType.Operator, UserType.Viewer]),
+  async (req, res, next) => {
+    try {
+      const networkCode = req.params.networkCode;
+      res.status(200).json(await getStatsByNetwork(networkCode, req.query));
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Retrieve only outliers for a set of sensors of a specific network
+router.get(
+  CONFIG.ROUTES.V1_NETWORKS + "/:networkCode/outliers",
+  authenticateUser([UserType.Admin, UserType.Operator, UserType.Viewer]),
+  async (req, res, next) => {
+    try {
+      const networkCode = req.params.networkCode;
+      res.status(200).json(await getOutliersByNetwork(networkCode, req.query));
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+export default router;
