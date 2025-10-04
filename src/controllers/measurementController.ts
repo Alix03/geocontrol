@@ -8,9 +8,7 @@ import {
   createStatsDTO,
   groupMeasurementBySensor,
 } from "@services/mapperService";
-import {
-  Measurements as MeasurementsDTO,
-} from "@models/dto/Measurements";
+import { Measurements as MeasurementsDTO } from "@models/dto/Measurements";
 import { SensorDAO } from "@models/dao/SensorDAO";
 import { SensorRepository } from "@repositories/SensorRepository";
 import { Stats as StatsDTO } from "@models/dto/Stats";
